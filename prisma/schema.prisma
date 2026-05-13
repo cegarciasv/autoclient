@@ -1,0 +1,214 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Rol {
+  ADMIN
+  OPERADOR
+}
+
+enum TipoTercero {
+  CLIENTE
+  PROVEEDOR
+}
+
+enum TipoDocumento {
+  NIT
+  DUI
+  PASAPORTE
+}
+
+enum Estado {
+  PENDIENTE
+  EN_PROCESO
+  COMPLETADO
+}
+
+model AdminUser {
+  id       String   @id @default(cuid())
+  nombre   String
+  email    String   @unique
+  password String
+  rol      Rol      @default(OPERADOR)
+  activo   Boolean  @default(true)
+  creadoEn DateTime @default(now())
+}
+
+model Tercero {
+  id              String        @id @default(cuid())
+  tipo            TipoTercero
+  razonSocial     String
+  tipoDocumento   TipoDocumento
+  numeroDocumento String
+  email           String
+  token           String        @unique
+  tokenExpira     DateTime
+  estado          Estado        @default(PENDIENTE)
+  creadoPor       String
+  creadoEn        DateTime      @default(now())
+  formulario      Formulario?
+  otpTokens       OtpToken[]
+}
+
+model OtpToken {
+  id        String   @id @default(cuid())
+  terceroId String
+  tercero   Tercero  @relation(fields: [terceroId], references: [id])
+  codigo    String
+  expira    DateTime
+  usado     Boolean  @default(false)
+  creadoEn  DateTime @default(now())
+
+  @@index([terceroId])
+}
+
+model Formulario {
+  id            String    @id @default(cuid())
+  terceroId     String    @unique
+  tercero       Tercero   @relation(fields: [terceroId], references: [id])
+  pasoActual    Int       @default(1)
+  progreso      Int       @default(0)
+  estado        Estado    @default(EN_PROCESO)
+  creadoEn      DateTime  @default(now())
+  actualizadoEn DateTime  @updatedAt
+
+  infoGeneral         InfoGeneral?
+  accionistas         Accionista[]
+  clientesPrincipales ClientePrincipal[]
+  infoFinanciera      InfoFinanciera?
+  referencias         ReferenciaComercial[]
+  encuestaProveedor   EncuestaProveedor?
+  documentos          Documento[]
+}
+
+model InfoGeneral {
+  id                      String     @id @default(cuid())
+  formularioId            String     @unique
+  formulario              Formulario @relation(fields: [formularioId], references: [id])
+  razonSocial             String
+  nombreComercial         String
+  nit                     String
+  iva                     String
+  actividadReal           String
+  tipoEmpresa             String
+  tipoActividadEconomica  String
+  obligacionesTributarias Boolean    @default(false)
+  sistemaLAFT             Boolean    @default(false)
+  productoServicio        String
+  direccionPrincipal      String
+  departamento            String
+  ciudad                  String
+  correoElectronico       String
+  telefonoFijo            String?
+  telefonoCelular         String?
+  rlPrimerApellido        String
+  rlSegundoApellido       String
+  rlNombres               String
+  rlTipoIdentificacion    String
+  rlNumeroDocumento       String
+  rlFechaExpedicion       DateTime
+  rlLugarExpedicion       String
+  rlFechaVencimiento      DateTime?
+  rlGenero                String
+  rlEstadoCivil           String
+  rlFechaNacimiento       DateTime
+  rlLugarNacimiento       String
+  pepRecursosPublicos     Boolean    @default(false)
+  pepFamiliaresPublicos   Boolean    @default(false)
+  pepCargosPublicos       Boolean    @default(false)
+  pepSistemaLAFT          Boolean    @default(false)
+}
+
+model ClientePrincipal {
+  id                      String     @id @default(cuid())
+  formularioId            String
+  formulario              Formulario @relation(fields: [formularioId], references: [id])
+  nombreRazonSocial       String
+  porcentajeParticipacion String     @default("0")
+
+  @@index([formularioId])
+}
+
+model Accionista {
+  id                      String     @id @default(cuid())
+  formularioId            String
+  formulario              Formulario @relation(fields: [formularioId], references: [id])
+  tipoIdentificacion      String
+  numeroDocumento         String
+  nombreRazonSocial       String
+  recursosPublicos        Boolean    @default(false)
+  cargoPoder              Boolean    @default(false)
+  reconocidoPublicamente  Boolean    @default(false)
+  declaracionPais         String
+  porcentajeParticipacion Decimal    @db.Decimal(5, 2)
+
+  @@index([formularioId])
+}
+
+model InfoFinanciera {
+  id                         String     @id @default(cuid())
+  formularioId               String     @unique
+  formulario                 Formulario @relation(fields: [formularioId], references: [id])
+  totalActivo                Decimal    @db.Decimal(15, 2)
+  totalPasivo                Decimal    @db.Decimal(15, 2)
+  totalPatrimonio            Decimal    @db.Decimal(15, 2)
+  ingresosMensuales          Decimal    @db.Decimal(15, 2)
+  egresosMensuales           Decimal    @db.Decimal(15, 2)
+  fuenteOtrosIngresos        String?
+  otrosIngresosMensuales     Decimal?   @db.Decimal(15, 2)
+  operacionesInternacionales Boolean    @default(false)
+  detalleOperaciones         String?    @db.Text
+}
+
+model ReferenciaComercial {
+  id                String     @id @default(cuid())
+  formularioId      String
+  formulario        Formulario @relation(fields: [formularioId], references: [id])
+  nombreRazonSocial String
+  telefonoFijo      String
+  telefonoCelular   String
+  direccion         String
+
+  @@index([formularioId])
+}
+
+model EncuestaProveedor {
+  id                             String     @id @default(cuid())
+  formularioId                   String     @unique
+  formulario                     Formulario @relation(fields: [formularioId], references: [id])
+  trayectoriaExperiencia         String
+  cantidadProyectos              String
+  montosProyectos                String
+  marketShareLocal               String
+  certificacionesInternacionales Boolean
+  detallesCertificaciones        String?
+  polizasSeguros                 Boolean
+  detallesPolizas                String?
+  prestacionesLey                Boolean
+  programaSeguridadSalud         Boolean
+  creditoOtorga                  String
+  garantiasFianzas               Boolean
+  presenciaRegional              String
+  marketShareRegional            String
+  campanasReciclaje              Boolean
+  detallesReciclaje              String?
+}
+
+model Documento {
+  id            String     @id @default(cuid())
+  formularioId  String
+  formulario    Formulario @relation(fields: [formularioId], references: [id])
+  tipo          String
+  nombreArchivo String
+  rutaNAS       String
+  tamanoBytes   Int
+  creadoEn      DateTime   @default(now())
+
+  @@index([formularioId])
+}
+

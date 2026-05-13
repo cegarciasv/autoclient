@@ -1,0 +1,29 @@
+# Dependencias (se reinstalan dentro del container)
+node_modules
+npm-debug.log*
+
+# Output de build (se genera dentro del container)
+.next
+out
+
+# Variables de entorno locales (NUNCA incluir en la imagen)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# Editores y OS
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
+.vscode
+.idea
+
+# Archivos de desarrollo
+scripts/
+*.sh.bak
+README.md

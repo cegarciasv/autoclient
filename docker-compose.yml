@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql://gruporemor:${DB_PASSWORD}@db:3306/gruporemor
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_FORMULARIO_SECRET: ${JWT_FORMULARIO_SECRET}
+      SMTP_HOST: smtp.office365.com
+      SMTP_PORT: "587"
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM: ${SMTP_FROM}
+      NAS_BASE_PATH: /mnt/nas/gruporemor/expedientes
+      APP_URL: ${APP_URL}
+    volumes:
+      - /mnt/nas:/mnt/nas
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: gruporemor
+      MYSQL_USER: gruporemor
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "gruporemor", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
