@@ -4,9 +4,13 @@ const nextConfig: NextConfig = {
   // Genera output standalone para Docker (copia sólo lo necesario en .next/standalone)
   output: "standalone",
 
-  // pdfkit necesita acceso real al sistema de archivos (busca sus fuentes .afm en node_modules).
-  // Sin esto, Next.js/Turbopack lo virtualiza y falla con ENOENT en los archivos de fuentes.
-  serverExternalPackages: ["pdfkit"],
+  // Paquetes que Turbopack NO debe bundlear — necesitan el sistema de archivos real
+  // o tienen módulos nativos que no sobreviven al proceso de bundling.
+  serverExternalPackages: [
+    "pdfkit",           // busca fuentes .afm en su propio node_modules
+    "mariadb",          // usa net/tls de Node.js directamente
+    "@prisma/adapter-mariadb", // depende de mariadb
+  ],
 };
 
 export default nextConfig;
