@@ -29,12 +29,16 @@ if [ -n "$DB_HOST" ]; then
 fi
 
 # ── Aplicar schema a la base de datos ────────────────────────
+# Invocamos Prisma directo con node para evitar el bug del symlink .bin/prisma
+# en builds multi-stage de Docker (COPY dereferencia symlinks y deja el bundle
+# de Prisma sin sus WASMs adyacentes).
+PRISMA="node ./node_modules/prisma/build/index.js"
 if [ -d "./prisma/migrations" ] && [ "$(ls -A ./prisma/migrations 2>/dev/null)" ]; then
   echo "→ Aplicando migraciones (migrate deploy)..."
-  ./node_modules/.bin/prisma migrate deploy
+  $PRISMA migrate deploy
 else
   echo "→ Sin migraciones encontradas — sincronizando schema (db push)..."
-  ./node_modules/.bin/prisma db push --skip-generate
+  $PRISMA db push --skip-generate
 fi
 echo "✓ Base de datos lista"
 

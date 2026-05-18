@@ -55,7 +55,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/public           ./public
 
 # ── Prisma CLI + engines (para migrate deploy en entrypoint) ──
 # No están en el standalone porque no son importados por el código de la app.
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin/prisma      ./node_modules/.bin/prisma
+# OJO: NO copiar /app/node_modules/.bin/prisma — en Alpine es un symlink a
+# prisma/build/index.js y `COPY` lo dereferencia, dejando el bundle suelto en
+# .bin/ donde no encuentra sus WASMs adyacentes. El entrypoint invoca Prisma
+# directamente con `node ./node_modules/prisma/build/index.js`.
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma            ./node_modules/prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma           ./node_modules/@prisma
 
