@@ -29,18 +29,26 @@ if [ -n "$DB_HOST" ]; then
 fi
 
 # ── Aplicar schema a la base de datos ────────────────────────
+# Por defecto se saltan las migraciones — el schema se gestiona manualmente
+# (dump SQL, herramienta externa, etc.). Para reactivarlo, lanza el contenedor
+# con RUN_MIGRATIONS=true.
+#
 # Prisma CLI vive en /prisma-cli (instalación aislada con todas sus deps).
-# Lo invocamos con node directamente. El symlink /app/node_modules/prisma
-# permite que prisma.config.ts resuelva `import "prisma/config"`.
-PRISMA="node /prisma-cli/node_modules/prisma/build/index.js"
-if [ -d "./prisma/migrations" ] && [ "$(ls -A ./prisma/migrations 2>/dev/null)" ]; then
-  echo "→ Aplicando migraciones (migrate deploy)..."
-  $PRISMA migrate deploy
+# El symlink /app/node_modules/prisma permite que prisma.config.ts resuelva
+# `import "prisma/config"` correctamente.
+if [ "$RUN_MIGRATIONS" = "true" ]; then
+  PRISMA="node /prisma-cli/node_modules/prisma/build/index.js"
+  if [ -d "./prisma/migrations" ] && [ "$(ls -A ./prisma/migrations 2>/dev/null)" ]; then
+    echo "→ Aplicando migraciones (migrate deploy)..."
+    $PRISMA migrate deploy
+  else
+    echo "→ Sin migraciones encontradas — sincronizando schema (db push)..."
+    $PRISMA db push --skip-generate
+  fi
+  echo "✓ Base de datos lista"
 else
-  echo "→ Sin migraciones encontradas — sincronizando schema (db push)..."
-  $PRISMA db push --skip-generate
+  echo "→ RUN_MIGRATIONS != true → saltando migraciones (schema gestionado manualmente)"
 fi
-echo "✓ Base de datos lista"
 
 # ── Iniciar servidor Next.js ──────────────────────────────────
 echo "→ Iniciando servidor en :${PORT:-3000} ..."
