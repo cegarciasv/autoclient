@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npx prisma *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "PowerShell(Remove-Item -Recurse -Force .next; $env:DATABASE_URL=$null; $env:JWT_SECRET=$null; $env:JWT_FORMULARIO_SECRET=$null; npm run build 2>&1 | Select-Object -Last 20)",
+      "Bash(echo \"---EXIT: $?\")",
+      "Bash(grep -E \"/admin/\" /tmp/build.log 2>/dev/null ; mv .env .env.bak && rm -rf .next && npm run build 2>&1 | grep -E \"○|ƒ\" | grep admin ; mv .env.bak .env)",
+      "Read(//tmp/**)"
     ]
   }
 }

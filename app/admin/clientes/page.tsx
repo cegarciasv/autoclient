@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import TablaTerceros from "@/components/admin/TablaTerceros";
 
+export const dynamic = "force-dynamic";
+
 export default async function ClientesPage() {
   const clientes = await prisma.tercero.findMany({
     where: { tipo: "CLIENTE" },

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const [totalClientes, totalProveedores, pendientes, enProceso, completados, recientes] =
     await Promise.all([
