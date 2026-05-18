@@ -53,18 +53,23 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static     ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public           ./public
 
-# ── Prisma CLI + engines (para migrate deploy en entrypoint) ──
-# No están en el standalone porque no son importados por el código de la app.
-# OJO: NO copiar /app/node_modules/.bin/prisma — en Alpine es un symlink a
-# prisma/build/index.js y `COPY` lo dereferencia, dejando el bundle suelto en
-# .bin/ donde no encuentra sus WASMs adyacentes. El entrypoint invoca Prisma
-# directamente con `node ./node_modules/prisma/build/index.js`.
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma            ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma           ./node_modules/@prisma
-
 # ── Schema y migraciones ──────────────────────────────────────
 COPY --from=builder --chown=nextjs:nodejs /app/prisma          ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
+
+# ── Prisma CLI (instalación aislada con todas sus deps transitivas) ──
+# Copiar /app/node_modules/prisma desde el builder no basta: el CLI carga
+# @prisma/config en runtime, que a su vez requiere effect/c12/etc. — paquetes
+# que viven en el top-level de node_modules y se perderían al cherry-picking.
+# Tampoco vale copiar .bin/prisma (en Alpine es un symlink y COPY lo
+# dereferencia, dejando el bundle sin sus WASMs adyacentes).
+# Solución: instalación limpia en /prisma-cli + symlink en node_modules/prisma
+# para que prisma.config.ts pueda resolver `import "prisma/config"`.
+RUN mkdir /prisma-cli && cd /prisma-cli && \
+    echo '{"name":"prisma-runner","version":"1.0.0","private":true}' > package.json && \
+    npm install --no-package-lock --omit=dev prisma@7.8.0 && \
+    ln -sf /prisma-cli/node_modules/prisma /app/node_modules/prisma && \
+    chown -R nextjs:nodejs /prisma-cli
 
 # ── pdfkit y sus dependencias ─────────────────────────────────
 # serverExternalPackages evita que Turbopack lo bundle, pero en standalone

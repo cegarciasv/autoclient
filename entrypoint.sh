@@ -29,10 +29,10 @@ if [ -n "$DB_HOST" ]; then
 fi
 
 # ── Aplicar schema a la base de datos ────────────────────────
-# Invocamos Prisma directo con node para evitar el bug del symlink .bin/prisma
-# en builds multi-stage de Docker (COPY dereferencia symlinks y deja el bundle
-# de Prisma sin sus WASMs adyacentes).
-PRISMA="node ./node_modules/prisma/build/index.js"
+# Prisma CLI vive en /prisma-cli (instalación aislada con todas sus deps).
+# Lo invocamos con node directamente. El symlink /app/node_modules/prisma
+# permite que prisma.config.ts resuelva `import "prisma/config"`.
+PRISMA="node /prisma-cli/node_modules/prisma/build/index.js"
 if [ -d "./prisma/migrations" ] && [ "$(ls -A ./prisma/migrations 2>/dev/null)" ]; then
   echo "→ Aplicando migraciones (migrate deploy)..."
   $PRISMA migrate deploy
