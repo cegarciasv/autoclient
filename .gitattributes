@@ -1,0 +1,4 @@
+# Fuerza LF en archivos shell para que el contenedor Alpine pueda ejecutarlos.
+# Sin esto, un checkout en Windows con autocrlf=true rompe el shebang.
+*.sh text eol=lf
+entrypoint.sh text eol=lf
