@@ -54,7 +54,7 @@ async function enviarLinkReal(
     subject: `Grupo Remor — Formulario de Vinculación ${tipo === "CLIENTE" ? "de Cliente" : "de Proveedor"}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background-color: #1e3a5f; padding: 20px; text-align: center;">
+        <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
           <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
         </div>
         <div style="padding: 30px; background: #f9f9f9;">
@@ -64,7 +64,7 @@ async function enviarLinkReal(
             para conocimiento de nuestras contrapartes y cumplimiento de nuestros procesos internos.
           </p>
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${url}" style="background-color: #1e3a5f; color: white; padding: 14px 28px;
+            <a href="${url}" style="background-color: #1B3C22; color: white; padding: 14px 28px;
                text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">
               Completar Formulario
             </a>
@@ -115,15 +115,15 @@ async function enviarOTPReal(destinatario: string, razonSocial: string, codigo: 
     subject: "Grupo Remor — Código de verificación",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background-color: #1e3a5f; padding: 20px; text-align: center;">
+        <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
           <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
         </div>
         <div style="padding: 30px; background: #f9f9f9; text-align: center;">
           <p>Estimado/a <strong>${razonSocial}</strong>,</p>
           <p>Su código de verificación para acceder al formulario es:</p>
           <div style="font-size: 36px; font-weight: bold; letter-spacing: 8px;
-               color: #1e3a5f; margin: 20px 0; padding: 20px;
-               background: white; border-radius: 8px; border: 2px solid #1e3a5f;">
+               color: #1B3C22; margin: 20px 0; padding: 20px;
+               background: white; border-radius: 8px; border: 2px solid #1B3C22;">
             ${codigo}
           </div>
           <p style="color: #666; font-size: 13px;">

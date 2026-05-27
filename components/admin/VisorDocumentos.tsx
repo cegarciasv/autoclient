@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   FileText, Eye, Download, ChevronLeft, ChevronRight,
-  Loader2, AlertCircle, ExternalLink, X, Files,
+  Loader2, AlertCircle, ExternalLink, X,
 } from "lucide-react";
 
 export interface DocItem {
@@ -133,7 +133,7 @@ export default function VisorDocumentos({ terceroId, documentos }: Props) {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => abrirDoc(doc)}
-                className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1e3a5f] text-white text-xs font-medium hover:bg-[#162d4a] transition-colors shadow-sm"
+                className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1A7A30] text-white text-xs font-medium hover:bg-[#155E25] transition-colors shadow-sm"
               >
                 <Eye className="h-3.5 w-3.5" />
                 Ver
@@ -177,8 +177,7 @@ export default function VisorDocumentos({ terceroId, documentos }: Props) {
                   {documentos.length > 1 && (
                     <>
                       <span className="text-slate-600">·</span>
-                      <span className="flex items-center gap-1">
-                        <Files className="h-3 w-3" />
+                      <span>
                         {idx + 1} de {documentos.length}
                       </span>
                     </>
@@ -246,65 +245,27 @@ export default function VisorDocumentos({ terceroId, documentos }: Props) {
             </div>
           </div>
 
-          {/* ── Miniaturas laterales (si hay más de 1 doc) ── */}
+          {/* ── Área del visor (ocupa todo el ancho disponible) ── */}
           <div className="flex flex-1 min-h-0">
-            {documentos.length > 1 && (
-              <div className="w-52 flex-shrink-0 bg-slate-900 border-r border-slate-700/40 overflow-y-auto hidden lg:block">
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider px-3 pt-3 pb-2">
-                  Documentos ({documentos.length})
-                </p>
-                <div className="space-y-0.5 px-2 pb-3">
-                  {documentos.map((doc, i) => (
-                    <button
-                      key={doc.id}
-                      onClick={() => abrirDoc(doc)}
-                      className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-start gap-2.5 ${
-                        activo.id === doc.id
-                          ? "bg-blue-600 text-white shadow-md"
-                          : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-                      }`}
-                    >
-                      <span className={`flex-shrink-0 text-[10px] font-bold w-4 mt-0.5 ${
-                        activo.id === doc.id ? "text-blue-200" : "text-slate-600"
-                      }`}>
-                        {i + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium truncate leading-tight">
-                          {etiqueta(doc.tipo)}
-                        </p>
-                        <p className={`text-[10px] mt-0.5 truncate ${
-                          activo.id === doc.id ? "text-blue-200" : "text-slate-500"
-                        }`}>
-                          {fmtTamano(doc.tamanoBytes)}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ── Área del visor ── */}
-            <div className="flex-1 relative bg-slate-800 min-w-0">
+            <div className="flex-1 relative bg-white min-w-0">
 
               {/* Spinner de carga */}
               {cargando && !error && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10 gap-4">
-                  <Loader2 className="h-10 w-10 text-blue-400 animate-spin" />
-                  <p className="text-sm text-slate-400">Cargando documento...</p>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-10 gap-4">
+                  <Loader2 className="h-10 w-10 text-[#1A7A30] animate-spin" />
+                  <p className="text-sm text-slate-500">Cargando documento...</p>
                 </div>
               )}
 
               {/* Error */}
               {error && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10 gap-5">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-10 gap-5">
                   <div className="h-16 w-16 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center justify-center">
                     <AlertCircle className="h-8 w-8 text-red-400" />
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-semibold text-slate-200">No se pudo cargar el documento</p>
-                    <p className="text-xs text-slate-500 mt-1">El archivo podría no estar disponible.</p>
+                    <p className="text-sm font-semibold text-slate-700">No se pudo cargar el documento</p>
+                    <p className="text-xs text-slate-500 mt-1">El archivo podría no estar disponible en el servidor.</p>
                   </div>
                   <a
                     href={urlDoc(activo.id)}
@@ -317,10 +278,10 @@ export default function VisorDocumentos({ terceroId, documentos }: Props) {
                 </div>
               )}
 
-              {/* iFrame PDF */}
+              {/* iFrame PDF — FitW encaja el ancho completo de la página */}
               <iframe
                 key={activo.id}
-                src={`${urlDoc(activo.id)}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
+                src={`${urlDoc(activo.id)}#toolbar=1&navpanes=0&scrollbar=1&view=FitW&zoom=page-width`}
                 className="w-full h-full border-0"
                 title={activo.nombreArchivo}
                 onLoad={() => setCargando(false)}

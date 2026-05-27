@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import VisorDocumentos from "@/components/admin/VisorDocumentos";
 import BotonesEstado from "@/components/admin/BotonesEstado";
+import FichaSAP from "@/components/admin/FichaSAP";
+import { Database } from "lucide-react";
 
 /* ── Helpers ─────────────────────────────────────── */
 function fmtFecha(v: unknown): string {
@@ -45,7 +47,7 @@ function InfoItem({ label, value, wide }: { label: string; value: string; wide?:
 function SeccionHeader({ icon: Icon, titulo }: { icon: React.ElementType; titulo: string }) {
   return (
     <CardHeader className="pb-3 border-b border-gray-100">
-      <CardTitle className="text-sm font-semibold text-[#1e3a5f] flex items-center gap-2">
+      <CardTitle className="text-sm font-semibold text-[#1B3C22] flex items-center gap-2">
         <Icon className="h-4 w-4" />
         {titulo}
       </CardTitle>
@@ -56,7 +58,7 @@ function SeccionHeader({ icon: Icon, titulo }: { icon: React.ElementType; titulo
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; cls: string; icon: React.ReactNode }> = {
     PENDIENTE:  { label: "Pendiente",  cls: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: <Clock className="h-3 w-3" /> },
-    EN_PROCESO: { label: "En proceso", cls: "bg-blue-100 text-blue-800 border-blue-200",       icon: <Loader2 className="h-3 w-3" /> },
+    EN_PROCESO: { label: "En proceso", cls: "bg-[#1A7A30]/10 text-[#1B3C22] border-[#1A7A30]/20",       icon: <Loader2 className="h-3 w-3" /> },
     COMPLETADO: { label: "Completado", cls: "bg-green-100 text-green-800 border-green-200",    icon: <CheckCircle2 className="h-3 w-3" /> },
   };
   const e = map[estado] ?? { label: estado, cls: "", icon: null };
@@ -159,7 +161,7 @@ export default async function DetalleProveedorPage({
         const pct = completado ? 100 : f.progreso;
         const barColor = completado
           ? "bg-gradient-to-r from-emerald-400 to-emerald-600"
-          : pct >= 70 ? "bg-gradient-to-r from-blue-500 to-blue-700"
+          : pct >= 70 ? "bg-gradient-to-r from-[#1A7A30] to-[#1B3C22]"
           : pct >= 40 ? "bg-gradient-to-r from-amber-400 to-amber-600"
           : "bg-gradient-to-r from-red-400 to-red-600";
         return (
@@ -167,7 +169,7 @@ export default async function DetalleProveedorPage({
             <CardContent className="pt-4 pb-3">
               <div className="flex items-center justify-between mb-1.5">
                 <p className="text-sm font-medium text-gray-700">Progreso del formulario</p>
-                <span className={`text-sm font-bold ${completado ? "text-emerald-700" : "text-[#1e3a5f]"}`}>
+                <span className={`text-sm font-bold ${completado ? "text-emerald-700" : "text-[#1B3C22]"}`}>
                   {pct}%{completado ? " — Completado ✓" : ""}
                 </span>
               </div>
@@ -182,22 +184,58 @@ export default async function DetalleProveedorPage({
         );
       })()}
 
+      {/* ── Ficha SAP ── */}
+      {ig && (
+        <Card className="border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] px-5 py-3 flex items-center gap-2">
+            <Database className="h-4 w-4 text-green-300 flex-shrink-0" />
+            <span className="text-sm font-bold text-white">Ficha SAP</span>
+            <span className="text-xs text-slate-400 ml-1">— Datos esenciales para registro</span>
+          </div>
+          <CardContent className="pt-4 pb-5">
+            <FichaSAP campos={[
+              { label: "Nombre Comercial",                    valor: val(ig.nombreComercial) },
+              { label: "Nombre completo / Razón Social",      valor: val(ig.razonSocial) },
+              { label: "N° de Registro (NRC)",                valor: val(ig.nrc) },
+              { label: "NIT",                                  valor: val(ig.nit) },
+              { label: "Giro / Actividad Económica",           valor: val(ig.actividadReal) },
+              { label: "Código de Actividad Económica",        valor: val(ig.codigoActividadEconomica) },
+              { label: "Categoría de Contribuyente",           valor: val(ig.categoriaContribuyente) },
+              { label: "Dirección",                            valor: val(ig.direccionPrincipal) },
+              { label: "Celular",                              valor: val(ig.telefonoCelular) },
+              { label: "Teléfono",                             valor: val(ig.telefonoFijo) },
+              { label: "Nombre de Contacto",                   valor: val(ig.nombreContacto) },
+              { label: "Correo del Vendedor",                  valor: val(ig.correoVendedor) },
+              { label: "Correo de Comprobantes de Pago",       valor: val(ig.correoComprobantes) },
+              { label: "N° de Cuenta Bancaria (sin guiones)",  valor: val(ig.numeroCuentaBancaria) },
+              { label: "Titular de la Cuenta",                 valor: val(ig.titularCuenta) },
+              { label: "Tipo de Cuenta",                       valor: val(ig.tipoCuenta) },
+              { label: "Banco",                                valor: val(ig.banco) },
+            ]} />
+          </CardContent>
+        </Card>
+      )}
+
       {/* ── Información de la Empresa ── */}
+
       {ig && (
         <Card>
           <SeccionHeader icon={Building2} titulo="Información de la Empresa" />
           <CardContent className="pt-4">
             <dl className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4 text-sm">
-              <InfoItem label="Razón Social"          value={val(ig.razonSocial)} />
-              <InfoItem label="Nombre Comercial"      value={val(ig.nombreComercial)} />
-              <InfoItem label="NIT"                   value={val(ig.nit)} />
-              <InfoItem label="Número de IVA"         value={val(ig.iva)} />
-              <InfoItem label="Tipo de Empresa"       value={val(ig.tipoEmpresa)} />
-              <InfoItem label="Actividad Económica"   value={val(ig.tipoActividadEconomica)} />
-              <InfoItem label="Actividad Real / Giro" value={val(ig.actividadReal)} wide />
-              <InfoItem label="Producto / Servicio"   value={val(ig.productoServicio)} wide />
-              <InfoItem label="Obligaciones Tributarias" value={fmtBool(ig.obligacionesTributarias)} />
-              <InfoItem label="Sistema LAFT"          value={fmtBool(ig.sistemaLAFT)} />
+              <InfoItem label="Razón Social"               value={val(ig.razonSocial)} />
+              <InfoItem label="Nombre Comercial"           value={val(ig.nombreComercial)} />
+              <InfoItem label="NIT"                        value={val(ig.nit)} />
+              <InfoItem label="Número de IVA"              value={val(ig.iva)} />
+              <InfoItem label="N° de Registro (NRC)"       value={val(ig.nrc)} />
+              <InfoItem label="Tipo de Empresa"            value={val(ig.tipoEmpresa)} />
+              <InfoItem label="Actividad Económica"        value={val(ig.tipoActividadEconomica)} />
+              <InfoItem label="Código Act. Económica"      value={val(ig.codigoActividadEconomica)} />
+              <InfoItem label="Categoría Contribuyente"    value={val(ig.categoriaContribuyente)} />
+              <InfoItem label="Actividad Real / Giro"      value={val(ig.actividadReal)} wide />
+              <InfoItem label="Producto / Servicio"        value={val(ig.productoServicio)} wide />
+              <InfoItem label="Obligaciones Tributarias"   value={fmtBool(ig.obligacionesTributarias)} />
+              <InfoItem label="Sistema LAFT"               value={fmtBool(ig.sistemaLAFT)} />
             </dl>
           </CardContent>
         </Card>
@@ -215,6 +253,30 @@ export default async function DetalleProveedorPage({
               <InfoItem label="Correo Electrónico"  value={val(ig.correoElectronico)} />
               <InfoItem label="Teléfono Fijo"       value={val(ig.telefonoFijo)} />
               <InfoItem label="Teléfono Celular"    value={val(ig.telefonoCelular)} />
+              {ig.nombreContacto && (
+                <InfoItem label="Nombre de Contacto"  value={val(ig.nombreContacto)} />
+              )}
+              {ig.correoVendedor && (
+                <InfoItem label="Correo Vendedor"     value={val(ig.correoVendedor)} />
+              )}
+              {ig.correoComprobantes && (
+                <InfoItem label="Correo Comprobantes" value={val(ig.correoComprobantes)} wide />
+              )}
+            </dl>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Información Bancaria (Proveedor) ── */}
+      {ig && (ig.banco || ig.numeroCuentaBancaria) && (
+        <Card>
+          <SeccionHeader icon={ClipboardList} titulo="Información Bancaria" />
+          <CardContent className="pt-4">
+            <dl className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4 text-sm">
+              <InfoItem label="Banco"                value={val(ig.banco)} />
+              <InfoItem label="Tipo de Cuenta"       value={val(ig.tipoCuenta)} />
+              <InfoItem label="Titular de la Cuenta" value={val(ig.titularCuenta)} />
+              <InfoItem label="N° de Cuenta (sin guiones)" value={val(ig.numeroCuentaBancaria)} wide />
             </dl>
           </CardContent>
         </Card>

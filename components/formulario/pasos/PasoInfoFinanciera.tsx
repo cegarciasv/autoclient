@@ -90,7 +90,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
       <div className="space-y-6">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1e3a5f]">Balance General</CardTitle>
+            <CardTitle className="text-base text-[#1B3C22]">Balance General</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-gray-500">
@@ -107,7 +107,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1e3a5f]">Flujo de Ingresos y Egresos</CardTitle>
+            <CardTitle className="text-base text-[#1B3C22]">Flujo de Ingresos y Egresos</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -129,7 +129,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1e3a5f]">Operaciones Internacionales</CardTitle>
+            <CardTitle className="text-base text-[#1B3C22]">Operaciones Internacionales</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-2">
@@ -149,7 +149,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
                 <textarea
                   {...register("detalleOperaciones")}
                   rows={3}
-                  className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
+                  className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#1A7A30] focus:border-transparent"
                   placeholder="Describa los países, tipo de operaciones y montos aproximados..."
                 />
               </div>
@@ -170,7 +170,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
             >
               Guardar borrador
             </Button>
-            <Button type="submit" disabled={guardando} className="bg-[#1e3a5f] hover:bg-[#162d4a]">
+            <Button type="submit" disabled={guardando} className="bg-[#1A7A30] hover:bg-[#155E25]">
               {guardando ? "Guardando..." : "Siguiente →"}
             </Button>
           </div>

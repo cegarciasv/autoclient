@@ -47,11 +47,11 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-2">
       {/* ── Panel izquierdo (solo desktop) ── */}
-      <div className="hidden lg:flex flex-col justify-between bg-slate-900 px-12 py-16 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-[#1B3C22] px-12 py-16 relative overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-800/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#1A7A30]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1A7A30]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
           {/* Grid sutil */}
           <div
             className="absolute inset-0 opacity-[0.03]"
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="relative flex items-center gap-3">
-          <div className="bg-blue-600 rounded-xl p-2.5 shadow-lg shadow-blue-600/30">
+          <div className="bg-[#1A7A30] rounded-xl p-2.5 shadow-lg shadow-[#1A7A30]/30">
             <Building2 className="h-6 w-6 text-white" />
           </div>
           <div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
             <h2 className="text-4xl font-bold text-white leading-tight">
               Panel de
               <br />
-              <span className="text-blue-400">Administración</span>
+              <span className="text-[#4ade80]">Administración</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed max-w-sm">
               Gestiona el proceso de vinculación de clientes y proveedores desde
@@ -93,8 +93,8 @@ export default function LoginPage() {
           {/* Bullet points */}
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
-                <ShieldCheck className="h-4 w-4 text-blue-400" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <ShieldCheck className="h-4 w-4 text-[#4ade80]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -107,8 +107,8 @@ export default function LoginPage() {
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
-                <Zap className="h-4 w-4 text-blue-400" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <Zap className="h-4 w-4 text-[#4ade80]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -121,8 +121,8 @@ export default function LoginPage() {
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
-                <BarChart3 className="h-4 w-4 text-blue-400" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <BarChart3 className="h-4 w-4 text-[#4ade80]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -148,11 +148,11 @@ export default function LoginPage() {
       <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 bg-slate-50 px-6 py-12">
         {/* Logo visible solo en móvil */}
         <div className="lg:hidden flex items-center gap-3 mb-10">
-          <div className="bg-[#1e3a5f] rounded-xl p-2.5 shadow-lg shadow-blue-900/20">
+          <div className="bg-[#1A7A30] rounded-xl p-2.5 shadow-lg shadow-black/10">
             <Building2 className="h-6 w-6 text-white" />
           </div>
           <div>
-            <p className="font-bold text-[#1e3a5f] text-lg tracking-tight leading-none">
+            <p className="font-bold text-[#1B3C22] text-lg tracking-tight leading-none">
               GRUPO REMOR
             </p>
             <p className="text-xs text-slate-500 mt-0.5">Sistema de Vinculación</p>
@@ -192,7 +192,7 @@ export default function LoginPage() {
                     placeholder="usuario@gruporemor.com.sv"
                     required
                     autoFocus
-                    className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 text-sm transition-colors"
+                    className="pl-10 h-12 border-slate-200 focus:border-[#1A7A30] focus:ring-[#1A7A30]/20 text-sm transition-colors"
                   />
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 text-sm transition-colors"
+                    className="pl-10 h-12 border-slate-200 focus:border-[#1A7A30] focus:ring-[#1A7A30]/20 text-sm transition-colors"
                   />
                 </div>
               </div>
@@ -231,7 +231,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={cargando}
-                className="w-full h-12 text-white font-semibold text-sm rounded-xl bg-gradient-to-r from-[#1e3a5f] to-[#2a5298] hover:from-[#162d4a] hover:to-[#1e3a5f] shadow-md shadow-blue-900/15 transition-all duration-200"
+                className="w-full h-12 text-white font-semibold text-sm rounded-xl bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] hover:from-[#155E25] hover:to-[#1A7A30] shadow-md shadow-green-900/15 transition-all duration-200"
               >
                 {cargando ? (
                   <span className="flex items-center gap-2">

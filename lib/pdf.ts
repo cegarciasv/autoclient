@@ -70,8 +70,8 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       const ML      = 50;                      // margen izquierdo
       const MR      = 50;                      // margen derecho
       const CW      = W - ML - MR;            // 512 — ancho del contenido
-      const AZUL    = "#1e3a5f";
-      const AZUL2   = "#2d5186";
+      const AZUL    = "#1B3C22";
+      const AZUL2   = "#1A7A30";
       const GRIS    = "#4b5563";
       const GRIS_L  = "#9ca3af";
       const LINEA   = "#e5e7eb";
@@ -160,9 +160,9 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       function campo(label: string, valor: string, x: number, w: number) {
         checkPagina(28);
         doc.fillColor(GRIS_L).font("Helvetica").fontSize(6.5)
-          .text(label.toUpperCase(), x, Y, { width: w });
+          .text(label.toUpperCase(), x, Y, { width: w, lineBreak: false });
         doc.fillColor(valor === "—" ? GRIS_L : "#111827").font("Helvetica-Bold").fontSize(9)
-          .text(valor, x, Y + 8, { width: w });
+          .text(valor, x, Y + 8, { width: w, lineBreak: false });
       }
 
       /** Dos campos en columna (izquierda y derecha) */
@@ -176,11 +176,17 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         avanzar(6);
       }
 
-      /** Un campo de ancho completo */
+      /** Un campo de ancho completo (permite wrap para textos largos) */
       function fila1(label: string, valor: string, altura = 28) {
         checkPagina(altura + 4);
-        campo(label, valor, ML, CW);
-        avanzar(altura);
+        // Para fila1 permitimos wrap del valor (puede ser texto largo)
+        doc.fillColor(GRIS_L).font("Helvetica").fontSize(6.5)
+          .text(label.toUpperCase(), ML, Y, { width: CW, lineBreak: false });
+        doc.fillColor(valor === "—" ? GRIS_L : "#111827").font("Helvetica-Bold").fontSize(9)
+          .text(valor, ML, Y + 8, { width: CW });
+        // Usar la posición real del cursor de PDFKit para no pisar contenido
+        const realY = Math.max(doc.y, Y + altura);
+        Y = realY;
         linea(Y);
         avanzar(6);
       }
@@ -473,7 +479,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       seccion("9. Declaración Jurada y Firma");
 
       avanzar(10);
-      doc.rect(ML, Y, CW, 60).fill("#f0f9ff").stroke("#bae6fd");
+      doc.rect(ML, Y, CW, 80).fill("#f0f9ff").stroke("#bae6fd");
       doc.fillColor("#0c4a6e").font("Helvetica").fontSize(8.5)
         .text(
           "El suscrito, actuando en su calidad de Representante Legal, declara bajo juramento que toda la " +
@@ -482,9 +488,10 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
           "consignados dentro de los treinta (30) días siguientes a su ocurrencia.\n\n" +
           "Autoriza expresamente a Grupo Remor a verificar la información suministrada y a utilizarla " +
           "conforme a sus políticas internas de conocimiento de terceros y prevención de lavado de activos.",
-          ML + 10, Y + 8, { width: CW - 20, align: "justify" }
+          ML + 10, Y + 8, { width: CW - 20, align: "justify", lineBreak: true }
         );
-      avanzar(72);
+      // Avanzar usando la posición real del cursor para que las firmas no solapen el texto
+      Y = Math.max(doc.y + 10, Y + 92);
 
       avanzar(20);
 
@@ -517,24 +524,36 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       doc.fillColor(GRIS_L).font("Helvetica").fontSize(7)
         .text(
           `Documento generado electrónicamente el ${new Date().toLocaleString("es-SV")} | Grupo Remor — Sistema de Vinculación de Terceros`,
-          ML, Y, { width: CW, align: "center" }
+          ML, Y, { width: CW, align: "center", lineBreak: false }
         );
 
       /* ═══════════════════════════════════════════════
          NUMERACIÓN DE PÁGINAS
+         ⚠️ Usamos lineBreak:false para que el cursor
+         interno de PDFKit NO avance más allá del
+         margen inferior y no genere páginas en blanco.
       ═══════════════════════════════════════════════ */
-      const total = doc.bufferedPageRange().count;
+      const range = doc.bufferedPageRange();
+      const total = range.count;
+
+      // ⚠️ CRÍTICO: el margen inferior es 40pt, por lo que maxY() = 792-40 = 752.
+      // Si y >= 752, PDFKit crea una página nueva en lugar de escribir en la actual.
+      // Usamos 738 (bien dentro del área imprimible) con lineBreak:false.
+      const yPiePagina = doc.page.height - doc.page.margins.bottom - 14; // = 738
+
       for (let i = 0; i < total; i++) {
         doc.switchToPage(i);
-        // Saltar portada
-        if (i === 0) continue;
+        if (i === 0) continue; // saltar portada
         doc.fillColor(GRIS_L).font("Helvetica").fontSize(7)
           .text(
             `Página ${i + 1} de ${total}`,
-            0, doc.page.height - 20,
-            { width: W, align: "center" }
+            0, yPiePagina,
+            { width: W, align: "center", lineBreak: false }
           );
       }
+
+      // Volver a la última página antes de finalizar.
+      doc.switchToPage(total - 1);
 
       doc.end();
 

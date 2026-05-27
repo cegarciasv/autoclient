@@ -122,6 +122,18 @@ model InfoGeneral {
   pepFamiliaresPublicos   Boolean    @default(false)
   pepCargosPublicos       Boolean    @default(false)
   pepSistemaLAFT          Boolean    @default(false)
+
+  // ── Campos exclusivos para Proveedores (SAP) ──────────────
+  nrc                      String?   // Número de Registro de Contribuyente
+  codigoActividadEconomica String?   // Código CIIU de actividad
+  categoriaContribuyente   String?   // Grande / Mediano / Pequeño contribuyente
+  nombreContacto           String?   // Nombre del contacto / vendedor
+  correoVendedor           String?   // Correo electrónico del vendedor
+  correoComprobantes       String?   // Correo para recepción de comprobantes de pago
+  numeroCuentaBancaria     String?   // Sin guiones (prioridad Cuscatlán)
+  titularCuenta            String?
+  tipoCuenta               String?   // Ahorro / Corriente
+  banco                    String?
 }
 
 model ClientePrincipal {

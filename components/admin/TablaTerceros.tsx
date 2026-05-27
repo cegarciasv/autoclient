@@ -41,8 +41,8 @@ const ESTADO_MAP = {
   },
   EN_PROCESO: {
     label: "En proceso",
-    cls: "bg-blue-50 text-blue-800 border-blue-200",
-    dot: "bg-blue-500",
+    cls: "bg-[#1A7A30]/10 text-[#1B3C22] border-[#1A7A30]/20",
+    dot: "bg-[#1A7A30]",
     pulse: true,
   },
   COMPLETADO: {
@@ -55,7 +55,7 @@ const ESTADO_MAP = {
 
 function getAvatarColors(tipo: "clientes" | "proveedores") {
   return tipo === "clientes"
-    ? "bg-blue-100 text-blue-700"
+    ? "bg-green-100 text-[#1B3C22]"
     : "bg-purple-100 text-purple-700";
 }
 
@@ -100,7 +100,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <Input
             placeholder="Buscar por nombre, email o documento..."
-            className="pl-9 h-10 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
+            className="pl-9 h-10 border-slate-200 focus:border-[#1A7A30] focus:ring-[#1A7A30]/20 transition-colors"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -109,7 +109,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
           href={`/admin/${tipo}/nuevo`}
           className={buttonVariants({
             className:
-              "bg-[#1e3a5f] hover:bg-[#162d4a] text-white shadow-sm shadow-blue-900/10 transition-all",
+              "bg-[#1A7A30] hover:bg-[#155E25] text-white shadow-sm shadow-green-900/10 transition-all",
           })}
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -121,7 +121,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
       <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-900 hover:bg-slate-900 border-none">
+            <TableRow className="bg-[#1B3C22] hover:bg-[#1B3C22] border-none">
               <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
                 Razón Social
               </TableHead>
@@ -182,7 +182,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                 return (
                   <TableRow
                     key={t.id}
-                    className="group hover:bg-blue-50/50 transition-colors duration-150 border-l-2 border-transparent hover:border-blue-500"
+                    className="group hover:bg-[#1A7A30]/5 transition-colors duration-150 border-l-2 border-transparent hover:border-[#1A7A30]"
                   >
                     {/* Razón Social con avatar */}
                     <TableCell className="py-3">
@@ -258,7 +258,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                           onClick={() => reenviarLink(t.id, t.razonSocial)}
                           disabled={enviando === t.id}
                           title="Reenviar link de formulario"
-                          className="h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                          className="h-8 w-8 p-0 text-slate-500 hover:text-[#1A7A30] hover:bg-green-50 transition-colors"
                         >
                           <Send
                             className={`h-3.5 w-3.5 ${
@@ -273,7 +273,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                             size: "sm",
                             variant: "ghost",
                             className:
-                              "h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors",
+                              "h-8 w-8 p-0 text-slate-500 hover:text-[#1A7A30] hover:bg-green-50 transition-colors",
                           })}
                         >
                           <Eye className="h-3.5 w-3.5" />

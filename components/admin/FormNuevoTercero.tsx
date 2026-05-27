@@ -116,7 +116,7 @@ export default function FormNuevoTercero({ tipo }: Props) {
             />
           </div>
 
-          <p className="text-xs text-gray-500 bg-blue-50 rounded p-2 border border-blue-100">
+          <p className="text-xs text-gray-500 bg-green-50 rounded p-2 border border-green-100">
             Al guardar, se enviará automáticamente un correo con el enlace al formulario.
           </p>
 
@@ -131,7 +131,7 @@ export default function FormNuevoTercero({ tipo }: Props) {
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-[#1e3a5f] hover:bg-[#162d4a]"
+              className="flex-1 bg-[#1A7A30] hover:bg-[#155E25]"
               disabled={cargando}
             >
               {cargando ? "Guardando..." : "Guardar y Enviar Link"}

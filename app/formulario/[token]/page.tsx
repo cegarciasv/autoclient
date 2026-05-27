@@ -27,15 +27,15 @@ function MiniStepper({ active }: { active: 1 | 2 | 3 }) {
             <div className="flex flex-col items-center gap-1">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all
-                  ${done    ? "bg-blue-600 border-blue-600 text-white" : ""}
-                  ${current ? "bg-white border-blue-600 text-blue-600 shadow-md ring-4 ring-blue-100" : ""}
+                  ${done    ? "bg-[#1A7A30] border-[#1A7A30] text-white" : ""}
+                  ${current ? "bg-white border-[#1A7A30] text-[#1A7A30] shadow-md ring-4 ring-[#1A7A30]/10" : ""}
                   ${!done && !current ? "bg-white border-slate-200 text-slate-300" : ""}`}
               >
                 {done ? <Check className="h-4 w-4" /> : <Icon className="h-3.5 w-3.5" />}
               </div>
               <span
                 className={`text-[10px] font-medium leading-none
-                  ${current ? "text-blue-600 font-semibold" : "text-slate-400"}`}
+                  ${current ? "text-[#1A7A30] font-semibold" : "text-slate-400"}`}
               >
                 {step.label}
               </span>
@@ -43,7 +43,7 @@ function MiniStepper({ active }: { active: 1 | 2 | 3 }) {
             {idx < STEPS.length - 1 && (
               <div
                 className={`h-0.5 w-8 mx-1 mb-4 rounded-full transition-all
-                  ${step.id < active ? "bg-blue-600" : "bg-slate-200"}`}
+                  ${step.id < active ? "bg-[#1A7A30]" : "bg-slate-200"}`}
               />
             )}
           </div>
@@ -129,7 +129,7 @@ export default function FormularioLoginPage({
     <div className="max-w-md mx-auto">
       {/* Hero icon */}
       <div className="flex justify-center mb-5">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg ring-4 ring-blue-100">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#1A7A30] to-[#1B3C22] flex items-center justify-center shadow-lg ring-4 ring-[#1A7A30]/10">
           <HeroIcon className="h-8 w-8 text-white" />
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function FormularioLoginPage({
               {error && <ErrorMsg text={error} />}
               <Button
                 type="submit"
-                className="w-full h-11 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 transition-all"
+                className="w-full h-11 bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] hover:from-[#155E25] hover:to-[#1A7A30] transition-all"
                 disabled={cargando}
               >
                 {cargando ? "Verificando..." : "Continuar"}
@@ -184,7 +184,7 @@ export default function FormularioLoginPage({
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="0  0  0  0  0  0"
                   maxLength={6}
-                  className="text-center text-3xl tracking-[0.5em] font-mono h-14 border-2 focus:border-blue-500"
+                  className="text-center text-3xl tracking-[0.5em] font-mono h-14 border-2 focus:border-[#1A7A30]"
                   autoFocus
                   required
                 />
@@ -195,7 +195,7 @@ export default function FormularioLoginPage({
               {error && <ErrorMsg text={error} />}
               <Button
                 type="submit"
-                className="w-full h-11 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 transition-all"
+                className="w-full h-11 bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] hover:from-[#155E25] hover:to-[#1A7A30] transition-all"
                 disabled={cargando || otp.length !== 6}
               >
                 {cargando ? "Verificando..." : "Ingresar al Formulario"}

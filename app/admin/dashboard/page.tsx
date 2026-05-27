@@ -55,8 +55,8 @@ export default async function DashboardPage() {
       label: "Total Clientes",
       value: totalClientes,
       icon: Users,
-      iconBg: "bg-gradient-to-br from-blue-500 to-blue-700",
-      border: "border-blue-100",
+      iconBg: "bg-gradient-to-br from-[#1A7A30] to-[#1B3C22]",
+      border: "border-[#1A7A30]/20",
     },
     {
       label: "Total Proveedores",
@@ -203,7 +203,7 @@ export default async function DashboardPage() {
               href="/admin/clientes/nuevo"
               className={buttonVariants({
                 className:
-                  "w-full bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white font-semibold gap-2 justify-center",
+                  "w-full bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] hover:from-[#155E25] hover:to-[#1A7A30] text-white font-semibold gap-2 justify-center",
               })}
             >
               <UserPlus className="h-4 w-4" />
@@ -242,7 +242,7 @@ export default async function DashboardPage() {
                     <div
                       className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${
                         esCliente
-                          ? "bg-gradient-to-br from-blue-500 to-blue-700"
+                          ? "bg-gradient-to-br from-[#1A7A30] to-[#1B3C22]"
                           : "bg-gradient-to-br from-purple-500 to-purple-700"
                       }`}
                     >
