@@ -74,7 +74,7 @@ async function enviarLinkReal(
             <a href="${url}">${url}</a>
           </p>
           <p style="font-size: 12px; color: #666;">
-            <strong>Nota:</strong> Este enlace es personal e intransferible. Expira en 30 días.
+            <strong>Nota:</strong> Este enlace es personal e intransferible. Expira en 5 días.
           </p>
         </div>
         <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
