@@ -52,7 +52,7 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
     }
 
     const token = generarTokenUnico();
-    const tokenExpira = tokenExpiraEn(30);
+    const tokenExpira = tokenExpiraEn(5);
 
     await prisma.tercero.update({ where: { id }, data: { token, tokenExpira } });
     await enviarLinkFormulario(tercero.email, tercero.razonSocial, token, tercero.tipo);

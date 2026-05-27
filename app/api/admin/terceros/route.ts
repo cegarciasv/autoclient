@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   }
 
   const token = generarTokenUnico();
-  const tokenExpira = tokenExpiraEn(30);
+  const tokenExpira = tokenExpiraEn(5);
 
   const tercero = await prisma.tercero.create({
     data: {
