@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
-  Building2,
   Lock,
   Mail,
   ShieldCheck,
@@ -64,16 +64,15 @@ export default function LoginPage() {
         </div>
 
         {/* Logo */}
-        <div className="relative flex items-center gap-3">
-          <div className="bg-[#1A7A30] rounded-xl p-2.5 shadow-lg shadow-[#1A7A30]/30">
-            <Building2 className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-white text-lg tracking-tight leading-none">
-              GRUPO REMOR
-            </p>
-            <p className="text-xs text-slate-400 mt-0.5">Sistema de Vinculación</p>
-          </div>
+        <div className="relative">
+          <Image
+            src="/logo.png"
+            alt="Grupo Remor"
+            width={180}
+            height={56}
+            className="h-14 w-auto object-contain"
+            priority
+          />
         </div>
 
         {/* Contenido central */}
@@ -147,16 +146,15 @@ export default function LoginPage() {
       {/* ── Panel derecho: formulario ── */}
       <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 bg-slate-50 px-6 py-12">
         {/* Logo visible solo en móvil */}
-        <div className="lg:hidden flex items-center gap-3 mb-10">
-          <div className="bg-[#1A7A30] rounded-xl p-2.5 shadow-lg shadow-black/10">
-            <Building2 className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-[#1B3C22] text-lg tracking-tight leading-none">
-              GRUPO REMOR
-            </p>
-            <p className="text-xs text-slate-500 mt-0.5">Sistema de Vinculación</p>
-          </div>
+        <div className="lg:hidden mb-10">
+          <Image
+            src="/logo.png"
+            alt="Grupo Remor"
+            width={160}
+            height={50}
+            className="h-12 w-auto object-contain"
+            priority
+          />
         </div>
 
         <div className="w-full max-w-md">

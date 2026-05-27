@@ -1,17 +1,22 @@
-import { Building2, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { ShieldCheck } from "lucide-react";
 
 export default function FormularioLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] text-white py-5 px-6 shadow-lg">
+      <header className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/20">
-            <Building2 className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-base leading-tight tracking-wide">GRUPO REMOR</p>
-            <p className="text-xs text-white/60 leading-tight">Formulario de Vinculación de Clientes</p>
+          <Image
+            src="/logo.png"
+            alt="Grupo Remor"
+            width={160}
+            height={50}
+            className="h-12 w-auto object-contain"
+            priority
+          />
+          <div className="border-l border-white/20 pl-4">
+            <p className="text-xs text-white/70 leading-tight">Formulario de Vinculación</p>
           </div>
         </div>
       </header>
@@ -25,12 +30,13 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
 
       <footer className="bg-white border-t border-slate-200 py-4 px-6">
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#1B3C22]">
-              <Building2 className="h-3 w-3 text-white" />
-            </div>
-            <span className="text-xs text-slate-500 font-medium">GRUPO REMOR</span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Grupo Remor"
+            width={90}
+            height={28}
+            className="h-7 w-auto object-contain opacity-70"
+          />
           <span className="text-xs text-slate-400">
             © {new Date().getFullYear()} Grupo Remor · Todos los derechos reservados
           </span>

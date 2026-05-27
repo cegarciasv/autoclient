@@ -2,13 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   LayoutDashboard,
   Users,
   Truck,
   LogOut,
   Menu,
-  Building2,
   X,
 } from "lucide-react";
 import { useState } from "react";
@@ -50,15 +50,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         )}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
-          <div className="bg-[#1A7A30] rounded-lg p-2 shadow-lg shadow-black/20 ring-1 ring-white/10">
-            <Building2 className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-sm tracking-tight leading-none text-white">GRUPO REMOR</p>
-            <p className="text-[11px] text-white/50 mt-1 leading-none">Panel Administrativo</p>
-          </div>
-
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10">
+          <Image
+            src="/logo.png"
+            alt="Grupo Remor"
+            width={150}
+            height={48}
+            className="h-10 w-auto object-contain"
+            priority
+          />
           {/* Cerrar en móvil */}
           <button
             className="ml-auto lg:hidden text-white/50 hover:text-white transition-colors"
@@ -127,12 +127,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <Menu className="h-5 w-5" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="bg-[#1A7A30] rounded-md p-1">
-              <Building2 className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="font-semibold text-sm text-white">Grupo Remor</span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Grupo Remor"
+            width={120}
+            height={36}
+            className="h-8 w-auto object-contain"
+            priority
+          />
         </header>
 
         <main className="flex-1 p-6 lg:p-8 overflow-auto max-w-7xl w-full mx-auto">
