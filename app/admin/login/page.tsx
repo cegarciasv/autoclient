@@ -68,9 +68,9 @@ export default function LoginPage() {
           <Image
             src="/logo.png"
             alt="Grupo Remor"
-            width={180}
-            height={56}
-            className="h-14 w-auto object-contain"
+            width={360}
+            height={112}
+            className="h-28 w-auto object-contain"
             priority
           />
         </div>
@@ -150,9 +150,9 @@ export default function LoginPage() {
           <Image
             src="/logo.png"
             alt="Grupo Remor"
-            width={160}
-            height={50}
-            className="h-12 w-auto object-contain"
+            width={280}
+            height={88}
+            className="h-20 w-auto object-contain"
             priority
           />
         </div>

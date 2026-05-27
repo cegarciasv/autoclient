@@ -50,13 +50,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         )}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10">
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
           <Image
             src="/logo.png"
             alt="Grupo Remor"
-            width={150}
-            height={48}
-            className="h-10 w-auto object-contain"
+            width={300}
+            height={96}
+            className="h-20 w-auto object-contain"
             priority
           />
           {/* Cerrar en móvil */}
@@ -130,9 +130,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Image
             src="/logo.png"
             alt="Grupo Remor"
-            width={120}
-            height={36}
-            className="h-8 w-auto object-contain"
+            width={200}
+            height={56}
+            className="h-14 w-auto object-contain"
             priority
           />
         </header>
