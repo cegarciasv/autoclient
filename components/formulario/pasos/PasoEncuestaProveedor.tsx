@@ -47,8 +47,8 @@ function toStr(v: unknown): string {
 export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar, onAnterior }: Props) {
   const ep = (formulario.encuestaProveedor as Record<string, unknown>) ?? {};
 
-  const { register, handleSubmit, setValue, watch } = useForm<Datos>({
-    // resolver: zodResolver(schema), // ← DESACTIVADO para pruebas
+  const { register, handleSubmit, getValues, setValue, watch } = useForm<Datos>({
+    resolver: zodResolver(schema),
     defaultValues: {
       trayectoriaExperiencia: toStr(ep.trayectoriaExperiencia),
       cantidadProyectos: toStr(ep.cantidadProyectos),
@@ -73,8 +73,15 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
   const tienePolizas = watch("polizasSeguros");
   const tieneReciclaje = watch("campanasReciclaje");
 
+  // Siguiente → pasa por handleSubmit (valida schema)
   async function onSubmit(datos: Datos, siguiente: boolean) {
     await onGuardar({ encuestaProveedor: datos }, siguiente);
+  }
+
+  // Borrador → guarda sin validar
+  async function guardarBorrador() {
+    const datos = getValues();
+    await onGuardar({ encuestaProveedor: datos }, false);
   }
 
   function BoolCheck({ name, label }: { name: keyof Datos; label: string }) {
@@ -208,7 +215,7 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
               type="button"
               variant="outline"
               disabled={guardando}
-              onClick={() => handleSubmit((d) => onSubmit(d, false))()}
+              onClick={guardarBorrador}
             >
               Guardar borrador
             </Button>

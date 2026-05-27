@@ -101,12 +101,11 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
   }
 
   async function finalizar() {
-    // ← DESACTIVADO para pruebas
-    // const faltantes = DOCUMENTOS_REQUERIDOS.filter((d) => d.requerido && !docSubido(d.tipo));
-    // if (faltantes.length > 0) {
-    //   toast.error(`Faltan ${faltantes.length} documento(s) requerido(s)`);
-    //   return;
-    // }
+    const faltantes = DOCUMENTOS_REQUERIDOS.filter((d) => d.requerido && !docSubido(d.tipo));
+    if (faltantes.length > 0) {
+      toast.error(`Faltan ${faltantes.length} documento(s) requerido(s) por cargar`);
+      return;
+    }
 
     setFinalizando(true);
     try {

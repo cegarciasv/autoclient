@@ -97,7 +97,8 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
   }
 
   async function guardar(siguiente: boolean) {
-    // if (!validar()) return; // ← DESACTIVADO para pruebas
+    // Al avanzar (Siguiente) validamos; al guardar borrador no
+    if (siguiente && !validar()) return;
     await onGuardar({ accionistas }, siguiente);
   }
 

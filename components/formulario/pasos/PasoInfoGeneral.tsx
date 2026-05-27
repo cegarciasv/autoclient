@@ -91,8 +91,8 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
 
   const [clientes, setClientes] = useState<ClientePrincipal[]>(clientesIniciales);
 
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<Datos>({
-    // resolver: zodResolver(schema), // ← DESACTIVADO para pruebas
+  const { register, handleSubmit, getValues, setValue, watch, formState: { errors } } = useForm<Datos>({
+    resolver: zodResolver(schema),
     defaultValues: {
       razonSocial: toStr(ig.razonSocial),
       nombreComercial: toStr(ig.nombreComercial),
@@ -143,8 +143,15 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
     setClientes(nuevos);
   }
 
+  // Siguiente → pasa por handleSubmit (valida schema)
   async function onSubmit(datos: Datos, siguiente: boolean) {
     await onGuardar({ infoGeneral: datos, clientesPrincipales: clientes }, siguiente);
+  }
+
+  // Borrador → guarda lo que haya sin validar
+  async function guardarBorrador() {
+    const datos = getValues();
+    await onGuardar({ infoGeneral: datos, clientesPrincipales: clientes }, false);
   }
 
   const err = (campo: keyof Datos) => errors[campo] ? "border-red-500" : "";
@@ -369,7 +376,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
             type="button"
             variant="outline"
             disabled={guardando}
-            onClick={() => handleSubmit((d) => onSubmit(d, false))()}
+            onClick={guardarBorrador}
           >
             Guardar borrador
           </Button>
