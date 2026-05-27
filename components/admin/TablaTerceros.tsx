@@ -33,10 +33,37 @@ interface Props {
 }
 
 const ESTADO_MAP = {
-  PENDIENTE: { label: "Pendiente", cls: "bg-yellow-100 text-yellow-800 border-yellow-200" },
-  EN_PROCESO: { label: "En proceso", cls: "bg-blue-100 text-blue-800 border-blue-200" },
-  COMPLETADO: { label: "Completado", cls: "bg-green-100 text-green-800 border-green-200" },
+  PENDIENTE: {
+    label: "Pendiente",
+    cls: "bg-yellow-50 text-yellow-800 border-yellow-200",
+    dot: "bg-yellow-400",
+    pulse: true,
+  },
+  EN_PROCESO: {
+    label: "En proceso",
+    cls: "bg-blue-50 text-blue-800 border-blue-200",
+    dot: "bg-blue-500",
+    pulse: true,
+  },
+  COMPLETADO: {
+    label: "Completado",
+    cls: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    dot: "bg-emerald-500",
+    pulse: false,
+  },
 };
+
+function getAvatarColors(tipo: "clientes" | "proveedores") {
+  return tipo === "clientes"
+    ? "bg-blue-100 text-blue-700"
+    : "bg-purple-100 text-purple-700";
+}
+
+function getProgressColor(pct: number) {
+  if (pct < 30) return "bg-red-500";
+  if (pct < 70) return "bg-amber-400";
+  return "bg-emerald-500";
+}
 
 export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
   const [busqueda, setBusqueda] = useState("");
@@ -70,87 +97,185 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
       {/* Barra de acciones */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <Input
             placeholder="Buscar por nombre, email o documento..."
-            className="pl-9"
+            className="pl-9 h-10 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
         </div>
-        <Link href={`/admin/${tipo}/nuevo`} className={buttonVariants({ className: "bg-[#1e3a5f] hover:bg-[#162d4a]" })}>
+        <Link
+          href={`/admin/${tipo}/nuevo`}
+          className={buttonVariants({
+            className:
+              "bg-[#1e3a5f] hover:bg-[#162d4a] text-white shadow-sm shadow-blue-900/10 transition-all",
+          })}
+        >
           <Plus className="h-4 w-4 mr-2" />
           {tipo === "clientes" ? "Nuevo Cliente" : "Nuevo Proveedor"}
         </Link>
       </div>
 
       {/* Tabla */}
-      <div className="rounded-lg border border-gray-200 overflow-hidden bg-white">
+      <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead>Razón Social</TableHead>
-              <TableHead>Documento</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Progreso</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
+            <TableRow className="bg-slate-900 hover:bg-slate-900 border-none">
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                Razón Social
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                Documento
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                Email
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                Estado
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                Progreso
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider text-right">
+                Acciones
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtrados.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-gray-400">
-                  No se encontraron registros
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-14 text-slate-400"
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <Search className="h-8 w-8 text-slate-300" />
+                    <span className="text-sm font-medium">
+                      No se encontraron registros
+                    </span>
+                    {busqueda && (
+                      <span className="text-xs text-slate-400">
+                        Intenta con otro término de búsqueda
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
               filtrados.map((t) => {
-                const estado = ESTADO_MAP[t.estado as keyof typeof ESTADO_MAP] ?? { label: t.estado, cls: "" };
+                const estado =
+                  ESTADO_MAP[t.estado as keyof typeof ESTADO_MAP] ?? {
+                    label: t.estado,
+                    cls: "bg-slate-100 text-slate-700 border-slate-200",
+                    dot: "bg-slate-400",
+                    pulse: false,
+                  };
+                const initials = t.razonSocial
+                  .trim()
+                  .split(/\s+/)
+                  .slice(0, 2)
+                  .map((w) => w[0]?.toUpperCase() ?? "")
+                  .join("");
+                const avatarColors = getAvatarColors(tipo);
+
                 return (
-                  <TableRow key={t.id} className="hover:bg-gray-50">
-                    <TableCell className="font-medium text-gray-800 max-w-[200px] truncate">
-                      {t.razonSocial}
+                  <TableRow
+                    key={t.id}
+                    className="group hover:bg-blue-50/50 transition-colors duration-150 border-l-2 border-transparent hover:border-blue-500"
+                  >
+                    {/* Razón Social con avatar */}
+                    <TableCell className="py-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${avatarColors}`}
+                        >
+                          {initials}
+                        </div>
+                        <span className="font-semibold text-slate-800 text-sm max-w-[160px] truncate">
+                          {t.razonSocial}
+                        </span>
+                      </div>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">
-                      <span className="text-xs text-gray-400 mr-1">{t.tipoDocumento}</span>
+
+                    {/* Documento */}
+                    <TableCell className="text-sm text-slate-600">
+                      <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wide mr-1.5 bg-slate-100 px-1.5 py-0.5 rounded">
+                        {t.tipoDocumento}
+                      </span>
                       {t.numeroDocumento}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600 max-w-[180px] truncate">
+
+                    {/* Email */}
+                    <TableCell className="text-sm text-slate-500 max-w-[180px] truncate">
                       {t.email}
                     </TableCell>
+
+                    {/* Estado */}
                     <TableCell>
-                      <Badge variant="outline" className={estado.cls}>
+                      <Badge
+                        variant="outline"
+                        className={`${estado.cls} flex items-center gap-1.5 w-fit text-xs font-medium px-2 py-0.5`}
+                      >
+                        <span
+                          className={`inline-block w-1.5 h-1.5 rounded-full ${estado.dot} ${
+                            estado.pulse ? "animate-pulse" : ""
+                          }`}
+                        />
                         {estado.label}
                       </Badge>
                     </TableCell>
+
+                    {/* Progreso */}
                     <TableCell>
                       {t.formulario ? (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 bg-gray-200 rounded-full h-1.5 w-16">
+                        <div className="flex items-center gap-2 min-w-[90px]">
+                          <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
                             <div
-                              className="bg-[#1e3a5f] h-1.5 rounded-full"
+                              className={`h-2 rounded-full transition-all duration-500 ${getProgressColor(
+                                t.formulario.progreso
+                              )}`}
                               style={{ width: `${t.formulario.progreso}%` }}
                             />
                           </div>
-                          <span className="text-xs text-gray-500">{t.formulario.progreso}%</span>
+                          <span className="text-xs font-medium text-slate-600 tabular-nums w-8 text-right">
+                            {t.formulario.progreso}%
+                          </span>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400">Sin iniciar</span>
+                        <span className="text-xs text-slate-400 italic">
+                          Sin iniciar
+                        </span>
                       )}
                     </TableCell>
+
+                    {/* Acciones */}
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5">
                         <Button
                           size="sm"
-                          variant="outline"
+                          variant="ghost"
                           onClick={() => reenviarLink(t.id, t.razonSocial)}
                           disabled={enviando === t.id}
-                          title="Reenviar link"
+                          title="Reenviar link de formulario"
+                          className="h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                         >
-                          <Send className="h-3.5 w-3.5" />
+                          <Send
+                            className={`h-3.5 w-3.5 ${
+                              enviando === t.id ? "animate-pulse" : ""
+                            }`}
+                          />
                         </Button>
-                        <Link href={`/admin/${tipo}/${t.id}`} className={buttonVariants({ size: "sm", variant: "outline" })}>
+                        <Link
+                          href={`/admin/${tipo}/${t.id}`}
+                          title="Ver detalle"
+                          className={buttonVariants({
+                            size: "sm",
+                            variant: "ghost",
+                            className:
+                              "h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors",
+                          })}
+                        >
                           <Eye className="h-3.5 w-3.5" />
                         </Link>
                       </div>
@@ -162,7 +287,17 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
           </TableBody>
         </Table>
       </div>
-      <p className="text-xs text-gray-400">{filtrados.length} registro(s) encontrado(s)</p>
+
+      {/* Footer */}
+      <p className="text-xs text-slate-400 font-medium">
+        <span className="text-slate-600 font-semibold">{filtrados.length}</span>{" "}
+        {filtrados.length === 1 ? "registro encontrado" : "registros encontrados"}
+        {busqueda && (
+          <span className="ml-1 text-slate-400">
+            para &ldquo;{busqueda}&rdquo;
+          </span>
+        )}
+      </p>
     </div>
   );
 }

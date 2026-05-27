@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, Lock, Mail, ShieldCheck } from "lucide-react";
+import {
+  Building2,
+  Lock,
+  Mail,
+  ShieldCheck,
+  AlertCircle,
+  CheckCircle2,
+  Zap,
+  BarChart3,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,42 +45,145 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
-      {/* Decoración de fondo */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen lg:grid lg:grid-cols-2">
+      {/* ── Panel izquierdo (solo desktop) ── */}
+      <div className="hidden lg:flex flex-col justify-between bg-slate-900 px-12 py-16 relative overflow-hidden">
+        {/* Decoración de fondo */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-800/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          {/* Grid sutil */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+        </div>
 
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
-        {/* Logo header */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="bg-[#1e3a5f] rounded-2xl p-3 shadow-lg shadow-blue-900/20">
-            <Building2 className="h-7 w-7 text-white" />
+        {/* Logo */}
+        <div className="relative flex items-center gap-3">
+          <div className="bg-blue-600 rounded-xl p-2.5 shadow-lg shadow-blue-600/30">
+            <Building2 className="h-6 w-6 text-white" />
           </div>
           <div>
-            <p className="font-bold text-xl text-[#1e3a5f] tracking-tight leading-none">GRUPO REMOR</p>
-            <p className="text-xs text-slate-500 mt-1">Sistema de Vinculación</p>
+            <p className="font-bold text-white text-lg tracking-tight leading-none">
+              GRUPO REMOR
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">Sistema de Vinculación</p>
           </div>
         </div>
 
-        {/* Card */}
+        {/* Contenido central */}
+        <div className="relative space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-4xl font-bold text-white leading-tight">
+              Panel de
+              <br />
+              <span className="text-blue-400">Administración</span>
+            </h2>
+            <p className="text-slate-400 text-base leading-relaxed max-w-sm">
+              Gestiona el proceso de vinculación de clientes y proveedores desde
+              un solo lugar, con trazabilidad completa y en tiempo real.
+            </p>
+          </div>
+
+          {/* Bullet points */}
+          <ul className="space-y-4">
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
+                <ShieldCheck className="h-4 w-4 text-blue-400" />
+              </span>
+              <div>
+                <p className="text-white text-sm font-medium">
+                  Seguridad empresarial
+                </p>
+                <p className="text-slate-500 text-xs mt-0.5">
+                  Acceso controlado con sesiones cifradas y auditoría de
+                  actividad.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
+                <Zap className="h-4 w-4 text-blue-400" />
+              </span>
+              <div>
+                <p className="text-white text-sm font-medium">
+                  Eficiencia operativa
+                </p>
+                <p className="text-slate-500 text-xs mt-0.5">
+                  Automatiza el envío de formularios y reduce tiempos de
+                  onboarding.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center mt-0.5">
+                <BarChart3 className="h-4 w-4 text-blue-400" />
+              </span>
+              <div>
+                <p className="text-white text-sm font-medium">
+                  Control y visibilidad
+                </p>
+                <p className="text-slate-500 text-xs mt-0.5">
+                  Seguimiento del progreso de cada tercero con reportes
+                  detallados.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        {/* Footer izquierdo */}
+        <div className="relative flex items-center gap-2 text-xs text-slate-600">
+          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+          Todos los sistemas operativos
+        </div>
+      </div>
+
+      {/* ── Panel derecho: formulario ── */}
+      <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 bg-slate-50 px-6 py-12">
+        {/* Logo visible solo en móvil */}
+        <div className="lg:hidden flex items-center gap-3 mb-10">
+          <div className="bg-[#1e3a5f] rounded-xl p-2.5 shadow-lg shadow-blue-900/20">
+            <Building2 className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <p className="font-bold text-[#1e3a5f] text-lg tracking-tight leading-none">
+              GRUPO REMOR
+            </p>
+            <p className="text-xs text-slate-500 mt-0.5">Sistema de Vinculación</p>
+          </div>
+        </div>
+
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/60 overflow-hidden">
-            <div className="px-8 pt-8 pb-6 text-center border-b border-slate-100">
-              <h1 className="text-xl font-semibold text-slate-900">Acceso administrativo</h1>
+          {/* Card */}
+          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-200/60 overflow-hidden">
+            {/* Header */}
+            <div className="px-8 pt-8 pb-6 border-b border-slate-100">
+              <h1 className="text-2xl font-bold text-slate-900">
+                Acceso administrativo
+              </h1>
               <p className="text-sm text-slate-500 mt-1.5">
                 Ingrese sus credenciales para continuar
               </p>
             </div>
 
+            {/* Form */}
             <form onSubmit={handleSubmit} className="px-8 py-6 space-y-5">
+              {/* Email */}
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-sm font-medium text-slate-700">
+                <Label
+                  htmlFor="email"
+                  className="text-sm font-medium text-slate-700"
+                >
                   Correo electrónico
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                   <Input
                     id="email"
                     type="email"
@@ -80,17 +192,21 @@ export default function LoginPage() {
                     placeholder="usuario@gruporemor.com.sv"
                     required
                     autoFocus
-                    className="pl-9 h-10"
+                    className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 text-sm transition-colors"
                   />
                 </div>
               </div>
 
+              {/* Password */}
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-medium text-slate-700">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-slate-700"
+                >
                   Contraseña
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                   <Input
                     id="password"
                     type="password"
@@ -98,36 +214,49 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="pl-9 h-10"
+                    className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 text-sm transition-colors"
                   />
                 </div>
               </div>
 
+              {/* Error */}
               {error && (
-                <div className="flex items-start gap-2 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2.5">
+                <div className="flex items-start gap-2.5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-red-500" />
                   <span className="leading-tight">{error}</span>
                 </div>
               )}
 
+              {/* Submit */}
               <Button
                 type="submit"
-                className="w-full h-10 bg-[#1e3a5f] hover:bg-[#162d4a] text-white font-medium shadow-md shadow-blue-900/10"
                 disabled={cargando}
+                className="w-full h-12 text-white font-semibold text-sm rounded-xl bg-gradient-to-r from-[#1e3a5f] to-[#2a5298] hover:from-[#162d4a] hover:to-[#1e3a5f] shadow-md shadow-blue-900/15 transition-all duration-200"
               >
-                {cargando ? "Ingresando..." : "Ingresar al sistema"}
+                {cargando ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Verificando...
+                  </span>
+                ) : (
+                  "Ingresar al sistema"
+                )}
               </Button>
             </form>
 
+            {/* Seguridad */}
             <div className="px-8 pb-6">
               <div className="flex items-center gap-2 text-xs text-slate-400 justify-center">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Conexión segura · Sesión cifrada
+                <ShieldCheck className="h-3.5 w-3.5 text-slate-400" />
+                Conexión segura &middot; Sesión cifrada
               </div>
             </div>
           </div>
 
+          {/* Copyright */}
           <p className="text-center text-xs text-slate-400 mt-6">
-            © {new Date().getFullYear()} Grupo Remor · Todos los derechos reservados
+            &copy; {new Date().getFullYear()} Grupo Remor &middot; Todos los
+            derechos reservados
           </p>
         </div>
       </div>

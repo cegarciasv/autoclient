@@ -6,8 +6,63 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyRound, ShieldCheck } from "lucide-react";
+import { KeyRound, ShieldCheck, Check, FileText, LogIn } from "lucide-react";
 
+// ─── Mini stepper horizontal ───────────────────────────────────────────────
+const STEPS = [
+  { id: 1, label: "Documento", icon: FileText },
+  { id: 2, label: "Código",    icon: KeyRound },
+  { id: 3, label: "Acceso",   icon: LogIn },
+];
+
+function MiniStepper({ active }: { active: 1 | 2 | 3 }) {
+  return (
+    <div className="flex items-center justify-center gap-0 mb-6">
+      {STEPS.map((step, idx) => {
+        const done    = step.id < active;
+        const current = step.id === active;
+        const Icon    = step.icon;
+        return (
+          <div key={step.id} className="flex items-center">
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all
+                  ${done    ? "bg-blue-600 border-blue-600 text-white" : ""}
+                  ${current ? "bg-white border-blue-600 text-blue-600 shadow-md ring-4 ring-blue-100" : ""}
+                  ${!done && !current ? "bg-white border-slate-200 text-slate-300" : ""}`}
+              >
+                {done ? <Check className="h-4 w-4" /> : <Icon className="h-3.5 w-3.5" />}
+              </div>
+              <span
+                className={`text-[10px] font-medium leading-none
+                  ${current ? "text-blue-600 font-semibold" : "text-slate-400"}`}
+              >
+                {step.label}
+              </span>
+            </div>
+            {idx < STEPS.length - 1 && (
+              <div
+                className={`h-0.5 w-8 mx-1 mb-4 rounded-full transition-all
+                  ${step.id < active ? "bg-blue-600" : "bg-slate-200"}`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Error message ─────────────────────────────────────────────────────────
+function ErrorMsg({ text }: { text: string }) {
+  return (
+    <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+      {text}
+    </p>
+  );
+}
+
+// ─── Page ──────────────────────────────────────────────────────────────────
 export default function FormularioLoginPage({
   params,
 }: {
@@ -67,30 +122,32 @@ export default function FormularioLoginPage({
     }
   }
 
+  const stepActual = etapa === "documento" ? 1 : 2;
+  const HeroIcon   = etapa === "documento" ? ShieldCheck : KeyRound;
+
   return (
     <div className="max-w-md mx-auto">
-      <Card className="shadow-md">
-        <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-3">
-            <div className="bg-blue-50 rounded-full p-3">
-              {etapa === "documento" ? (
-                <ShieldCheck className="h-8 w-8 text-[#1e3a5f]" />
-              ) : (
-                <KeyRound className="h-8 w-8 text-[#1e3a5f]" />
-              )}
-            </div>
-          </div>
-          <CardTitle className="text-xl text-[#1e3a5f]">
+      {/* Hero icon */}
+      <div className="flex justify-center mb-5">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg ring-4 ring-blue-100">
+          <HeroIcon className="h-8 w-8 text-white" />
+        </div>
+      </div>
+
+      <Card className="shadow-xl border-0 rounded-2xl overflow-hidden">
+        <CardHeader className="text-center pb-2 pt-6 px-6">
+          <MiniStepper active={stepActual as 1 | 2 | 3} />
+          <CardTitle className="text-xl text-slate-800">
             {etapa === "documento" ? "Acceso al Formulario" : "Verificación de Identidad"}
           </CardTitle>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-slate-500 mt-1">
             {etapa === "documento"
               ? "Ingrese su número de documento para continuar"
               : `Ingrese el código enviado a ${emailOculto}`}
           </p>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="px-6 pb-6 pt-4">
           {etapa === "documento" ? (
             <form onSubmit={verificarDocumento} className="space-y-4">
               <div className="space-y-1.5">
@@ -102,15 +159,16 @@ export default function FormularioLoginPage({
                   placeholder="Sin guiones, espacios ni puntos"
                   autoFocus
                   required
+                  className="h-11"
                 />
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-slate-400">
                   Ingrese NIT, DUI o Pasaporte según el tipo registrado
                 </p>
               </div>
               {error && <ErrorMsg text={error} />}
               <Button
                 type="submit"
-                className="w-full bg-[#1e3a5f] hover:bg-[#162d4a]"
+                className="w-full h-11 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 transition-all"
                 disabled={cargando}
               >
                 {cargando ? "Verificando..." : "Continuar"}
@@ -119,25 +177,25 @@ export default function FormularioLoginPage({
           ) : (
             <form onSubmit={verificarOTP} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="otp">Código de verificación</Label>
+                <Label htmlFor="otp" className="text-center block">Código de verificación</Label>
                 <Input
                   id="otp"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="000000"
+                  placeholder="0  0  0  0  0  0"
                   maxLength={6}
-                  className="text-center text-2xl tracking-widest font-mono"
+                  className="text-center text-3xl tracking-[0.5em] font-mono h-14 border-2 focus:border-blue-500"
                   autoFocus
                   required
                 />
-                <p className="text-xs text-gray-400 text-center">
+                <p className="text-xs text-slate-400 text-center">
                   El código es válido por 15 minutos
                 </p>
               </div>
               {error && <ErrorMsg text={error} />}
               <Button
                 type="submit"
-                className="w-full bg-[#1e3a5f] hover:bg-[#162d4a]"
+                className="w-full h-11 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 transition-all"
                 disabled={cargando || otp.length !== 6}
               >
                 {cargando ? "Verificando..." : "Ingresar al Formulario"}
@@ -145,26 +203,18 @@ export default function FormularioLoginPage({
               <button
                 type="button"
                 onClick={() => { setEtapa("documento"); setError(""); setOtp(""); }}
-                className="w-full text-sm text-gray-500 hover:text-gray-700 underline"
+                className="w-full text-sm text-slate-500 hover:text-slate-700 underline underline-offset-2"
               >
-                Volver
+                Volver al paso anterior
               </button>
             </form>
           )}
         </CardContent>
       </Card>
 
-      <p className="text-center text-xs text-gray-400 mt-4">
+      <p className="text-center text-xs text-slate-400 mt-5">
         Si tiene problemas para acceder, contacte a su representante de Grupo Remor
       </p>
     </div>
-  );
-}
-
-function ErrorMsg({ text }: { text: string }) {
-  return (
-    <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-      {text}
-    </p>
   );
 }
