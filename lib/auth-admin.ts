@@ -1,10 +1,15 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
-  throw new Error("JWT_SECRET no está definido. Configura esta variable de entorno.");
+// Se valida en runtime (no en build-time) para evitar errores durante next build.
+function getSecret(): Uint8Array {
+  const raw = process.env.JWT_SECRET;
+  if (!raw) {
+    throw new Error("JWT_SECRET no está definido. Configura esta variable de entorno.");
+  }
+  return new TextEncoder().encode(raw);
 }
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "dev-fallback-admin-secret-32chars!!");
+
 const COOKIE = "admin_session";
 
 export interface AdminPayload {
@@ -19,12 +24,12 @@ export async function crearSesionAdmin(payload: AdminPayload): Promise<string> {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("8h")
-    .sign(SECRET);
+    .sign(getSecret());
 }
 
 export async function verificarSesionAdmin(token: string): Promise<AdminPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET);
+    const { payload } = await jwtVerify(token, getSecret());
     return payload as unknown as AdminPayload;
   } catch {
     return null;

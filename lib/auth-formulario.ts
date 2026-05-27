@@ -1,12 +1,15 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-if (process.env.NODE_ENV === "production" && !process.env.JWT_FORMULARIO_SECRET) {
-  throw new Error("JWT_FORMULARIO_SECRET no está definido. Configura esta variable de entorno.");
+// Validación lazy: se ejecuta en runtime, no en build-time.
+function getSecret(): Uint8Array {
+  const raw = process.env.JWT_FORMULARIO_SECRET;
+  if (!raw) {
+    throw new Error("JWT_FORMULARIO_SECRET no está definido. Configura esta variable de entorno.");
+  }
+  return new TextEncoder().encode(raw);
 }
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_FORMULARIO_SECRET || "dev-fallback-form-secret-32chars!!!"
-);
+
 const COOKIE_PREFIX = "form_session_";
 
 export interface FormularioPayload {
@@ -21,14 +24,14 @@ export async function crearSesionFormulario(payload: FormularioPayload): Promise
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("2h")
-    .sign(SECRET);
+    .sign(getSecret());
 }
 
 export async function verificarSesionFormulario(
   jwt: string
 ): Promise<FormularioPayload | null> {
   try {
-    const { payload } = await jwtVerify(jwt, SECRET);
+    const { payload } = await jwtVerify(jwt, getSecret());
     return payload as unknown as FormularioPayload;
   } catch {
     return null;
