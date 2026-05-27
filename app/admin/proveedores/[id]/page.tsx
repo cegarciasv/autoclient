@@ -9,6 +9,7 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import VisorDocumentos from "@/components/admin/VisorDocumentos";
 
 /* ── Helpers ─────────────────────────────────────── */
 function fmtFecha(v: unknown): string {
@@ -392,19 +393,16 @@ export default async function DetalleProveedorPage({
       {f && f.documentos.length > 0 && (
         <Card>
           <SeccionHeader icon={FileText} titulo={`Documentos cargados (${f.documentos.length})`} />
-          <CardContent className="pt-3">
-            <div className="space-y-1">
-              {f.documentos.map((doc) => (
-                <div key={doc.id} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
-                  <FileText className="h-4 w-4 text-gray-400 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-700 truncate">{doc.nombreArchivo}</p>
-                    <p className="text-xs text-gray-400">{doc.tipo} · {(doc.tamanoBytes / 1024 / 1024).toFixed(2)} MB</p>
-                  </div>
-                  <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                </div>
-              ))}
-            </div>
+          <CardContent className="pt-3 pb-2">
+            <VisorDocumentos
+              terceroId={tercero.id}
+              documentos={f.documentos.map((d) => ({
+                id: d.id,
+                nombreArchivo: d.nombreArchivo,
+                tipo: d.tipo,
+                tamanoBytes: d.tamanoBytes,
+              }))}
+            />
           </CardContent>
         </Card>
       )}
