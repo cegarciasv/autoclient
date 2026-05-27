@@ -1,8 +1,11 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
+if (process.env.NODE_ENV === "production" && !process.env.JWT_FORMULARIO_SECRET) {
+  throw new Error("JWT_FORMULARIO_SECRET no está definido. Configura esta variable de entorno.");
+}
 const SECRET = new TextEncoder().encode(
-  process.env.JWT_FORMULARIO_SECRET || "fallback-formulario-secret"
+  process.env.JWT_FORMULARIO_SECRET || "dev-fallback-form-secret-32chars!!!"
 );
 const COOKIE_PREFIX = "form_session_";
 

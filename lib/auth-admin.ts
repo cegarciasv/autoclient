@@ -1,7 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "fallback-secret");
+if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET no está definido. Configura esta variable de entorno.");
+}
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "dev-fallback-admin-secret-32chars!!");
 const COOKIE = "admin_session";
 
 export interface AdminPayload {
