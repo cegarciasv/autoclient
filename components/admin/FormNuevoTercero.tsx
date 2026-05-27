@@ -47,7 +47,8 @@ export default function FormNuevoTercero({ tipo }: Props) {
 
     if (res.ok) {
       toast.success("Registro creado y link enviado por email");
-      router.push(`/admin/${tipo.toLowerCase()}s`);
+      const ruta = tipo === "PROVEEDOR" ? "proveedores" : "clientes";
+      router.push(`/admin/${ruta}`);
       router.refresh();
     } else {
       const data = await res.json();
