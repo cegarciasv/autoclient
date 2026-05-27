@@ -11,11 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 const schema = z.object({
-  totalActivo: z.string().min(1, "Requerido"),
-  totalPasivo: z.string().min(1, "Requerido"),
-  totalPatrimonio: z.string().min(1, "Requerido"),
-  ingresosMensuales: z.string().min(1, "Requerido"),
-  egresosMensuales: z.string().min(1, "Requerido"),
+  totalActivo: z.string().optional(),
+  totalPasivo: z.string().optional(),
+  totalPatrimonio: z.string().optional(),
+  ingresosMensuales: z.string().optional(),
+  egresosMensuales: z.string().optional(),
   fuenteOtrosIngresos: z.string().optional(),
   otrosIngresosMensuales: z.string().optional(),
   operacionesInternacionales: z.boolean(),
@@ -42,7 +42,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
   const fi = (formulario.infoFinanciera as Record<string, unknown>) ?? {};
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<Datos>({
-    // resolver: zodResolver(schema), // ← DESACTIVADO para pruebas
+    resolver: zodResolver(schema),
     defaultValues: {
       totalActivo: toStr(fi.totalActivo),
       totalPasivo: toStr(fi.totalPasivo),
@@ -95,11 +95,12 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
           <CardContent className="space-y-4">
             <p className="text-sm text-gray-500">
               Ingrese los valores en dólares americanos (USD) correspondientes al último período fiscal.
+              Todos los campos de este paso son opcionales.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <MoneyInput name="totalActivo" label="Total Activo" req />
-              <MoneyInput name="totalPasivo" label="Total Pasivo" req />
-              <MoneyInput name="totalPatrimonio" label="Total Patrimonio" req />
+              <MoneyInput name="totalActivo" label="Total Activo" />
+              <MoneyInput name="totalPasivo" label="Total Pasivo" />
+              <MoneyInput name="totalPatrimonio" label="Total Patrimonio" />
             </div>
           </CardContent>
         </Card>
@@ -110,8 +111,8 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <MoneyInput name="ingresosMensuales" label="Ingresos Mensuales Promedio" req />
-              <MoneyInput name="egresosMensuales" label="Egresos Mensuales Promedio" req />
+              <MoneyInput name="ingresosMensuales" label="Ingresos Mensuales Promedio" />
+              <MoneyInput name="egresosMensuales" label="Egresos Mensuales Promedio" />
             </div>
 
             <Separator />
@@ -144,7 +145,7 @@ export default function PasoInfoFinanciera({ formulario, guardando, onGuardar, o
 
             {tieneOpsInternacionales && (
               <div className="space-y-1">
-                <Label>Detalle de las operaciones internacionales <span className="text-red-500">*</span></Label>
+                <Label>Detalle de las operaciones internacionales</Label>
                 <textarea
                   {...register("detalleOperaciones")}
                   rows={3}
