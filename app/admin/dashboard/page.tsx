@@ -5,7 +5,6 @@ import {
   Loader2,
   CheckCircle2,
   UserPlus,
-  TruckIcon,
   Activity,
   TrendingUp,
 } from "lucide-react";
@@ -217,7 +216,7 @@ export default async function DashboardPage() {
                 className: "w-full font-semibold gap-2 justify-center border-slate-200 text-slate-700 hover:bg-slate-50",
               })}
             >
-              <TruckIcon className="h-4 w-4" />
+              <Truck className="h-4 w-4" />
               Nuevo Proveedor
             </Link>
           </CardContent>
