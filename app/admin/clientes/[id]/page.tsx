@@ -9,6 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import VisorDocumentos from "@/components/admin/VisorDocumentos";
+import BotonesEstado from "@/components/admin/BotonesEstado";
 
 /* ── Helpers ─────────────────────────────────────── */
 function fmtFecha(v: unknown): string {
@@ -123,6 +124,11 @@ export default async function DetalleClientePage({
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <EstadoBadge estado={tercero.estado} />
+          <BotonesEstado
+            terceroId={tercero.id}
+            estadoActual={tercero.estado}
+            tieneFormulario={!!f}
+          />
           {f && (
             <a
               href={`/api/admin/terceros/${tercero.id}/pdf`}
@@ -145,20 +151,33 @@ export default async function DetalleClientePage({
       )}
 
       {/* ── Progreso ── */}
-      {f && (
-        <Card>
-          <CardContent className="pt-4 pb-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <p className="text-sm font-medium text-gray-700">Progreso del formulario</p>
-              <span className="text-sm font-bold text-[#1e3a5f]">{f.progreso}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-[#1e3a5f] h-2 rounded-full transition-all" style={{ width: `${f.progreso}%` }} />
-            </div>
-            <p className="text-xs text-gray-400 mt-1">Paso {f.pasoActual} de 6</p>
-          </CardContent>
-        </Card>
-      )}
+      {f && (() => {
+        const completado = tercero.estado === "COMPLETADO" || f.estado === "COMPLETADO";
+        const pct = completado ? 100 : f.progreso;
+        const barColor = completado
+          ? "bg-gradient-to-r from-emerald-400 to-emerald-600"
+          : pct >= 70 ? "bg-gradient-to-r from-blue-500 to-blue-700"
+          : pct >= 40 ? "bg-gradient-to-r from-amber-400 to-amber-600"
+          : "bg-gradient-to-r from-red-400 to-red-600";
+        return (
+          <Card className={completado ? "border-emerald-200 bg-emerald-50/40" : ""}>
+            <CardContent className="pt-4 pb-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-sm font-medium text-gray-700">Progreso del formulario</p>
+                <span className={`text-sm font-bold ${completado ? "text-emerald-700" : "text-[#1e3a5f]"}`}>
+                  {pct}%{completado ? " — Completado ✓" : ""}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className={`${barColor} h-2 rounded-full transition-all`} style={{ width: `${pct}%` }} />
+              </div>
+              <p className="text-xs text-gray-400 mt-1">
+                {completado ? "El cliente finalizó el formulario y cargó todos los documentos." : `Paso ${f.pasoActual} de 6`}
+              </p>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* ── Información de la Empresa ── */}
       {ig && (

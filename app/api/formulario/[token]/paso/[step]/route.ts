@@ -47,9 +47,15 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
 
   const totalPasos = sesion.tipo === "PROVEEDOR" ? TOTAL_PASOS_PROVEEDOR : TOTAL_PASOS_CLIENTE;
   const nuevoPasoActual = Math.max(formulario.pasoActual, pasoNum + 1);
-  const progreso = Math.round((pasoNum / totalPasos) * 100);
+
+  // El progreso nunca retrocede: si el formulario ya está más avanzado (o completado), se respeta.
+  // Un formulario COMPLETADO (estado = COMPLETADO) siempre muestra 100%.
+  const progresoCalculado = Math.round((pasoNum / totalPasos) * 100);
+  const estaCompletado = formulario.estado === "COMPLETADO";
+  const progreso = estaCompletado ? 100 : Math.max(formulario.progreso, progresoCalculado);
 
   try {
+    // Si ya está completado, solo guardamos los datos pero NO modificamos estado ni progreso
     switch (pasoNum) {
       case 1:
         await guardarPaso1(formulario.id, body as Record<string, unknown>);
@@ -70,7 +76,12 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
 
     await prisma.formulario.update({
       where: { id: formulario.id },
-      data: { pasoActual: nuevoPasoActual, progreso },
+      data: {
+        pasoActual: nuevoPasoActual,
+        progreso,
+        // Nunca bajar el estado si ya está COMPLETADO
+        ...(estaCompletado ? {} : {}),
+      },
     });
 
     return NextResponse.json({ ok: true, pasoActual: nuevoPasoActual, progreso });
