@@ -137,7 +137,7 @@ export default async function LoginPage({
           {/* Card */}
           <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-200/60 overflow-hidden">
             {/* Header */}
-            <div className="px-8 pt-8 pb-6 border-b border-slate-100">
+            <div className="px-8 pt-8 pb-6 border-b border-slate-100 text-center">
               <h1 className="text-2xl font-bold text-slate-900">
                 Acceso administrativo
               </h1>
