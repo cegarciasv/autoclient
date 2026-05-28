@@ -108,15 +108,18 @@ async function guardarPaso1(formularioId: string, terceroId: string, data: Recor
     clientesPrincipales: Array<{ nombreRazonSocial: string; porcentajeParticipacion: string }>;
   };
 
-  // Sincronizar tipoPersona en Tercero para que sea visible en la tabla del admin
-  if (infoGeneral?.tipoPersona) {
+  // Extraer tipoPersona (va en Tercero, no en InfoGeneral) y sincronizar
+  const tipoPersonaGuardar = infoGeneral?.tipoPersona as string | undefined;
+  if (tipoPersonaGuardar) {
     await prisma.tercero.update({
       where: { id: terceroId },
-      data: { tipoPersona: infoGeneral.tipoPersona as string },
+      data: { tipoPersona: tipoPersonaGuardar },
     });
   }
 
   if (infoGeneral) {
+    // Eliminar tipoPersona del objeto antes de upsert — no existe en InfoGeneral
+    delete (infoGeneral as Record<string, unknown>).tipoPersona;
     // Campos DateTime: convertir strings a Date (null si vacío)
     const FECHA_FALLBACK = new Date("1900-01-01"); // placeholder para pruebas
     const ig = {

@@ -27,7 +27,7 @@ export default async function PasoPage({
       encuestaProveedor: true,
       documentos: { select: { tipo: true, nombreArchivo: true, tamanoBytes: true } },
       tercero: {
-        select: { razonSocial: true, tipo: true, tipoDocumento: true, numeroDocumento: true, email: true },
+        select: { razonSocial: true, tipo: true, tipoDocumento: true, numeroDocumento: true, email: true, tipoPersona: true },
       },
     },
   });

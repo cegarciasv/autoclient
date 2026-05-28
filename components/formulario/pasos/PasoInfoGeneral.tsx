@@ -153,7 +153,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   const { register, handleSubmit, getValues, setValue, watch, formState: { errors } } = useForm<Datos>({
     resolver: zodResolver(schema),
     defaultValues: {
-      tipoPersona:             (toStr(ig.tipoPersona) || "JURIDICA") as "NATURAL" | "JURIDICA",
+      tipoPersona:             ((toStr(tercero.tipoPersona) || "JURIDICA") as "NATURAL" | "JURIDICA"),
       razonSocial:             toStr(ig.razonSocial),
       nombreComercial:         toStr(ig.nombreComercial),
       nit:                     toStr(ig.nit),
