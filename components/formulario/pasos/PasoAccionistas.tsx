@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Accionista {
   tipoIdentificacion: string;
@@ -113,8 +114,16 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
             Registre todos los accionistas con participación igual o superior al 5%.
           </p>
 
+          <AnimatePresence initial={false}>
           {accionistas.map((a, i) => (
-            <div key={i} className="border rounded-lg overflow-hidden">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="border rounded-lg overflow-hidden"
+            >
               <div
                 className="flex items-center justify-between px-4 py-3 bg-gray-50 cursor-pointer"
                 onClick={() => toggleExpandir(i)}
@@ -229,8 +238,9 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
+          </AnimatePresence>
 
           <Button type="button" variant="outline" size="sm" onClick={agregar}>
             <Plus className="h-4 w-4 mr-1" /> Agregar accionista

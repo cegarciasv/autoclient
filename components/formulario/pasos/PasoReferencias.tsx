@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Referencia {
   nombreRazonSocial: string;
@@ -89,8 +90,16 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
             Proporcione al menos <strong>2 referencias comerciales</strong> que puedan dar fe de su trayectoria y cumplimiento de obligaciones.
           </p>
 
+          <AnimatePresence initial={false}>
           {referencias.map((r, i) => (
-            <div key={i} className="border rounded-lg p-4 space-y-4 relative">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="border rounded-lg p-4 space-y-4 relative"
+            >
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-gray-700">Referencia {i + 1}</p>
                 {referencias.length > 2 && (
@@ -131,8 +140,9 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
                   />
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
+          </AnimatePresence>
 
           <Button type="button" variant="outline" size="sm" onClick={agregar}>
             <Plus className="h-4 w-4 mr-1" /> Agregar referencia

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
   children: React.ReactNode;
@@ -44,20 +45,28 @@ export default function AdminLayoutClient({ children, session }: Props) {
 
   return (
     <div className="min-h-screen flex bg-slate-50">
-      {/* Overlay móvil */}
-      {sidebarAbierto && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden"
-          onClick={() => setSidebarAbierto(false)}
-        />
-      )}
+      {/* Overlay móvil animado */}
+      <AnimatePresence>
+        {sidebarAbierto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden"
+            onClick={() => setSidebarAbierto(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* ── Sidebar ─────────────────────────────────── */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 w-64 flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:z-auto",
+          "fixed inset-y-0 left-0 z-30 w-64 flex flex-col lg:translate-x-0 lg:static lg:z-auto",
           "bg-[#1B3C22] text-white",
-          sidebarAbierto ? "translate-x-0" : "-translate-x-full"
+          // En desktop siempre visible; en móvil lo manejamos con motion
+          "max-lg:transition-transform max-lg:duration-200",
+          sidebarAbierto ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
         {/* Logo */}
@@ -157,7 +166,17 @@ export default function AdminLayoutClient({ children, session }: Props) {
         </header>
 
         <main className="flex-1 p-6 lg:p-8 overflow-auto max-w-7xl w-full mx-auto">
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>

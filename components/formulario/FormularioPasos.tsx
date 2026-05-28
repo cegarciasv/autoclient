@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import PasoInfoGeneral from "./pasos/PasoInfoGeneral";
 import PasoAccionistas from "./pasos/PasoAccionistas";
@@ -44,6 +45,7 @@ export default function FormularioPasos({
 }: Props) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
+  const direccion = useRef<1 | -1>(1); // 1=adelante, -1=atrás
 
   async function guardarPaso(datos: Record<string, unknown>, siguiente = true) {
     setGuardando(true);
@@ -63,6 +65,7 @@ export default function FormularioPasos({
       const data = await res.json();
       if (siguiente) {
         const proxPaso = pasoActual + 1;
+        direccion.current = 1;
         router.push(`/formulario/${token}/paso/${proxPaso}`);
         router.refresh();
       } else {
@@ -79,6 +82,7 @@ export default function FormularioPasos({
   }
 
   function irAnterior() {
+    direccion.current = -1;
     router.push(`/formulario/${token}/paso/${pasoActual - 1}`);
   }
 
@@ -105,14 +109,28 @@ export default function FormularioPasos({
     }
   }
 
+  const variants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
+  };
+
   return (
     <div className="space-y-6">
-      <BarraProgreso
-        pasos={pasos}
-        pasoActual={pasoActual}
-        progreso={progreso}
-      />
-      {renderizarPaso()}
+      <BarraProgreso pasos={pasos} pasoActual={pasoActual} progreso={progreso} />
+      <AnimatePresence mode="wait" custom={direccion.current}>
+        <motion.div
+          key={pasoActual}
+          custom={direccion.current}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.25, ease: "easeInOut" }}
+        >
+          {renderizarPaso()}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
