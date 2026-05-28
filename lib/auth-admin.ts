@@ -15,6 +15,7 @@ const COOKIE = "admin_session";
 export interface AdminPayload {
   id: string;
   email: string;
+  nombre: string;
   rol: string;
   [key: string]: unknown;
 }
