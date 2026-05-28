@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { obtenerSesionFormulario } from "@/lib/auth-formulario";
 
-const TOTAL_PASOS_CLIENTE = 6;
-const TOTAL_PASOS_PROVEEDOR = 7;
+const TOTAL_PASOS_CLIENTE = 5;
+const TOTAL_PASOS_PROVEEDOR = 6;
 
 type Ctx = { params: Promise<{ token: string; step: string }> };
 
@@ -67,10 +67,7 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
         await guardarPaso3(formulario.id, body as Record<string, unknown>);
         break;
       case 4:
-        await guardarPaso4(formulario.id, body as Record<string, unknown>);
-        break;
-      case 5:
-        if (sesion.tipo === "PROVEEDOR") await guardarPaso5(formulario.id, body as Record<string, unknown>);
+        if (sesion.tipo === "PROVEEDOR") await guardarPaso4(formulario.id, body as Record<string, unknown>);
         break;
     }
 
@@ -157,27 +154,6 @@ async function guardarPaso2(formularioId: string, data: Record<string, unknown>)
 }
 
 async function guardarPaso3(formularioId: string, data: Record<string, unknown>) {
-  const raw = (data.infoFinanciera ?? data) as Record<string, unknown>;
-  // Convertir strings a decimales (Prisma Decimal requiere número, no string vacío)
-  const infoFinanciera = {
-    ...raw,
-    totalActivo:            toDecimal(raw.totalActivo)            ?? 0,
-    totalPasivo:            toDecimal(raw.totalPasivo)            ?? 0,
-    totalPatrimonio:        toDecimal(raw.totalPatrimonio)        ?? 0,
-    ingresosMensuales:      toDecimal(raw.ingresosMensuales)      ?? 0,
-    egresosMensuales:       toDecimal(raw.egresosMensuales)       ?? 0,
-    otrosIngresosMensuales: toDecimal(raw.otrosIngresosMensuales) ?? null,
-  };
-  await prisma.infoFinanciera.upsert({
-    where: { formularioId },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    create: { formularioId, ...(infoFinanciera as any) },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    update: infoFinanciera as any,
-  });
-}
-
-async function guardarPaso4(formularioId: string, data: Record<string, unknown>) {
   const referencias = data.referencias as Array<Record<string, unknown>>;
   if (Array.isArray(referencias)) {
     await prisma.referenciaComercial.deleteMany({ where: { formularioId } });
@@ -190,7 +166,7 @@ async function guardarPaso4(formularioId: string, data: Record<string, unknown>)
   }
 }
 
-async function guardarPaso5(formularioId: string, data: Record<string, unknown>) {
+async function guardarPaso4(formularioId: string, data: Record<string, unknown>) {
   const encuesta = (data.encuestaProveedor ?? data) as Record<string, unknown>;
   await prisma.encuestaProveedor.upsert({
     where: { formularioId },

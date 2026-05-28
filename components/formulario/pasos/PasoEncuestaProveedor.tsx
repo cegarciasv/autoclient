@@ -12,9 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const schema = z.object({
   trayectoriaExperiencia: z.string().min(1),
-  cantidadProyectos: z.string().min(1),
-  montosProyectos: z.string().min(1),
-  marketShareLocal: z.string().min(1),
   certificacionesInternacionales: z.boolean(),
   detallesCertificaciones: z.string().optional(),
   polizasSeguros: z.boolean(),
@@ -24,7 +21,6 @@ const schema = z.object({
   creditoOtorga: z.string().min(1),
   garantiasFianzas: z.boolean(),
   presenciaRegional: z.string().min(1),
-  marketShareRegional: z.string().min(1),
   campanasReciclaje: z.boolean(),
   detallesReciclaje: z.string().optional(),
 });
@@ -51,9 +47,6 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
     resolver: zodResolver(schema),
     defaultValues: {
       trayectoriaExperiencia: toStr(ep.trayectoriaExperiencia),
-      cantidadProyectos: toStr(ep.cantidadProyectos),
-      montosProyectos: toStr(ep.montosProyectos),
-      marketShareLocal: toStr(ep.marketShareLocal),
       certificacionesInternacionales: Boolean(ep.certificacionesInternacionales),
       detallesCertificaciones: toStr(ep.detallesCertificaciones),
       polizasSeguros: Boolean(ep.polizasSeguros),
@@ -63,7 +56,6 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
       creditoOtorga: toStr(ep.creditoOtorga),
       garantiasFianzas: Boolean(ep.garantiasFianzas),
       presenciaRegional: toStr(ep.presenciaRegional),
-      marketShareRegional: toStr(ep.marketShareRegional),
       campanasReciclaje: Boolean(ep.campanasReciclaje),
       detallesReciclaje: toStr(ep.detallesReciclaje),
     },
@@ -127,16 +119,6 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
               <SelectField name="trayectoriaExperiencia" label="Años de trayectoria / experiencia" options={[
                 "Menos de 1 año", "1 a 3 años", "3 a 5 años", "5 a 10 años", "Más de 10 años",
               ]} />
-              <SelectField name="cantidadProyectos" label="Cantidad de proyectos ejecutados" options={[
-                "1 a 5", "6 a 10", "11 a 20", "21 a 50", "Más de 50",
-              ]} />
-              <SelectField name="montosProyectos" label="Montos de proyectos ejecutados (USD)" options={[
-                "Menos de $10,000", "$10,000 a $50,000", "$50,000 a $100,000",
-                "$100,000 a $500,000", "Más de $500,000",
-              ]} />
-              <SelectField name="marketShareLocal" label="Market share en El Salvador" options={[
-                "Menos del 5%", "5% a 15%", "15% a 30%", "30% a 50%", "Más del 50%",
-              ]} />
             </div>
           </CardContent>
         </Card>
@@ -190,9 +172,6 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
               <SelectField name="presenciaRegional" label="Presencia regional (Centroamérica)" options={[
                 "Solo El Salvador", "El Salvador y Guatemala", "El Salvador y Honduras",
                 "El Salvador y Nicaragua", "Toda Centroamérica", "Centroamérica y más",
-              ]} />
-              <SelectField name="marketShareRegional" label="Market share regional" options={[
-                "Menos del 5%", "5% a 15%", "15% a 30%", "30% a 50%", "Más del 50%",
               ]} />
             </div>
 

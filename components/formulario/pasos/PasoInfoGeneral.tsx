@@ -19,7 +19,6 @@ const schema = z.object({
   razonSocial:             z.string().min(1, "Requerido"),
   nombreComercial:         z.string().min(1, "Requerido"),
   nit:                     z.string().min(1, "Requerido"),
-  iva:                     z.string().min(1, "Requerido"),
   actividadReal:           z.string().min(1, "Requerido"),
   tipoEmpresa:             z.string().min(1, "Requerido"),
   tipoActividadEconomica:  z.string().min(1, "Requerido"),
@@ -50,7 +49,7 @@ const schema = z.object({
   productoServicio:        z.string().min(1, "Requerido"),
 
   // ── Campos exclusivos PROVEEDOR (opcionales en schema, validados manualmente) ─
-  nrc:                      z.string().optional(),
+  nrc:                      z.string().min(1, "Requerido"),
   codigoActividadEconomica: z.string().optional(),
   categoriaContribuyente:   z.string().optional(),
   nombreContacto:           z.string().optional(),
@@ -66,14 +65,14 @@ type Datos = z.infer<typeof schema>;
 
 // Campos requeridos para PROVEEDOR al hacer clic en "Siguiente"
 const CAMPOS_REQUERIDOS_PROVEEDOR: (keyof Datos)[] = [
-  "nrc", "codigoActividadEconomica", "categoriaContribuyente",
+  "codigoActividadEconomica", "categoriaContribuyente",
   "telefonoCelular",
   "nombreContacto", "correoVendedor", "correoComprobantes",
   "numeroCuentaBancaria", "titularCuenta", "tipoCuenta", "banco",
 ];
 
 const LABELS_CAMPO: Partial<Record<keyof Datos, string>> = {
-  nrc:                      "N° de Registro (NRC)",
+  nrc:                      "N° de Registro IVA / NRC",
   codigoActividadEconomica: "Código de Actividad Económica",
   categoriaContribuyente:   "Categoría de Contribuyente",
   telefonoCelular:          "Teléfono Celular",
@@ -132,7 +131,6 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
       razonSocial:             toStr(ig.razonSocial),
       nombreComercial:         toStr(ig.nombreComercial),
       nit:                     toStr(ig.nit),
-      iva:                     toStr(ig.iva),
       actividadReal:           toStr(ig.actividadReal),
       tipoEmpresa:             toStr(ig.tipoEmpresa),
       tipoActividadEconomica:  toStr(ig.tipoActividadEconomica),
@@ -269,10 +267,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
               <Field name="razonSocial"    label="Razón Social" />
               <Field name="nombreComercial" label="Nombre Comercial" />
               <Field name="nit"            label="NIT" placeholder="0000-000000-000-0" />
-              <Field name="iva"            label="Número de Registro IVA" />
-              {esProveedor && (
-                <Field name="nrc" label="N° de Registro (NRC)" placeholder="Ej: 12345-6" />
-              )}
+              <Field name="nrc" label="N° de Registro IVA / NRC" placeholder="Ej: 12345-6" />
               <Field name="actividadReal"  label="Giro / Actividad Real" />
               <SelectField name="tipoEmpresa" label="Tipo de Empresa" requerido options={[
                 "Sociedad Anónima", "Sociedad de Responsabilidad Limitada", "Empresa Individual",
