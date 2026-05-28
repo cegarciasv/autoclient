@@ -9,7 +9,7 @@ datasource db {
 
 enum Rol {
   ADMIN
-  OPERADOR
+  EJECUTIVO
 }
 
 enum TipoTercero {
@@ -30,13 +30,13 @@ enum Estado {
 }
 
 model AdminUser {
-  id       String   @id @default(cuid())
-  nombre   String
-  email    String   @unique
-  password String
-  rol      Rol      @default(OPERADOR)
-  activo   Boolean  @default(true)
-  creadoEn DateTime @default(now())
+  id          String   @id @default(cuid())
+  nombre      String
+  email       String   @unique
+  microsoftId String?
+  rol         Rol      @default(EJECUTIVO)
+  activo      Boolean  @default(true)
+  creadoEn    DateTime @default(now())
 }
 
 model Tercero {

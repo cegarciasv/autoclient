@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { crearSesionAdmin, nombreCookieAdmin } from "@/lib/auth-admin";
 import { z } from "zod";
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(1),
 });
 
 export async function POST(request: NextRequest) {
@@ -16,16 +14,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
   }
 
-  const { email, password } = parsed.data;
+  const { email } = parsed.data;
 
   const admin = await prisma.adminUser.findUnique({ where: { email } });
   if (!admin || !admin.activo) {
-    return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
-  }
-
-  const valido = await bcrypt.compare(password, admin.password);
-  if (!valido) {
-    return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
+    return NextResponse.json({ error: "Usuario no encontrado" }, { status: 401 });
   }
 
   const token = await crearSesionAdmin({ id: admin.id, email: admin.email, rol: admin.rol });
