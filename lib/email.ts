@@ -107,6 +107,52 @@ export async function enviarOTP(
   }
 }
 
+export async function enviarAccesoSistema(
+  destinatario: string,
+  nombre: string,
+  rol: string
+) {
+  const rolTexto = rol === "ADMIN" ? "Administrador" : "Ejecutivo";
+  const url = `${process.env.APP_URL}/admin/login`;
+
+  try {
+    const transporter = makeTransporter();
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to: destinatario,
+      subject: "Grupo Remor — Acceso al Sistema Interno",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
+            <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+          </div>
+          <div style="padding: 30px; background: #f9f9f9;">
+            <p>Estimado/a <strong>${nombre}</strong>,</p>
+            <p>Se le ha otorgado acceso al <strong>Sistema Interno de Vinculación</strong> con el rol de <strong>${rolTexto}</strong>.</p>
+            <p>Para acceder, haga clic en el siguiente botón e inicie sesión con su cuenta Microsoft 365:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${url}" style="background-color: #1B3C22; color: white; padding: 14px 28px;
+                 text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">
+                Acceder al Sistema
+              </a>
+            </div>
+            <p style="font-size: 12px; color: #666;">Su correo de Microsoft 365 registrado: <strong>${destinatario}</strong></p>
+          </div>
+          <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
+            Correo enviado automáticamente — Grupo Remor
+          </div>
+        </div>
+      `,
+    });
+  } catch (err) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(`⚠️ SMTP no disponible. Email de acceso para: ${destinatario} (${nombre}, ${rolTexto})`);
+      return;
+    }
+    throw err;
+  }
+}
+
 async function enviarOTPReal(destinatario: string, razonSocial: string, codigo: string) {
   const transporter = makeTransporter();
   await transporter.sendMail({
