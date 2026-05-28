@@ -12,15 +12,22 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Proteger rutas del panel admin
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login") && !pathname.startsWith("/api/auth/")) {
     const token = request.cookies.get("admin_session")?.value;
     if (!token) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
     try {
-      await jwtVerify(token, ADMIN_SECRET);
+      const { payload } = await jwtVerify(token, ADMIN_SECRET);
+
+      // Control de acceso por rol: solo ADMIN puede acceder a /admin/usuarios
+      if (pathname.startsWith("/admin/usuarios") && payload.rol !== "ADMIN") {
+        return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      }
     } catch {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
+      const response = NextResponse.redirect(new URL("/admin/login", request.url));
+      response.cookies.delete("admin_session");
+      return response;
     }
   }
 

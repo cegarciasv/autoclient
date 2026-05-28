@@ -12,19 +12,34 @@ interface TipoDoc {
   requerido: boolean;
 }
 
-const DOCUMENTOS_REQUERIDOS: TipoDoc[] = [
-  { tipo: "formulario_firmado", label: "Formulario de Vinculación Firmado", requerido: true },
-  { tipo: "dui_representante", label: "Fotocopia DUI/Pasaporte del Representante Legal", requerido: true },
-  { tipo: "nit_representante", label: "Tarjeta de Identificación Tributaria (NIT) del Representante Legal", requerido: true },
-  { tipo: "credencial_administrador", label: "Credencial vigente de Elección de Administrador / Junta Directiva", requerido: true },
-  { tipo: "escritura_constitucion", label: "Escritura de Constitución de la Sociedad", requerido: true },
-  { tipo: "matricula_comercio", label: "Matrícula de Comercio Vigente", requerido: true },
-  { tipo: "comprobante_domicilio", label: "Comprobante de Domicilio de la Empresa", requerido: true },
-  { tipo: "nit_nrc_empresa", label: "Fotocopia de NIT y Número de Registro Fiscal (NRC)", requerido: true },
-  { tipo: "pasaporte_extranjero", label: "Copia de Pasaporte o Carné de Residencia (si aplica)", requerido: false },
-  { tipo: "acuerdo_decreto", label: "Acuerdo/Decreto/Acta (Asociaciones, ONGs, Cooperativas)", requerido: false },
-  { tipo: "poder_apoderado", label: "Fotocopia de Poder (si firma un apoderado)", requerido: false },
-  { tipo: "dui_nit_apoderado", label: "Fotocopia DUI y NIT del Apoderado", requerido: false },
+/** Documentos para Persona Jurídica (empresa/sociedad) */
+const DOCS_JURIDICA: TipoDoc[] = [
+  { tipo: "formulario_firmado",      label: "Formulario de Vinculación Firmado",                                  requerido: true  },
+  { tipo: "dui_representante",       label: "Fotocopia DUI/Pasaporte del Representante Legal",                    requerido: true  },
+  { tipo: "nit_representante",       label: "Tarjeta de Identificación Tributaria (NIT) del Representante Legal", requerido: true  },
+  { tipo: "credencial_administrador",label: "Credencial vigente de Elección de Administrador / Junta Directiva",  requerido: true  },
+  { tipo: "escritura_constitucion",  label: "Escritura de Constitución de la Sociedad",                           requerido: true  },
+  { tipo: "matricula_comercio",      label: "Matrícula de Comercio Vigente",                                      requerido: true  },
+  { tipo: "comprobante_domicilio",   label: "Comprobante de Domicilio de la Empresa",                             requerido: true  },
+  { tipo: "nit_nrc_empresa",         label: "Fotocopia de NIT y Número de Registro Fiscal (NRC)",                 requerido: true  },
+  { tipo: "pasaporte_extranjero",    label: "Copia de Pasaporte o Carné de Residencia (si aplica)",               requerido: false },
+  { tipo: "acuerdo_decreto",         label: "Acuerdo/Decreto/Acta (Asociaciones, ONGs, Cooperativas)",            requerido: false },
+  { tipo: "poder_apoderado",         label: "Fotocopia de Poder (si firma un apoderado)",                         requerido: false },
+  { tipo: "dui_nit_apoderado",       label: "Fotocopia DUI y NIT del Apoderado",                                  requerido: false },
+];
+
+/** Documentos para Persona Natural */
+const DOCS_NATURAL: TipoDoc[] = [
+  { tipo: "formulario_firmado",    label: "Formulario de Vinculación Firmado",                    requerido: true  },
+  { tipo: "dui_representante",     label: "Fotocopia DUI/Pasaporte",                              requerido: true  },
+  { tipo: "nit_representante",     label: "Tarjeta de Identificación Tributaria (NIT)",           requerido: true  },
+  { tipo: "comprobante_domicilio", label: "Comprobante de Domicilio",                             requerido: true  },
+  // Opcionales para natural — no aplica Junta Directiva ni Escritura de Constitución
+  { tipo: "matricula_comercio",    label: "Matrícula de Comercio Vigente (si aplica)",            requerido: false },
+  { tipo: "nit_nrc_empresa",       label: "Fotocopia de NIT y Número de Registro Fiscal (NRC) (si aplica)", requerido: false },
+  { tipo: "pasaporte_extranjero",  label: "Copia de Pasaporte o Carné de Residencia (si aplica)", requerido: false },
+  { tipo: "poder_apoderado",       label: "Fotocopia de Poder (si firma un apoderado)",           requerido: false },
+  { tipo: "dui_nit_apoderado",     label: "Fotocopia DUI y NIT del Apoderado",                   requerido: false },
 ];
 
 interface DocSubido {
@@ -43,6 +58,10 @@ interface Props {
 }
 
 export default function PasoCargaDocumentos({ formulario, onAnterior, token }: Props) {
+  // Determinar lista de documentos según tipo de persona
+  const tipoPersona = (formulario.tercero as Record<string, unknown> | null)?.tipoPersona as string | undefined;
+  const DOCUMENTOS = tipoPersona === "NATURAL" ? DOCS_NATURAL : DOCS_JURIDICA;
+
   const docsIniciales: DocSubido[] = Array.isArray(formulario.documentos)
     ? (formulario.documentos as { tipo: string; nombreArchivo: string; tamanoBytes: number }[]).map((d) => ({
         tipo: d.tipo,
@@ -101,7 +120,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
   }
 
   async function finalizar() {
-    const faltantes = DOCUMENTOS_REQUERIDOS.filter((d) => d.requerido && !docSubido(d.tipo));
+    const faltantes = DOCUMENTOS.filter((d) => d.requerido && !docSubido(d.tipo));
     if (faltantes.length > 0) {
       toast.error(`Faltan ${faltantes.length} documento(s) requerido(s) por cargar`);
       return;
@@ -124,8 +143,8 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
     }
   }
 
-  const requeridos = DOCUMENTOS_REQUERIDOS.filter((d) => d.requerido);
-  const opcionales = DOCUMENTOS_REQUERIDOS.filter((d) => !d.requerido);
+  const requeridos = DOCUMENTOS.filter((d) => d.requerido);
+  const opcionales = DOCUMENTOS.filter((d) => !d.requerido);
   const completados = requeridos.filter((d) => docSubido(d.tipo)).length;
 
   return (

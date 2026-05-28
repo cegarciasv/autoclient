@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -136,6 +136,83 @@ function toBool(v: unknown): boolean {
   return v === true || v === "true";
 }
 
+// ── Componentes auxiliares FUERA del componente principal ─────────────────────
+// IMPORTANTE: deben estar fuera para evitar que React los desmonte en cada render.
+
+interface FieldProps {
+  name: keyof Datos;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  register: UseFormRegister<Datos>;
+  errors: FieldErrors<Datos>;
+  campoRequerido: (name: keyof Datos) => boolean;
+}
+function Field({ name, label, type = "text", placeholder, register, errors, campoRequerido }: FieldProps) {
+  const cls = errors[name] ? "border-red-500" : "";
+  return (
+    <div className="space-y-1">
+      <Label>
+        {label}
+        {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
+      </Label>
+      <Input {...register(name)} type={type} placeholder={placeholder} className={cls} />
+      {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
+    </div>
+  );
+}
+
+interface SelectFieldProps {
+  name: keyof Datos;
+  label: string;
+  options: string[];
+  defaultVal: string;
+  setValue: UseFormSetValue<Datos>;
+  errors: FieldErrors<Datos>;
+  campoRequerido: (name: keyof Datos) => boolean;
+}
+function SelectField({ name, label, options, defaultVal, setValue, errors, campoRequerido }: SelectFieldProps) {
+  const cls = errors[name] ? "border-red-500" : "";
+  return (
+    <div className="space-y-1">
+      <Label>
+        {label}
+        {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
+      </Label>
+      <Select defaultValue={defaultVal} onValueChange={(v) => setValue(name, (v ?? "") as never)}>
+        <SelectTrigger className={cls}>
+          <SelectValue placeholder="Seleccione..." />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}
+        </SelectContent>
+      </Select>
+      {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
+    </div>
+  );
+}
+
+interface CheckFieldProps {
+  name: keyof Datos;
+  label: string;
+  checked: boolean;
+  setValue: UseFormSetValue<Datos>;
+}
+function CheckField({ name, label, checked, setValue }: CheckFieldProps) {
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox
+        id={name}
+        checked={checked}
+        onCheckedChange={(v) => setValue(name, v as never)}
+      />
+      <Label htmlFor={name} className="font-normal text-sm cursor-pointer">{label}</Label>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Props) {
   const ig = (formulario.infoGeneral as Record<string, unknown>) ?? {};
   const tercero = (formulario.tercero as Record<string, unknown>) ?? {};
@@ -236,11 +313,6 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
     await onGuardar({ infoGeneral: datos, clientesPrincipales: clientes }, false);
   }
 
-  const err = (campo: keyof Datos) => errors[campo] ? "border-red-500" : "";
-  const req = (campo: keyof Datos) =>
-    (esProveedor && CAMPOS_REQUERIDOS_PROVEEDOR.includes(campo)) ||
-    (esJuridica && CAMPOS_REQUERIDOS_JURIDICA.includes(campo));
-
   // Determina si un campo debe mostrar asterisco de requerido
   function campoRequerido(name: keyof Datos): boolean {
     if (name === "telefonoCelular") return esProveedor;
@@ -249,58 +321,10 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
     return shape ? !shape.isOptional() : false;
   }
 
-  function SelectField({ name, label, options }: {
-    name: keyof Datos; label: string; options: string[];
-  }) {
-    return (
-      <div className="space-y-1">
-        <Label>
-          {label}
-          {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
-        </Label>
-        <Select
-          defaultValue={toStr(ig[name as string]) || watch(name) as string}
-          onValueChange={(v) => setValue(name, (v ?? "") as never)}
-        >
-          <SelectTrigger className={err(name)}>
-            <SelectValue placeholder="Seleccione..." />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
-      </div>
-    );
-  }
-
-  function CheckField({ name, label }: { name: keyof Datos; label: string }) {
-    return (
-      <div className="flex items-center gap-2">
-        <Checkbox
-          id={name}
-          checked={watch(name) as boolean}
-          onCheckedChange={(v) => setValue(name, v as never)}
-        />
-        <Label htmlFor={name} className="font-normal text-sm cursor-pointer">{label}</Label>
-      </div>
-    );
-  }
-
-  function Field({ name, label, type = "text", placeholder }: {
-    name: keyof Datos; label: string; type?: string; placeholder?: string;
-  }) {
-    return (
-      <div className="space-y-1">
-        <Label>
-          {label}
-          {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
-        </Label>
-        <Input {...register(name)} type={type} placeholder={placeholder} className={err(name)} />
-        {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
-      </div>
-    );
-  }
+  // Props comunes para los componentes auxiliares
+  const fieldProps = { register, errors, campoRequerido };
+  const selectProps = { setValue, errors, campoRequerido };
+  const checkProps = { setValue };
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit((d) => onSubmit(d, true))(); }}>
@@ -353,31 +377,31 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field name="razonSocial"    label={esNatural ? "Nombre Completo" : "Razón Social"} />
-              <Field name="nombreComercial" label="Nombre Comercial" />
-              <Field name="nit"            label="NIT" placeholder="0000-000000-000-0" />
-              <Field name="nrc" label="N° de Registro IVA / NRC" placeholder="Ej: 12345-6" />
-              <Field name="actividadReal"  label="Giro / Actividad Real" />
-              <SelectField name="tipoEmpresa" label="Tipo de Empresa" options={[
+              <Field {...fieldProps} name="razonSocial"    label={esNatural ? "Nombre Completo" : "Razón Social"} />
+              <Field {...fieldProps} name="nombreComercial" label="Nombre Comercial" />
+              <Field {...fieldProps} name="nit"            label="NIT" placeholder="0000-000000-000-0" />
+              <Field {...fieldProps} name="nrc" label="N° de Registro IVA / NRC" placeholder="Ej: 12345-6" />
+              <Field {...fieldProps} name="actividadReal"  label="Giro / Actividad Real" />
+              <SelectField {...selectProps} name="tipoEmpresa" label="Tipo de Empresa" defaultVal={toStr(ig.tipoEmpresa)} options={[
                 "Sociedad Anónima", "Sociedad de Responsabilidad Limitada", "Empresa Individual",
                 "Cooperativa", "ONG / Asociación", "Otro",
               ]} />
-              <SelectField name="tipoActividadEconomica" label="Tipo de Actividad Económica" options={[
+              <SelectField {...selectProps} name="tipoActividadEconomica" label="Tipo de Actividad Económica" defaultVal={toStr(ig.tipoActividadEconomica)} options={[
                 "Comercio", "Industria / Manufactura", "Servicios", "Agropecuaria", "Construcción", "Otro",
               ]} />
               {esProveedor && (
-                <Field name="codigoActividadEconomica" label="Código de Actividad Económica" placeholder="Ej: 4711" />
+                <Field {...fieldProps} name="codigoActividadEconomica" label="Código de Actividad Económica" placeholder="Ej: 4711" />
               )}
               {esProveedor && (
-                <SelectField name="categoriaContribuyente" label="Categoría de Contribuyente" options={[
+                <SelectField {...selectProps} name="categoriaContribuyente" label="Categoría de Contribuyente" defaultVal={toStr(ig.categoriaContribuyente)} options={[
                   "Grande contribuyente", "Mediano contribuyente", "Pequeño contribuyente", "Otro",
                 ]} />
               )}
-              <Field name="productoServicio" label="Producto / Servicio principal" />
+              <Field {...fieldProps} name="productoServicio" label="Producto / Servicio principal" />
             </div>
             <div className="space-y-2 pt-1">
-              <CheckField name="obligacionesTributarias" label="Declara que cumple con las obligaciones tributarias y fiscales vigentes" />
-              <CheckField name="sistemaLAFT" label="Cuenta con Sistema de Prevención de Lavado de Activos y Financiamiento al Terrorismo (LAFT)" />
+              <CheckField {...checkProps} name="obligacionesTributarias" label="Declara que cumple con las obligaciones tributarias y fiscales vigentes" checked={watch("obligacionesTributarias")} />
+              <CheckField {...checkProps} name="sistemaLAFT" label="Cuenta con Sistema de Prevención de Lavado de Activos y Financiamiento al Terrorismo (LAFT)" checked={watch("sistemaLAFT")} />
             </div>
           </CardContent>
         </Card>
@@ -391,11 +415,11 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1 sm:col-span-2">
                 <Label>Dirección Principal <span className="text-red-500">*</span></Label>
-                <Input {...register("direccionPrincipal")} className={err("direccionPrincipal")} />
+                <Input {...register("direccionPrincipal")} className={errors.direccionPrincipal ? "border-red-500" : ""} />
               </div>
-              <Field name="departamento" label="Departamento" />
-              <Field name="ciudad"       label="Ciudad / Municipio" />
-              <Field name="correoElectronico" label="Correo Electrónico" type="email" />
+              <Field {...fieldProps} name="departamento" label="Departamento" />
+              <Field {...fieldProps} name="ciudad"       label="Ciudad / Municipio" />
+              <Field {...fieldProps} name="correoElectronico" label="Correo Electrónico" type="email" />
               <div className="space-y-1">
                 <Label>Teléfono Fijo</Label>
                 <Input {...register("telefonoFijo")} placeholder="2222-2222" />
@@ -405,7 +429,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                   Teléfono Celular
                   {esProveedor && <span className="text-red-500 ml-0.5">*</span>}
                 </Label>
-                <Input {...register("telefonoCelular")} placeholder="7777-7777" className={err("telefonoCelular")} />
+                <Input {...register("telefonoCelular")} placeholder="7777-7777" className={errors.telefonoCelular ? "border-red-500" : ""} />
               </div>
             </div>
           </CardContent>
@@ -422,11 +446,11 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field name="nombreContacto"    label="Nombre del Contacto / Vendedor" />
-                <Field name="correoVendedor"    label="Correo del Vendedor" type="email" />
+                <Field {...fieldProps} name="nombreContacto"    label="Nombre del Contacto / Vendedor" />
+                <Field {...fieldProps} name="correoVendedor"    label="Correo del Vendedor" type="email" />
                 <div className="space-y-1 sm:col-span-2">
                   <Label>Correo para Recepción de Comprobantes de Pago <span className="text-red-500">*</span></Label>
-                  <Input {...register("correoComprobantes")} type="email" className={err("correoComprobantes")} />
+                  <Input {...register("correoComprobantes")} type="email" className={errors.correoComprobantes ? "border-red-500" : ""} />
                   <p className="text-xs text-gray-400">A este correo se enviarán los comprobantes de pago electrónicos.</p>
                 </div>
               </div>
@@ -495,15 +519,15 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                   <Input
                     {...register("numeroCuentaBancaria")}
                     placeholder="Sin guiones (ej: 10281234567890)"
-                    className={err("numeroCuentaBancaria")}
+                    className={errors.numeroCuentaBancaria ? "border-red-500" : ""}
                   />
                   <p className="text-xs text-gray-400">Ingrese el número sin guiones ni espacios.</p>
                 </div>
-                <Field name="titularCuenta" label="Titular de la Cuenta" />
-                <SelectField name="tipoCuenta" label="Tipo de Cuenta" options={[
+                <Field {...fieldProps} name="titularCuenta" label="Titular de la Cuenta" />
+                <SelectField {...selectProps} name="tipoCuenta" label="Tipo de Cuenta" defaultVal={toStr(ig.tipoCuenta)} options={[
                   "Ahorro", "Corriente",
                 ]} />
-                <SelectField name="banco" label="Banco" options={[
+                <SelectField {...selectProps} name="banco" label="Banco" defaultVal={toStr(ig.banco)} options={[
                   "Banco Cuscatlán", "Banco Agrícola", "Banco de América Central (BAC)",
                   "Banco Davivienda", "Banco G&T Continental", "Banco Promerica",
                   "Scotiabank", "Citibank", "Banco Hipotecario", "Otro",
@@ -530,34 +554,34 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
               </p>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field name="rlPrimerApellido"     label="Primer Apellido" />
-              <Field name="rlSegundoApellido"    label="Segundo Apellido" />
-              <Field name="rlNombres"            label="Nombres" />
-              <SelectField name="rlTipoIdentificacion" label="Tipo de Identificación" options={[
+              <Field {...fieldProps} name="rlPrimerApellido"     label="Primer Apellido" />
+              <Field {...fieldProps} name="rlSegundoApellido"    label="Segundo Apellido" />
+              <Field {...fieldProps} name="rlNombres"            label="Nombres" />
+              <SelectField {...selectProps} name="rlTipoIdentificacion" label="Tipo de Identificación" defaultVal={toStr(ig.rlTipoIdentificacion)} options={[
                 "DUI", "NIT", "Pasaporte", "Carné de Residente",
               ]} />
-              <Field name="rlNumeroDocumento"    label="Número de Documento" />
-              <Field name="rlFechaExpedicion"    label="Fecha de Expedición" type="date" />
-              <Field name="rlLugarExpedicion"    label="Lugar de Expedición" />
+              <Field {...fieldProps} name="rlNumeroDocumento"    label="Número de Documento" />
+              <Field {...fieldProps} name="rlFechaExpedicion"    label="Fecha de Expedición" type="date" />
+              <Field {...fieldProps} name="rlLugarExpedicion"    label="Lugar de Expedición" />
               <div className="space-y-1">
                 <Label>Fecha de Vencimiento</Label>
                 <Input {...register("rlFechaVencimiento")} type="date" />
               </div>
-              <SelectField name="rlGenero"       label="Género" options={["Masculino", "Femenino", "Otro"]} />
-              <SelectField name="rlEstadoCivil"  label="Estado Civil" options={[
+              <SelectField {...selectProps} name="rlGenero"       label="Género" defaultVal={toStr(ig.rlGenero)} options={["Masculino", "Femenino", "Otro"]} />
+              <SelectField {...selectProps} name="rlEstadoCivil"  label="Estado Civil" defaultVal={toStr(ig.rlEstadoCivil)} options={[
                 "Soltero/a", "Casado/a", "Divorciado/a", "Viudo/a", "Unión libre",
               ]} />
-              <Field name="rlFechaNacimiento"    label="Fecha de Nacimiento" type="date" />
-              <Field name="rlLugarNacimiento"    label="Lugar de Nacimiento" />
+              <Field {...fieldProps} name="rlFechaNacimiento"    label="Fecha de Nacimiento" type="date" />
+              <Field {...fieldProps} name="rlLugarNacimiento"    label="Lugar de Nacimiento" />
             </div>
 
             <Separator />
             <p className="text-sm font-medium text-gray-700">Declaración PEP (Persona Expuesta Políticamente)</p>
             <div className="space-y-2">
-              <CheckField name="pepRecursosPublicos"   label="Maneja o ha manejado recursos públicos" />
-              <CheckField name="pepFamiliaresPublicos" label="Tiene familiares que manejan recursos públicos" />
-              <CheckField name="pepCargosPublicos"     label="Ejerce o ha ejercido cargos públicos de alto nivel" />
-              <CheckField name="pepSistemaLAFT"        label="Está vinculado al Sistema LAFT" />
+              <CheckField {...checkProps} name="pepRecursosPublicos"   label="Maneja o ha manejado recursos públicos"           checked={watch("pepRecursosPublicos")} />
+              <CheckField {...checkProps} name="pepFamiliaresPublicos" label="Tiene familiares que manejan recursos públicos"   checked={watch("pepFamiliaresPublicos")} />
+              <CheckField {...checkProps} name="pepCargosPublicos"     label="Ejerce o ha ejercido cargos públicos de alto nivel" checked={watch("pepCargosPublicos")} />
+              <CheckField {...checkProps} name="pepSistemaLAFT"        label="Está vinculado al Sistema LAFT"                   checked={watch("pepSistemaLAFT")} />
             </div>
           </CardContent>
         </Card>
