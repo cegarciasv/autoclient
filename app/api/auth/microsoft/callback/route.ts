@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { crearSesionAdmin, nombreCookieAdmin } from "@/lib/auth-admin";
 
+/** Construye URL usando APP_URL (dominio público) en vez de request.url
+ *  que dentro de Docker/EasyPanel apunta a 0.0.0.0 */
+function appRedirect(path: string) {
+  const base = (process.env.APP_URL ?? "").replace(/\/$/, "");
+  return NextResponse.redirect(`${base}${path}`);
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -10,15 +17,13 @@ export async function GET(request: NextRequest) {
 
     const storedState = request.cookies.get("ms_oauth_state")?.value;
     if (!state || !storedState || state !== storedState) {
-      return NextResponse.redirect(
-        new URL("/admin/login?error=server_error", request.url),
-      );
+      return appRedirect("/admin/login?error=server_error");
     }
 
     const tenantId = process.env.MICROSOFT_TENANT_ID!;
     const clientId = process.env.MICROSOFT_CLIENT_ID!;
     const clientSecret = process.env.MICROSOFT_CLIENT_SECRET!;
-    const appUrl = process.env.APP_URL!;
+    const appUrl = (process.env.APP_URL ?? "").replace(/\/$/, "");
 
     const tokenBody = new URLSearchParams({
       grant_type: "authorization_code",
@@ -38,9 +43,9 @@ export async function GET(request: NextRequest) {
     );
 
     if (!tokenResponse.ok) {
-      return NextResponse.redirect(
-        new URL("/admin/login?error=server_error", request.url),
-      );
+      const errBody = await tokenResponse.text();
+      console.error("Microsoft token error:", tokenResponse.status, errBody);
+      return appRedirect("/admin/login?error=server_error");
     }
 
     const tokenData = (await tokenResponse.json()) as { id_token: string };
@@ -48,23 +53,20 @@ export async function GET(request: NextRequest) {
 
     const idTokenPayload = JSON.parse(
       Buffer.from(idToken.split(".")[1], "base64url").toString(),
-    ) as { email: string; preferred_username?: string; oid: string };
+    ) as { email?: string; preferred_username?: string; oid: string };
 
     const email = idTokenPayload.email ?? idTokenPayload.preferred_username;
     const oid = idTokenPayload.oid;
 
     if (!email) {
-      return NextResponse.redirect(
-        new URL("/admin/login?error=server_error", request.url),
-      );
+      console.error("Microsoft id_token no contiene email ni preferred_username");
+      return appRedirect("/admin/login?error=server_error");
     }
 
     const user = await prisma.adminUser.findUnique({ where: { email } });
 
     if (!user || !user.activo) {
-      return NextResponse.redirect(
-        new URL("/admin/login?error=no_access", request.url),
-      );
+      return appRedirect("/admin/login?error=no_access");
     }
 
     if (!user.microsoftId) {
@@ -81,24 +83,21 @@ export async function GET(request: NextRequest) {
       rol: user.rol,
     });
 
-    const response = NextResponse.redirect(
-      new URL("/admin/dashboard", request.url),
-    );
+    const response = appRedirect("/admin/dashboard");
 
     response.cookies.set(nombreCookieAdmin(), token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "lax",
-      maxAge: 60 * 60 * 8, // 8 hours
+      maxAge: 60 * 60 * 8, // 8 horas
       path: "/",
     });
 
     response.cookies.delete("ms_oauth_state");
 
     return response;
-  } catch {
-    return NextResponse.redirect(
-      new URL("/admin/login?error=server_error", request.url),
-    );
+  } catch (err) {
+    console.error("OAuth callback error:", err);
+    return appRedirect("/admin/login?error=server_error");
   }
 }
