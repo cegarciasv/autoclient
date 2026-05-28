@@ -183,6 +183,9 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                   .join("");
                 const avatarColors = getAvatarColors(tipo);
 
+                // El tipo de persona solo se muestra si el formulario fue iniciado
+                const tipoDefinido = t.formulario && t.formulario.progreso > 0;
+
                 return (
                   <TableRow
                     key={t.id}
@@ -202,15 +205,19 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                       </div>
                     </TableCell>
 
-                    {/* Tipo Persona */}
+                    {/* Tipo Persona — solo visible si el formulario ya fue iniciado */}
                     <TableCell>
-                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
-                        t.tipoPersona === "NATURAL"
-                          ? "bg-blue-50 text-blue-700 border-blue-200"
-                          : "bg-violet-50 text-violet-700 border-violet-200"
-                      }`}>
-                        {t.tipoPersona === "NATURAL" ? "Natural" : "Jurídica"}
-                      </span>
+                      {tipoDefinido ? (
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
+                          t.tipoPersona === "NATURAL"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-violet-50 text-violet-700 border-violet-200"
+                        }`}>
+                          {t.tipoPersona === "NATURAL" ? "Natural" : "Jurídica"}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-400 italic">Sin definir</span>
+                      )}
                     </TableCell>
 
                     {/* Documento */}
