@@ -11,16 +11,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Building2, User } from "lucide-react";
 import { toast } from "sonner";
 
-// ── Schema base (aplica a CLIENTE y PROVEEDOR) ───────────────────────────────
+// ── Schema base — campos opcionales en Zod; se validan manualmente según tipo ─
 const schema = z.object({
+  tipoPersona:             z.enum(["NATURAL", "JURIDICA"]),
   razonSocial:             z.string().min(1, "Requerido"),
-  nombreComercial:         z.string().min(1, "Requerido"),
+  nombreComercial:         z.string().optional(), // requerido para JURIDICA
   nit:                     z.string().min(1, "Requerido"),
   actividadReal:           z.string().min(1, "Requerido"),
-  tipoEmpresa:             z.string().min(1, "Requerido"),
+  tipoEmpresa:             z.string().optional(), // requerido para JURIDICA
   tipoActividadEconomica:  z.string().min(1, "Requerido"),
   obligacionesTributarias: z.boolean(),
   sistemaLAFT:             z.boolean(),
@@ -30,26 +31,28 @@ const schema = z.object({
   correoElectronico:       z.string().email("Correo inválido"),
   telefonoFijo:            z.string().optional(),
   telefonoCelular:         z.string().optional(),
-  rlPrimerApellido:        z.string().min(1, "Requerido"),
-  rlSegundoApellido:       z.string().min(1, "Requerido"),
-  rlNombres:               z.string().min(1, "Requerido"),
-  rlTipoIdentificacion:    z.string().min(1, "Requerido"),
-  rlNumeroDocumento:       z.string().min(1, "Requerido"),
-  rlFechaExpedicion:       z.string().min(1, "Requerido"),
-  rlLugarExpedicion:       z.string().min(1, "Requerido"),
+  // Representante Legal — requeridos solo para JURIDICA
+  rlPrimerApellido:        z.string().optional(),
+  rlSegundoApellido:       z.string().optional(),
+  rlNombres:               z.string().optional(),
+  rlTipoIdentificacion:    z.string().optional(),
+  rlNumeroDocumento:       z.string().optional(),
+  rlFechaExpedicion:       z.string().optional(),
+  rlLugarExpedicion:       z.string().optional(),
   rlFechaVencimiento:      z.string().optional(),
-  rlGenero:                z.string().min(1, "Requerido"),
-  rlEstadoCivil:           z.string().min(1, "Requerido"),
-  rlFechaNacimiento:       z.string().min(1, "Requerido"),
-  rlLugarNacimiento:       z.string().min(1, "Requerido"),
+  rlGenero:                z.string().optional(),
+  rlEstadoCivil:           z.string().optional(),
+  rlFechaNacimiento:       z.string().optional(),
+  rlLugarNacimiento:       z.string().optional(),
   pepRecursosPublicos:     z.boolean(),
   pepFamiliaresPublicos:   z.boolean(),
   pepCargosPublicos:       z.boolean(),
   pepSistemaLAFT:          z.boolean(),
   productoServicio:        z.string().min(1, "Requerido"),
 
-  // ── Campos exclusivos PROVEEDOR (opcionales en schema, validados manualmente) ─
-  nrc:                      z.string().min(1, "Requerido"),
+  // ── NRC/IVA — requerido para JURIDICA; validado manualmente ─
+  nrc:                      z.string().optional(),
+  // ── Campos exclusivos PROVEEDOR (validados manualmente) ─
   codigoActividadEconomica: z.string().optional(),
   categoriaContribuyente:   z.string().optional(),
   nombreContacto:           z.string().optional(),
@@ -62,6 +65,15 @@ const schema = z.object({
 });
 
 type Datos = z.infer<typeof schema>;
+
+// Campos requeridos para PERSONA JURÍDICA
+const CAMPOS_REQUERIDOS_JURIDICA: (keyof Datos)[] = [
+  "nombreComercial", "tipoEmpresa", "nrc",
+  "rlPrimerApellido", "rlSegundoApellido", "rlNombres",
+  "rlTipoIdentificacion", "rlNumeroDocumento", "rlFechaExpedicion",
+  "rlLugarExpedicion", "rlGenero", "rlEstadoCivil",
+  "rlFechaNacimiento", "rlLugarNacimiento",
+];
 
 // Campos requeridos para PROVEEDOR al hacer clic en "Siguiente"
 const CAMPOS_REQUERIDOS_PROVEEDOR: (keyof Datos)[] = [
@@ -83,6 +95,19 @@ const LABELS_CAMPO: Partial<Record<keyof Datos, string>> = {
   titularCuenta:            "Titular de la Cuenta",
   tipoCuenta:               "Tipo de Cuenta",
   banco:                    "Banco",
+  nombreComercial:          "Nombre Comercial",
+  tipoEmpresa:              "Tipo de Empresa",
+  rlPrimerApellido:         "Primer Apellido (Representante Legal)",
+  rlSegundoApellido:        "Segundo Apellido (Representante Legal)",
+  rlNombres:                "Nombres (Representante Legal)",
+  rlTipoIdentificacion:     "Tipo de Identificación (Representante Legal)",
+  rlNumeroDocumento:        "Número de Documento (Representante Legal)",
+  rlFechaExpedicion:        "Fecha de Expedición (Representante Legal)",
+  rlLugarExpedicion:        "Lugar de Expedición (Representante Legal)",
+  rlGenero:                 "Género (Representante Legal)",
+  rlEstadoCivil:            "Estado Civil (Representante Legal)",
+  rlFechaNacimiento:        "Fecha de Nacimiento (Representante Legal)",
+  rlLugarNacimiento:        "Lugar de Nacimiento (Representante Legal)",
 };
 
 interface ClientePrincipal {
@@ -128,6 +153,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   const { register, handleSubmit, getValues, setValue, watch, formState: { errors } } = useForm<Datos>({
     resolver: zodResolver(schema),
     defaultValues: {
+      tipoPersona:             (toStr(ig.tipoPersona) || "JURIDICA") as "NATURAL" | "JURIDICA",
       razonSocial:             toStr(ig.razonSocial),
       nombreComercial:         toStr(ig.nombreComercial),
       nit:                     toStr(ig.nit),
@@ -173,7 +199,22 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
     },
   });
 
-  // Validación adicional para campos exclusivos de proveedor
+  const tipoPersona = watch("tipoPersona");
+  const esJuridica = tipoPersona === "JURIDICA";
+  const esNatural = tipoPersona === "NATURAL";
+
+  // Valida campos requeridos para persona jurídica
+  function validarJuridica(datos: Datos): boolean {
+    const faltantes = CAMPOS_REQUERIDOS_JURIDICA.filter((campo) => !datos[campo]);
+    if (faltantes.length > 0) {
+      const nombres = faltantes.map((c) => LABELS_CAMPO[c] ?? c).join(", ");
+      toast.error(`Campos requeridos para persona jurídica: ${nombres}`);
+      return false;
+    }
+    return true;
+  }
+
+  // Valida campos requeridos para proveedor
   function validarProveedor(datos: Datos): boolean {
     const faltantes = CAMPOS_REQUERIDOS_PROVEEDOR.filter((campo) => !datos[campo]);
     if (faltantes.length > 0) {
@@ -185,6 +226,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   }
 
   async function onSubmit(datos: Datos, siguiente: boolean) {
+    if (siguiente && esJuridica && !validarJuridica(datos)) return;
     if (siguiente && esProveedor && !validarProveedor(datos)) return;
     await onGuardar({ infoGeneral: datos, clientesPrincipales: clientes }, siguiente);
   }
@@ -195,18 +237,26 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   }
 
   const err = (campo: keyof Datos) => errors[campo] ? "border-red-500" : "";
-  const req = esProveedor
-    ? (campo: keyof Datos) => CAMPOS_REQUERIDOS_PROVEEDOR.includes(campo)
-    : () => false;
+  const req = (campo: keyof Datos) =>
+    (esProveedor && CAMPOS_REQUERIDOS_PROVEEDOR.includes(campo)) ||
+    (esJuridica && CAMPOS_REQUERIDOS_JURIDICA.includes(campo));
 
-  function SelectField({ name, label, options, requerido }: {
-    name: keyof Datos; label: string; options: string[]; requerido?: boolean;
+  // Determina si un campo debe mostrar asterisco de requerido
+  function campoRequerido(name: keyof Datos): boolean {
+    if (name === "telefonoCelular") return esProveedor;
+    if (CAMPOS_REQUERIDOS_JURIDICA.includes(name)) return esJuridica;
+    const shape = schema.shape[name];
+    return shape ? !shape.isOptional() : false;
+  }
+
+  function SelectField({ name, label, options }: {
+    name: keyof Datos; label: string; options: string[];
   }) {
     return (
       <div className="space-y-1">
         <Label>
           {label}
-          {requerido && <span className="text-red-500 ml-0.5">*</span>}
+          {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
         </Label>
         <Select
           defaultValue={toStr(ig[name as string]) || watch(name) as string}
@@ -240,12 +290,11 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   function Field({ name, label, type = "text", placeholder }: {
     name: keyof Datos; label: string; type?: string; placeholder?: string;
   }) {
-    const isReq = name === "telefonoCelular" ? esProveedor : !schema.shape[name].isOptional();
     return (
       <div className="space-y-1">
         <Label>
           {label}
-          {(isReq || req(name)) && <span className="text-red-500 ml-0.5">*</span>}
+          {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
         </Label>
         <Input {...register(name)} type={type} placeholder={placeholder} className={err(name)} />
         {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
@@ -257,6 +306,46 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit((d) => onSubmit(d, true))(); }}>
       <div className="space-y-6">
 
+        {/* ── Tipo de Persona ── */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base text-[#1B3C22]">Tipo de Persona</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setValue("tipoPersona", "JURIDICA")}
+                className={`flex items-center gap-2 px-5 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                  tipoPersona === "JURIDICA"
+                    ? "bg-[#1A7A30] text-white border-[#1A7A30]"
+                    : "border-gray-200 text-gray-600 hover:border-[#1A7A30] hover:text-[#1A7A30]"
+                }`}
+              >
+                <Building2 className="h-4 w-4" />
+                Persona Jurídica
+              </button>
+              <button
+                type="button"
+                onClick={() => setValue("tipoPersona", "NATURAL")}
+                className={`flex items-center gap-2 px-5 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                  tipoPersona === "NATURAL"
+                    ? "bg-[#1A7A30] text-white border-[#1A7A30]"
+                    : "border-gray-200 text-gray-600 hover:border-[#1A7A30] hover:text-[#1A7A30]"
+                }`}
+              >
+                <User className="h-4 w-4" />
+                Persona Natural
+              </button>
+            </div>
+            {esNatural && (
+              <p className="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-1.5">
+                Los campos marcados con * son obligatorios. El resto son opcionales para persona natural.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
         {/* ── Datos de la Empresa ── */}
         <Card>
           <CardHeader className="pb-3">
@@ -264,23 +353,23 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field name="razonSocial"    label="Razón Social" />
+              <Field name="razonSocial"    label={esNatural ? "Nombre Completo" : "Razón Social"} />
               <Field name="nombreComercial" label="Nombre Comercial" />
               <Field name="nit"            label="NIT" placeholder="0000-000000-000-0" />
               <Field name="nrc" label="N° de Registro IVA / NRC" placeholder="Ej: 12345-6" />
               <Field name="actividadReal"  label="Giro / Actividad Real" />
-              <SelectField name="tipoEmpresa" label="Tipo de Empresa" requerido options={[
+              <SelectField name="tipoEmpresa" label="Tipo de Empresa" options={[
                 "Sociedad Anónima", "Sociedad de Responsabilidad Limitada", "Empresa Individual",
                 "Cooperativa", "ONG / Asociación", "Otro",
               ]} />
-              <SelectField name="tipoActividadEconomica" label="Tipo de Actividad Económica" requerido options={[
+              <SelectField name="tipoActividadEconomica" label="Tipo de Actividad Económica" options={[
                 "Comercio", "Industria / Manufactura", "Servicios", "Agropecuaria", "Construcción", "Otro",
               ]} />
               {esProveedor && (
                 <Field name="codigoActividadEconomica" label="Código de Actividad Económica" placeholder="Ej: 4711" />
               )}
               {esProveedor && (
-                <SelectField name="categoriaContribuyente" label="Categoría de Contribuyente" requerido options={[
+                <SelectField name="categoriaContribuyente" label="Categoría de Contribuyente" options={[
                   "Grande contribuyente", "Mediano contribuyente", "Pequeño contribuyente", "Otro",
                 ]} />
               )}
@@ -411,10 +500,10 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                   <p className="text-xs text-gray-400">Ingrese el número sin guiones ni espacios.</p>
                 </div>
                 <Field name="titularCuenta" label="Titular de la Cuenta" />
-                <SelectField name="tipoCuenta" label="Tipo de Cuenta" requerido options={[
+                <SelectField name="tipoCuenta" label="Tipo de Cuenta" options={[
                   "Ahorro", "Corriente",
                 ]} />
-                <SelectField name="banco" label="Banco" requerido options={[
+                <SelectField name="banco" label="Banco" options={[
                   "Banco Cuscatlán", "Banco Agrícola", "Banco de América Central (BAC)",
                   "Banco Davivienda", "Banco G&T Continental", "Banco Promerica",
                   "Scotiabank", "Citibank", "Banco Hipotecario", "Otro",
@@ -427,14 +516,24 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Representante Legal ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Representante Legal</CardTitle>
+            <CardTitle className="text-base text-[#1B3C22]">
+              Representante Legal
+              {esNatural && (
+                <span className="ml-2 text-xs font-normal text-gray-400">(Opcional para persona natural)</span>
+              )}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {esNatural && (
+              <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+                Si usted es el titular, puede completar esta sección con sus propios datos o dejarla en blanco.
+              </p>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field name="rlPrimerApellido"     label="Primer Apellido" />
               <Field name="rlSegundoApellido"    label="Segundo Apellido" />
               <Field name="rlNombres"            label="Nombres" />
-              <SelectField name="rlTipoIdentificacion" label="Tipo de Identificación" requerido options={[
+              <SelectField name="rlTipoIdentificacion" label="Tipo de Identificación" options={[
                 "DUI", "NIT", "Pasaporte", "Carné de Residente",
               ]} />
               <Field name="rlNumeroDocumento"    label="Número de Documento" />
@@ -444,8 +543,8 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                 <Label>Fecha de Vencimiento</Label>
                 <Input {...register("rlFechaVencimiento")} type="date" />
               </div>
-              <SelectField name="rlGenero"       label="Género" requerido options={["Masculino", "Femenino", "Otro"]} />
-              <SelectField name="rlEstadoCivil"  label="Estado Civil" requerido options={[
+              <SelectField name="rlGenero"       label="Género" options={["Masculino", "Femenino", "Otro"]} />
+              <SelectField name="rlEstadoCivil"  label="Estado Civil" options={[
                 "Soltero/a", "Casado/a", "Divorciado/a", "Viudo/a", "Unión libre",
               ]} />
               <Field name="rlFechaNacimiento"    label="Fecha de Nacimiento" type="date" />

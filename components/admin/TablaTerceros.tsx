@@ -24,6 +24,7 @@ interface Tercero {
   email: string;
   estado: string;
   creadoEn: string;
+  tipoPersona?: string | null;
   formulario?: { progreso: number; pasoActual: number } | null;
 }
 
@@ -126,6 +127,9 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                 Razón Social
               </TableHead>
               <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+                Tipo
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
                 Documento
               </TableHead>
               <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
@@ -146,7 +150,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
             {filtrados.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   className="text-center py-14 text-slate-400"
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -196,6 +200,17 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                           {t.razonSocial}
                         </span>
                       </div>
+                    </TableCell>
+
+                    {/* Tipo Persona */}
+                    <TableCell>
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
+                        t.tipoPersona === "NATURAL"
+                          ? "bg-blue-50 text-blue-700 border-blue-200"
+                          : "bg-violet-50 text-violet-700 border-violet-200"
+                      }`}>
+                        {t.tipoPersona === "NATURAL" ? "Natural" : "Jurídica"}
+                      </span>
                     </TableCell>
 
                     {/* Documento */}

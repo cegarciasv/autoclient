@@ -42,6 +42,7 @@ model AdminUser {
 model Tercero {
   id              String        @id @default(cuid())
   tipo            TipoTercero
+  tipoPersona     String        @default("JURIDICA") // NATURAL | JURIDICA
   razonSocial     String
   tipoDocumento   TipoDocumento
   numeroDocumento String
@@ -91,9 +92,9 @@ model InfoGeneral {
   formularioId            String     @unique
   formulario              Formulario @relation(fields: [formularioId], references: [id])
   razonSocial             String
-  nombreComercial         String
+  nombreComercial         String?
   nit                     String
-  iva                     String
+  iva                     String?   // obsoleto — campo unificado con nrc
   actividadReal           String
   tipoEmpresa             String
   tipoActividadEconomica  String
@@ -106,18 +107,18 @@ model InfoGeneral {
   correoElectronico       String
   telefonoFijo            String?
   telefonoCelular         String?
-  rlPrimerApellido        String
-  rlSegundoApellido       String
-  rlNombres               String
-  rlTipoIdentificacion    String
-  rlNumeroDocumento       String
-  rlFechaExpedicion       DateTime
-  rlLugarExpedicion       String
+  rlPrimerApellido        String?
+  rlSegundoApellido       String?
+  rlNombres               String?
+  rlTipoIdentificacion    String?
+  rlNumeroDocumento       String?
+  rlFechaExpedicion       DateTime?
+  rlLugarExpedicion       String?
   rlFechaVencimiento      DateTime?
-  rlGenero                String
-  rlEstadoCivil           String
-  rlFechaNacimiento       DateTime
-  rlLugarNacimiento       String
+  rlGenero                String?
+  rlEstadoCivil           String?
+  rlFechaNacimiento       DateTime?
+  rlLugarNacimiento       String?
   pepRecursosPublicos     Boolean    @default(false)
   pepFamiliaresPublicos   Boolean    @default(false)
   pepCargosPublicos       Boolean    @default(false)
@@ -194,9 +195,9 @@ model EncuestaProveedor {
   formularioId                   String     @unique
   formulario                     Formulario @relation(fields: [formularioId], references: [id])
   trayectoriaExperiencia         String
-  cantidadProyectos              String
-  montosProyectos                String
-  marketShareLocal               String
+  cantidadProyectos              String?  // eliminado del formulario
+  montosProyectos                String?  // eliminado del formulario
+  marketShareLocal               String?  // eliminado del formulario
   certificacionesInternacionales Boolean
   detallesCertificaciones        String?
   polizasSeguros                 Boolean
@@ -206,7 +207,7 @@ model EncuestaProveedor {
   creditoOtorga                  String
   garantiasFianzas               Boolean
   presenciaRegional              String
-  marketShareRegional            String
+  marketShareRegional            String?  // eliminado del formulario
   campanasReciclaje              Boolean
   detallesReciclaje              String?
 }

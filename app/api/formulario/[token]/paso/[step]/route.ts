@@ -58,7 +58,7 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
     // Si ya está completado, solo guardamos los datos pero NO modificamos estado ni progreso
     switch (pasoNum) {
       case 1:
-        await guardarPaso1(formulario.id, body as Record<string, unknown>);
+        await guardarPaso1(formulario.id, formulario.terceroId, body as Record<string, unknown>);
         break;
       case 2:
         await guardarPaso2(formulario.id, body as Record<string, unknown>);
@@ -102,11 +102,19 @@ function toDecimal(v: unknown): number | null {
   return isNaN(n) ? null : n;
 }
 
-async function guardarPaso1(formularioId: string, data: Record<string, unknown>) {
+async function guardarPaso1(formularioId: string, terceroId: string, data: Record<string, unknown>) {
   const { infoGeneral, clientesPrincipales } = data as {
     infoGeneral: Record<string, unknown>;
     clientesPrincipales: Array<{ nombreRazonSocial: string; porcentajeParticipacion: string }>;
   };
+
+  // Sincronizar tipoPersona en Tercero para que sea visible en la tabla del admin
+  if (infoGeneral?.tipoPersona) {
+    await prisma.tercero.update({
+      where: { id: terceroId },
+      data: { tipoPersona: infoGeneral.tipoPersona as string },
+    });
+  }
 
   if (infoGeneral) {
     // Campos DateTime: convertir strings a Date (null si vacío)
