@@ -42,7 +42,7 @@ model AdminUser {
 model Tercero {
   id              String        @id @default(cuid())
   tipo            TipoTercero
-  tipoPersona     String        @default("JURIDICA") // NATURAL | JURIDICA
+  tipoPersona     String?       // null = sin seleccionar | "NATURAL" | "JURIDICA"
   razonSocial     String
   tipoDocumento   TipoDocumento
   numeroDocumento String

@@ -11,6 +11,7 @@ import PasoEncuestaProveedor from "./pasos/PasoEncuestaProveedor";
 import PasoDescargaFirma from "./pasos/PasoDescargaFirma";
 import PasoCargaDocumentos from "./pasos/PasoCargaDocumentos";
 import BarraProgreso from "./BarraProgreso";
+import ModalTipoPersona from "./ModalTipoPersona";
 
 interface Props {
   token: string;
@@ -46,6 +47,10 @@ export default function FormularioPasos({
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const direccion = useRef<1 | -1>(1); // 1=adelante, -1=atrás
+
+  // Mostrar modal de selección de tipo persona solo si no fue seleccionado aún
+  const tercero = formulario.tercero as Record<string, unknown> | undefined;
+  const tipoPersonaSinSeleccionar = pasoActual === 1 && !tercero?.tipoPersona;
 
   async function guardarPaso(datos: Record<string, unknown>, siguiente = true) {
     setGuardando(true);
@@ -117,6 +122,18 @@ export default function FormularioPasos({
 
   return (
     <div className="space-y-6">
+      {/* Modal tipo persona: aparece en paso 1 si el usuario aún no eligió */}
+      {tipoPersonaSinSeleccionar && (
+        <ModalTipoPersona
+          token={token}
+          onSeleccion={() => {
+            // Full browser navigation — fuerza remonte completo del componente
+            // para que useForm tome el nuevo tipoPersona desde el servidor
+            window.location.href = `/formulario/${token}/paso/1`;
+          }}
+        />
+      )}
+
       <BarraProgreso pasos={pasos} pasoActual={pasoActual} progreso={progreso} />
       <AnimatePresence mode="wait" custom={direccion.current}>
         <motion.div
