@@ -9,22 +9,37 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
   const sesion = await obtenerSesionFormulario(token);
   if (!sesion) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-  const formulario = await prisma.formulario.findUnique({
-    where: { terceroId: sesion.terceroId },
-    include: { documentos: true },
-  });
+  const [formulario, tercero] = await Promise.all([
+    prisma.formulario.findUnique({
+      where: { terceroId: sesion.terceroId },
+      include: { documentos: true },
+    }),
+    prisma.tercero.findUnique({
+      where: { id: sesion.terceroId },
+      select: { tipoPersona: true },
+    }),
+  ]);
   if (!formulario) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
 
-  const tiposObligatorios = [
-    "formulario_firmado",
-    "dui_representante",
-    "nit_representante",
-    "credencial_administrador",
-    "escritura_constitucion",
-    "matricula_comercio",
-    "comprobante_domicilio",
-    "nit_nrc_empresa",
-  ];
+  const esNatural = tercero?.tipoPersona === "NATURAL";
+
+  const tiposObligatorios = esNatural
+    ? [
+        "formulario_firmado",
+        "dui_representante",
+        "nit_representante",
+        "comprobante_domicilio",
+      ]
+    : [
+        "formulario_firmado",
+        "dui_representante",
+        "nit_representante",
+        "credencial_administrador",
+        "escritura_constitucion",
+        "matricula_comercio",
+        "comprobante_domicilio",
+        "nit_nrc_empresa",
+      ];
 
   const tiposCargados = new Set(formulario.documentos.map((d: { tipo: string }) => d.tipo));
   const faltantes = tiposObligatorios.filter((t) => !tiposCargados.has(t));
