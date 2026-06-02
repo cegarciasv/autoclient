@@ -70,13 +70,13 @@ export default function AdminLayoutClient({ children, session }: Props) {
         )}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
           <Image
             src="/logo-tsi-dark.png"
             alt="Transebastian"
             width={220}
             height={220}
-            className="h-24 w-auto object-contain"
+            className="h-48 w-auto object-contain"
             priority
           />
           {/* Cerrar en móvil */}
