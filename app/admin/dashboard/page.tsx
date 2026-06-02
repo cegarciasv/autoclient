@@ -51,8 +51,8 @@ export default async function DashboardPage() {
       label: "Total Proveedores",
       value: totalProveedores,
       icon: "Truck",
-      iconBg: "bg-gradient-to-br from-purple-500 to-purple-700",
-      border: "border-purple-100",
+      iconBg: "bg-gradient-to-br from-[#18A8F0] to-[#1890F0]",
+      border: "border-[#18A8F0]/20",
     },
     {
       label: "Pendientes",

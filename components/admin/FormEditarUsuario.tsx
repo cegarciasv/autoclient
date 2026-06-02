@@ -128,7 +128,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
             </Badge>
           )}
           {usuario.rol === "ADMIN" ? (
-            <Badge className="bg-purple-100 text-purple-700 border-0 font-semibold">
+            <Badge className="bg-[#F26A1A]/12 text-[#F26A1A] border-0 font-semibold">
               ADMIN
             </Badge>
           ) : (

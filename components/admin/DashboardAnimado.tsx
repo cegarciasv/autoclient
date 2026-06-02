@@ -189,7 +189,7 @@ export default function DashboardAnimado({
                         className="flex items-center gap-3 py-2.5 px-2 rounded-lg border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all"
                       >
                         <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                          esCliente ? "bg-gradient-to-br from-[#2B5BE2] to-[#1E3A8A]" : "bg-gradient-to-br from-purple-500 to-purple-700"
+                          esCliente ? "bg-gradient-to-br from-[#2B5BE2] to-[#1E3A8A]" : "bg-gradient-to-br from-[#18A8F0] to-[#1890F0]"
                         }`}>
                           {inicial}
                         </div>

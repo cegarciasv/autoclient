@@ -85,7 +85,7 @@ export default async function UsuariosPage() {
                   <TableCell className="text-slate-600">{u.email}</TableCell>
                   <TableCell>
                     {u.rol === "ADMIN" ? (
-                      <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-0 font-semibold">
+                      <Badge className="bg-[#F26A1A]/12 text-[#F26A1A] hover:bg-[#F26A1A]/12 border-0 font-semibold">
                         ADMIN
                       </Badge>
                     ) : (

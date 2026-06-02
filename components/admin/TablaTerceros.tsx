@@ -57,7 +57,7 @@ const ESTADO_MAP = {
 function getAvatarColors(tipo: "clientes" | "proveedores") {
   return tipo === "clientes"
     ? "bg-blue-100 text-[#1E3A8A]"
-    : "bg-purple-100 text-purple-700";
+    : "bg-[#18A8F0]/15 text-[#1890F0]";
 }
 
 function getProgressColor(pct: number) {
