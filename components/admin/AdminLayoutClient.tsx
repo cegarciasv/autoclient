@@ -72,7 +72,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
         {/* Logo */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
           <Image
-            src="/logo-dark.png"
+            src="/logo-tsi-dark.png"
             alt="Transebastian"
             width={220}
             height={220}
@@ -156,7 +156,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
             <Menu className="h-5 w-5" />
           </button>
           <Image
-            src="/logo-dark.png"
+            src="/logo-tsi-dark.png"
             alt="Transebastian"
             width={120}
             height={120}

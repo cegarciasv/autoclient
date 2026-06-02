@@ -42,7 +42,7 @@ export default async function LoginPage({
         {/* Logo */}
         <div className="relative">
           <Image
-            src="/logo.png"
+            src="/logo-tsi.png"
             alt="Transebastian"
             width={400}
             height={400}
@@ -124,7 +124,7 @@ export default async function LoginPage({
         {/* Logo visible solo en móvil */}
         <div className="lg:hidden mb-10">
           <Image
-            src="/logo.png"
+            src="/logo-tsi.png"
             alt="Transebastian"
             width={300}
             height={300}

@@ -8,7 +8,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       <header className="bg-gradient-to-r from-[#1E3A8A] to-[#2B5BE2] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <Image
-            src="/logo-dark.png"
+            src="/logo-tsi-dark.png"
             alt="Transebastian"
             width={240}
             height={240}
@@ -31,7 +31,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       <footer className="bg-white border-t border-slate-200 py-4 px-6">
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <Image
-            src="/logo.png"
+            src="/logo-tsi.png"
             alt="Transebastian"
             width={40}
             height={40}
