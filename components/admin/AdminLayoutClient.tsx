@@ -74,9 +74,9 @@ export default function AdminLayoutClient({ children, session }: Props) {
           <Image
             src="/logo-dark.png"
             alt="Transebastian"
-            width={160}
-            height={160}
-            className="h-14 w-auto object-contain"
+            width={220}
+            height={220}
+            className="h-24 w-auto object-contain"
             priority
           />
           {/* Cerrar en móvil */}
