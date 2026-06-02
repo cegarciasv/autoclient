@@ -72,7 +72,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
         {/* Logo */}
         <div className="flex items-center justify-between px-4 py-5 border-b border-white/10">
           <Image
-            src="/logo.png"
+            src="/logo-dark.png"
             alt="Transporte Sebastián"
             width={400}
             height={274}
@@ -103,7 +103,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
                 className={cn(
                   "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                   activo
-                    ? "bg-[#2563EB] text-white shadow-sm shadow-black/20 border-l-2 border-[#60A5FA]"
+                    ? "bg-[#2563EB] text-white shadow-sm shadow-black/20 border-l-2 border-[#FFB414]"
                     : "text-white/60 hover:bg-white/10 hover:text-white"
                 )}
               >
@@ -156,7 +156,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
             <Menu className="h-5 w-5" />
           </button>
           <Image
-            src="/logo.png"
+            src="/logo-dark.png"
             alt="Transporte Sebastián"
             width={300}
             height={205}
