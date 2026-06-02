@@ -46,7 +46,7 @@ export default async function LoginPage({
             alt="Transporte Sebastián"
             width={500}
             height={342}
-            className="w-64 h-auto object-contain"
+            className="w-80 h-auto object-contain"
             priority
           />
         </div>
@@ -128,7 +128,7 @@ export default async function LoginPage({
             alt="Transporte Sebastián"
             width={400}
             height={274}
-            className="w-56 h-auto object-contain"
+            className="w-64 h-auto object-contain"
             priority
           />
         </div>

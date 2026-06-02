@@ -8,11 +8,11 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       <header className="bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <Image
-            src="/logo.png"
+            src="/logo-dark.png"
             alt="Transporte Sebastián"
-            width={160}
-            height={50}
-            className="h-12 w-auto object-contain"
+            width={400}
+            height={274}
+            className="w-48 h-auto object-contain"
             priority
           />
           <div className="border-l border-white/20 pl-4">
@@ -33,9 +33,9 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
           <Image
             src="/logo.png"
             alt="Transporte Sebastián"
-            width={90}
-            height={28}
-            className="h-7 w-auto object-contain opacity-70"
+            width={300}
+            height={205}
+            className="w-32 h-auto object-contain opacity-80"
           />
           <span className="text-xs text-slate-400">
             © {new Date().getFullYear()} Transporte Sebastián · Todos los derechos reservados

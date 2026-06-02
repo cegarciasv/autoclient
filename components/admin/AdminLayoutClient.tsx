@@ -76,7 +76,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
             alt="Transporte Sebastián"
             width={400}
             height={274}
-            className="w-44 h-auto object-contain"
+            className="w-56 h-auto object-contain"
             priority
           />
           {/* Cerrar en móvil */}
@@ -160,7 +160,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
             alt="Transporte Sebastián"
             width={300}
             height={205}
-            className="w-36 h-auto object-contain"
+            className="w-44 h-auto object-contain"
             priority
           />
         </header>
