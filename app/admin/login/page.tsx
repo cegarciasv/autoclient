@@ -46,7 +46,7 @@ export default async function LoginPage({
             alt="Transebastian"
             width={400}
             height={400}
-            className="h-auto w-auto max-h-64 object-contain"
+            className="h-auto w-auto max-h-[28vh] object-contain"
             priority
           />
         </div>
@@ -128,7 +128,7 @@ export default async function LoginPage({
             alt="Transebastian"
             width={300}
             height={300}
-            className="max-h-48 w-auto object-contain"
+            className="max-h-[18vh] w-auto object-contain"
             priority
           />
         </div>
