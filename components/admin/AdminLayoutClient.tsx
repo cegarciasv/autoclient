@@ -70,18 +70,18 @@ export default function AdminLayoutClient({ children, session }: Props) {
         )}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
+        <div className="flex items-center justify-between px-4 py-5 border-b border-white/10">
           <Image
             src="/logo.png"
             alt="Transporte Sebastián"
-            width={300}
-            height={96}
-            className="h-20 w-auto object-contain"
+            width={400}
+            height={274}
+            className="w-44 h-auto object-contain"
             priority
           />
           {/* Cerrar en móvil */}
           <button
-            className="ml-auto lg:hidden text-white/50 hover:text-white transition-colors"
+            className="ml-2 shrink-0 lg:hidden text-white/50 hover:text-white transition-colors"
             onClick={() => setSidebarAbierto(false)}
           >
             <X className="h-4 w-4" />
@@ -158,9 +158,9 @@ export default function AdminLayoutClient({ children, session }: Props) {
           <Image
             src="/logo.png"
             alt="Transporte Sebastián"
-            width={200}
-            height={56}
-            className="h-14 w-auto object-contain"
+            width={300}
+            height={205}
+            className="w-36 h-auto object-contain"
             priority
           />
         </header>
