@@ -70,20 +70,18 @@ export default function AdminLayoutClient({ children, session }: Props) {
         )}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
-          <div className="bg-white rounded-xl p-2 shadow-sm">
-            <Image
-              src="/logo.png"
-              alt="Transebastian"
-              width={160}
-              height={160}
-              className="h-16 w-16 object-contain"
-              priority
-            />
-          </div>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          <Image
+            src="/logo-dark.png"
+            alt="Transebastian"
+            width={160}
+            height={160}
+            className="h-14 w-auto object-contain"
+            priority
+          />
           {/* Cerrar en móvil */}
           <button
-            className="ml-auto lg:hidden text-white/50 hover:text-white transition-colors"
+            className="lg:hidden text-white/50 hover:text-white transition-colors"
             onClick={() => setSidebarAbierto(false)}
           >
             <X className="h-4 w-4" />
@@ -157,16 +155,14 @@ export default function AdminLayoutClient({ children, session }: Props) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <div className="bg-white rounded-lg p-1.5 shadow-sm">
-            <Image
-              src="/logo.png"
-              alt="Transebastian"
-              width={120}
-              height={120}
-              className="h-11 w-11 object-contain"
-              priority
-            />
-          </div>
+          <Image
+            src="/logo-dark.png"
+            alt="Transebastian"
+            width={120}
+            height={120}
+            className="h-10 w-auto object-contain"
+            priority
+          />
         </header>
 
         <main className="flex-1 p-6 lg:p-8 overflow-auto max-w-7xl w-full mx-auto">

@@ -5,26 +5,25 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#1E3A8A] to-[#2B5BE2] text-white py-4 px-6 shadow-lg">
+      <header className="bg-white shadow-sm border-b border-slate-200 py-3 px-6">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <div className="bg-white rounded-lg p-1.5 shadow-sm">
-            <Image
-              src="/logo.png"
-              alt="Transebastian"
-              width={120}
-              height={120}
-              className="h-11 w-11 object-contain"
-              priority
-            />
-          </div>
-          <div className="border-l border-white/20 pl-4">
-            <p className="text-xs text-white/70 leading-tight">Formulario de Vinculación</p>
+          <Image
+            src="/logo.png"
+            alt="Transebastian"
+            width={120}
+            height={120}
+            className="h-12 w-12 object-contain"
+            priority
+          />
+          <div className="border-l border-slate-200 pl-4">
+            <p className="text-xs text-[#1E3A8A] font-semibold leading-tight">Formulario de Vinculación</p>
+            <p className="text-[10px] text-slate-400 leading-tight">Transebastian</p>
           </div>
         </div>
       </header>
 
-      {/* Banda decorativa */}
-      <div className="h-[3px] bg-[#2B5BE2] w-full" />
+      {/* Banda de color de marca */}
+      <div className="h-[3px] bg-gradient-to-r from-[#1E3A8A] via-[#2B5BE2] to-[#F26A1A] w-full" />
 
       <main className="bg-slate-50 flex-1 py-8 px-4">
         <div className="max-w-3xl mx-auto">{children}</div>
