@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Grupo Remor — Formulario de Vinculación",
-  description: "Sistema de vinculación de clientes y proveedores de Grupo Remor",
+  title: "Transporte Sebastián — Formulario de Vinculación",
+  description: "Sistema de vinculación de clientes y proveedores de Transporte Sebastián",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

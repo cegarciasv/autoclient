@@ -12,7 +12,7 @@ export default function CompletadoPage() {
       <div className="space-y-2">
         <h1 className="text-2xl font-bold text-gray-900">¡Proceso completado!</h1>
         <p className="text-gray-600">
-          Su formulario de vinculación ha sido enviado exitosamente a Grupo Remor.
+          Su formulario de vinculación ha sido enviado exitosamente a Transporte Sebastián.
         </p>
       </div>
 
@@ -26,7 +26,7 @@ export default function CompletadoPage() {
       </div>
 
       <p className="text-xs text-gray-400">
-        Si tiene consultas, comuníquese con su representante de Grupo Remor.
+        Si tiene consultas, comuníquese con su representante de Transporte Sebastián.
       </p>
     </div>
   );

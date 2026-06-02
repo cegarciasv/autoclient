@@ -213,7 +213,7 @@ export default function FormularioLoginPage({
       </Card>
 
       <p className="text-center text-xs text-slate-400 mt-5">
-        Si tiene problemas para acceder, contacte a su representante de Grupo Remor
+        Si tiene problemas para acceder, contacte a su representante de Transporte Sebastián
       </p>
     </div>
   );
