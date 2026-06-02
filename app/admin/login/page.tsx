@@ -44,9 +44,9 @@ export default async function LoginPage({
           <Image
             src="/logo.png"
             alt="Transebastian"
-            width={360}
-            height={112}
-            className="h-28 w-auto object-contain"
+            width={180}
+            height={180}
+            className="h-28 w-28 object-contain"
             priority
           />
         </div>
@@ -126,9 +126,9 @@ export default async function LoginPage({
           <Image
             src="/logo.png"
             alt="Transebastian"
-            width={280}
-            height={88}
-            className="h-20 w-auto object-contain"
+            width={140}
+            height={140}
+            className="h-20 w-20 object-contain"
             priority
           />
         </div>

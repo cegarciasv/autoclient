@@ -7,14 +7,16 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       {/* Header */}
       <header className="bg-gradient-to-r from-[#1B4F8A] to-[#2872C7] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <Image
-            src="/logo.png"
-            alt="Transebastian"
-            width={160}
-            height={50}
-            className="h-12 w-auto object-contain"
-            priority
-          />
+          <div className="bg-white rounded-lg p-1.5 shadow-sm">
+            <Image
+              src="/logo.png"
+              alt="Transebastian"
+              width={120}
+              height={120}
+              className="h-11 w-11 object-contain"
+              priority
+            />
+          </div>
           <div className="border-l border-white/20 pl-4">
             <p className="text-xs text-white/70 leading-tight">Formulario de Vinculación</p>
           </div>
@@ -33,9 +35,9 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
           <Image
             src="/logo.png"
             alt="Transebastian"
-            width={90}
-            height={28}
-            className="h-7 w-auto object-contain opacity-70"
+            width={40}
+            height={40}
+            className="h-9 w-9 object-contain opacity-70"
           />
           <span className="text-xs text-slate-400">
             © {new Date().getFullYear()} Transebastian · Todos los derechos reservados
