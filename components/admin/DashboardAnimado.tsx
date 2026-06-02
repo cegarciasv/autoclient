@@ -60,7 +60,7 @@ function EstadoBadge({ estado }: { estado: string }) {
   const styles: Record<string, string> = {
     PENDIENTE: "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
     EN_PROCESO: "bg-orange-50 text-orange-700 ring-1 ring-orange-200",
-    COMPLETADO: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+    COMPLETADO: "bg-blue-50 text-blue-700 ring-1 ring-blue-200",
   };
   const labels: Record<string, string> = {
     PENDIENTE: "Pendiente",
@@ -110,7 +110,7 @@ export default function DashboardAnimado({
             {[
               { label: "Pendientes", count: pendientes, pct: pctPendientes, color: "from-amber-400 to-amber-500", dot: "bg-amber-400" },
               { label: "En proceso", count: enProceso, pct: pctEnProceso, color: "from-orange-400 to-orange-500", dot: "bg-orange-400" },
-              { label: "Completados", count: completados, pct: pctCompletados, color: "from-emerald-400 to-emerald-600", dot: "bg-emerald-500" },
+              { label: "Completados", count: completados, pct: pctCompletados, color: "from-blue-400 to-blue-600", dot: "bg-blue-500" },
             ].map((row) => (
               <div key={row.label} className="space-y-1.5">
                 <div className="flex justify-between items-center text-sm">
@@ -147,7 +147,7 @@ export default function DashboardAnimado({
               <Link
                 href="/admin/clientes/nuevo"
                 className={buttonVariants({
-                  className: "w-full bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] hover:from-[#155E25] hover:to-[#1A7A30] text-white font-semibold gap-2 justify-center",
+                  className: "w-full bg-gradient-to-r from-[#1B4F8A] to-[#2872C7] hover:from-[#1F5FA8] hover:to-[#2872C7] text-white font-semibold gap-2 justify-center",
                 })}
               >
                 <UserPlus className="h-4 w-4" />
@@ -189,7 +189,7 @@ export default function DashboardAnimado({
                         className="flex items-center gap-3 py-2.5 px-2 rounded-lg border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all"
                       >
                         <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                          esCliente ? "bg-gradient-to-br from-[#1A7A30] to-[#1B3C22]" : "bg-gradient-to-br from-purple-500 to-purple-700"
+                          esCliente ? "bg-gradient-to-br from-[#2872C7] to-[#1B4F8A]" : "bg-gradient-to-br from-purple-500 to-purple-700"
                         }`}>
                           {inicial}
                         </div>

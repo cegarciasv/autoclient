@@ -119,7 +119,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
         </div>
         <div className="flex gap-2 items-center">
           {activo ? (
-            <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+            <Badge className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold">
               Activo
             </Badge>
           ) : (
@@ -132,7 +132,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
               ADMIN
             </Badge>
           ) : (
-            <Badge className="bg-green-100 text-green-700 border-0 font-semibold">
+            <Badge className="bg-blue-100 text-blue-700 border-0 font-semibold">
               EJECUTIVO
             </Badge>
           )}
@@ -194,7 +194,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
               </p>
             )}
             {exito && (
-              <p className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-3 py-2">
+              <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded px-3 py-2">
                 {exito}
               </p>
             )}
@@ -211,7 +211,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-[#1A7A30] hover:bg-[#155E25]"
+                className="flex-1 bg-[#2872C7] hover:bg-[#1F5FA8]"
                 disabled={cargando}
               >
                 {cargando ? "Guardando..." : "Guardar Cambios"}
@@ -247,7 +247,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
                 className={
                   activo
                     ? "border-amber-300 text-amber-700 hover:bg-amber-50"
-                    : "border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                    : "border-blue-300 text-blue-700 hover:bg-blue-50"
                 }
               >
                 {cargando ? "..." : activo ? "Desactivar" : "Activar"}

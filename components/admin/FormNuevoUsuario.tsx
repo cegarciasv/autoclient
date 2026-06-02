@@ -116,7 +116,7 @@ export default function FormNuevoUsuario() {
               </p>
             )}
 
-            <p className="text-xs text-gray-500 bg-green-50 rounded p-2 border border-green-100">
+            <p className="text-xs text-gray-500 bg-blue-50 rounded p-2 border border-blue-100">
               Se enviará un correo al usuario con instrucciones para acceder al sistema.
             </p>
 
@@ -132,7 +132,7 @@ export default function FormNuevoUsuario() {
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-[#1A7A30] hover:bg-[#155E25]"
+                className="flex-1 bg-[#2872C7] hover:bg-[#1F5FA8]"
                 disabled={cargando}
               >
                 {cargando ? "Guardando..." : "Crear Usuario"}

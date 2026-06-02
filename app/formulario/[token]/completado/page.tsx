@@ -4,15 +4,15 @@ export default function CompletadoPage() {
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-8">
       <div className="flex justify-center">
-        <div className="bg-green-50 rounded-full p-5">
-          <CheckCircle2 className="h-12 w-12 text-green-600" />
+        <div className="bg-blue-50 rounded-full p-5">
+          <CheckCircle2 className="h-12 w-12 text-blue-600" />
         </div>
       </div>
 
       <div className="space-y-2">
         <h1 className="text-2xl font-bold text-gray-900">¡Proceso completado!</h1>
         <p className="text-gray-600">
-          Su formulario de vinculación ha sido enviado exitosamente a Grupo Remor.
+          Su formulario de vinculación ha sido enviado exitosamente a TSI Logistics Group.
         </p>
       </div>
 
@@ -26,7 +26,7 @@ export default function CompletadoPage() {
       </div>
 
       <p className="text-xs text-gray-400">
-        Si tiene consultas, comuníquese con su representante de Grupo Remor.
+        Si tiene consultas, comuníquese con su representante de TSI Logistics Group.
       </p>
     </div>
   );

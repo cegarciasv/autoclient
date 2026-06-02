@@ -7,7 +7,7 @@
  *   MICROSOFT_CLIENT_ID
  *   MICROSOFT_CLIENT_SECRET
  *   MICROSOFT_TENANT_ID
- *   MAIL_FROM          → buzón desde el que se envía (ej: formularios@gruporemor.com.sv)
+ *   MAIL_FROM          → buzón desde el que se envía (ej: formularios@tsilogistics.com.sv)
  *   APP_URL            → URL base de la app
  */
 
@@ -108,8 +108,8 @@ export async function enviarLinkFormulario(
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+      <div style="background-color: #1B4F8A; padding: 20px; text-align: center;">
+        <h1 style="color: white; margin: 0;">TSI LOGISTICS GROUP</h1>
       </div>
       <div style="padding: 30px; background: #f9f9f9;">
         <p>Estimado/a <strong>${razonSocial}</strong>,</p>
@@ -118,7 +118,7 @@ export async function enviarLinkFormulario(
           para conocimiento de nuestras contrapartes y cumplimiento de nuestros procesos internos.
         </p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" style="background-color: #1B3C22; color: white; padding: 14px 28px;
+          <a href="${url}" style="background-color: #1B4F8A; color: white; padding: 14px 28px;
              text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">
             Completar Formulario
           </a>
@@ -132,13 +132,13 @@ export async function enviarLinkFormulario(
         </p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — Grupo Remor
+        Correo enviado automáticamente — TSI Logistics Group
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, `Grupo Remor — Formulario de Vinculación ${tipoLabel}`, html);
+    await enviarCorreo(destinatario, `TSI Logistics Group — Formulario de Vinculación ${tipoLabel}`, html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
@@ -160,15 +160,15 @@ export async function enviarOTP(
 ) {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+      <div style="background-color: #1B4F8A; padding: 20px; text-align: center;">
+        <h1 style="color: white; margin: 0;">TSI LOGISTICS GROUP</h1>
       </div>
       <div style="padding: 30px; background: #f9f9f9; text-align: center;">
         <p>Estimado/a <strong>${razonSocial}</strong>,</p>
         <p>Su código de verificación para acceder al formulario es:</p>
         <div style="font-size: 36px; font-weight: bold; letter-spacing: 8px;
-             color: #1B3C22; margin: 20px 0; padding: 20px;
-             background: white; border-radius: 8px; border: 2px solid #1B3C22;">
+             color: #1B4F8A; margin: 20px 0; padding: 20px;
+             background: white; border-radius: 8px; border: 2px solid #1B4F8A;">
           ${codigo}
         </div>
         <p style="color: #666; font-size: 13px;">
@@ -177,13 +177,13 @@ export async function enviarOTP(
         </p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — Grupo Remor
+        Correo enviado automáticamente — TSI Logistics Group
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, "Grupo Remor — Código de verificación", html);
+    await enviarCorreo(destinatario, "TSI Logistics Group — Código de verificación", html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
@@ -208,15 +208,15 @@ export async function enviarAccesoSistema(
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+      <div style="background-color: #1B4F8A; padding: 20px; text-align: center;">
+        <h1 style="color: white; margin: 0;">TSI LOGISTICS GROUP</h1>
       </div>
       <div style="padding: 30px; background: #f9f9f9;">
         <p>Estimado/a <strong>${nombre}</strong>,</p>
         <p>Se le ha otorgado acceso al <strong>Sistema Interno de Vinculación</strong> con el rol de <strong>${rolTexto}</strong>.</p>
         <p>Para acceder, haga clic en el siguiente botón e inicie sesión con su cuenta Microsoft 365:</p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" style="background-color: #1B3C22; color: white; padding: 14px 28px;
+          <a href="${url}" style="background-color: #1B4F8A; color: white; padding: 14px 28px;
              text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">
             Acceder al Sistema
           </a>
@@ -224,13 +224,13 @@ export async function enviarAccesoSistema(
         <p style="font-size: 12px; color: #666;">Su correo de Microsoft 365 registrado: <strong>${destinatario}</strong></p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — Grupo Remor
+        Correo enviado automáticamente — TSI Logistics Group
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, "Grupo Remor — Acceso al Sistema Interno", html);
+    await enviarCorreo(destinatario, "TSI Logistics Group — Acceso al Sistema Interno", html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(`⚠️  Graph API no disponible. Email de acceso para: ${destinatario} (${nombre}, ${rolTexto})`);

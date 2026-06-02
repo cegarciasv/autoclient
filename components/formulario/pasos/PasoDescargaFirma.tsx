@@ -51,7 +51,7 @@ export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, 
     <div className="space-y-6">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Descarga y Firma del Formulario</CardTitle>
+          <CardTitle className="text-base text-[#1B4F8A]">Descarga y Firma del Formulario</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <p className="text-sm text-gray-600">
@@ -63,17 +63,17 @@ export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, 
           <div className="space-y-3">
             {[
               {
-                icon: <Download className="h-5 w-5 text-[#1B3C22]" />,
+                icon: <Download className="h-5 w-5 text-[#1B4F8A]" />,
                 titulo: "1. Descargue el PDF",
                 desc: "Haga clic en el botón de abajo para generar y descargar su formulario de vinculación.",
               },
               {
-                icon: <Pen className="h-5 w-5 text-[#1B3C22]" />,
+                icon: <Pen className="h-5 w-5 text-[#1B4F8A]" />,
                 titulo: "2. Fírmelo",
                 desc: "Imprima el documento, fírmelo en todas las páginas requeridas y escanéelo en formato PDF.",
               },
               {
-                icon: <Upload className="h-5 w-5 text-[#1B3C22]" />,
+                icon: <Upload className="h-5 w-5 text-[#1B4F8A]" />,
                 titulo: "3. Súbalo junto con los documentos",
                 desc: "En el siguiente paso podrá cargar el formulario firmado y todos los documentos requeridos.",
               },
@@ -96,7 +96,7 @@ export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, 
               type="button"
               onClick={descargarPDF}
               disabled={descargando}
-              className="bg-[#1A7A30] hover:bg-[#155E25] w-full sm:w-auto px-8"
+              className="bg-[#2872C7] hover:bg-[#1F5FA8] w-full sm:w-auto px-8"
               size="lg"
             >
               {descargando ? (
@@ -110,7 +110,7 @@ export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, 
             </Button>
 
             {descargado && (
-              <div className="flex items-center gap-2 text-green-600 text-sm">
+              <div className="flex items-center gap-2 text-blue-600 text-sm">
                 <CheckCircle2 className="h-4 w-4" />
                 PDF descargado — recuerde firmarlo antes de subirlo
               </div>
@@ -133,7 +133,7 @@ export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, 
         <Button
           type="button"
           disabled={guardando}
-          className="bg-[#1A7A30] hover:bg-[#155E25]"
+          className="bg-[#2872C7] hover:bg-[#1F5FA8]"
           onClick={continuar}
         >
           {guardando ? "Guardando..." : "Continuar a documentos →"}

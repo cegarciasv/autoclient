@@ -44,8 +44,8 @@ export default async function DashboardPage() {
       label: "Total Clientes",
       value: totalClientes,
       icon: "Users",
-      iconBg: "bg-gradient-to-br from-[#1A7A30] to-[#1B3C22]",
-      border: "border-[#1A7A30]/20",
+      iconBg: "bg-gradient-to-br from-[#2872C7] to-[#1B4F8A]",
+      border: "border-[#2872C7]/20",
     },
     {
       label: "Total Proveedores",
@@ -72,8 +72,8 @@ export default async function DashboardPage() {
       label: "Completados",
       value: completados,
       icon: "CheckCircle2",
-      iconBg: "bg-gradient-to-br from-emerald-400 to-emerald-600",
-      border: "border-emerald-100",
+      iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
+      border: "border-blue-100",
     },
   ];
 

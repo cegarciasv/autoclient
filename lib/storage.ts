@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
 import path from "path";
 
-const NAS_BASE = process.env.NAS_BASE_PATH || "/mnt/nas/gruporemor/expedientes";
+const NAS_BASE = process.env.NAS_BASE_PATH || "/mnt/nas/tsilogistics/expedientes";
 
 /** Elimina tildes y caracteres especiales para nombres de archivo seguros */
 function sanitizarNombre(nombre: string): string {

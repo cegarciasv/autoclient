@@ -45,7 +45,7 @@ export default async function UsuariosPage() {
           href="/admin/usuarios/nuevo"
           className={buttonVariants({
             className:
-              "bg-[#1A7A30] hover:bg-[#155E25] text-white font-semibold gap-2",
+              "bg-[#2872C7] hover:bg-[#1F5FA8] text-white font-semibold gap-2",
           })}
         >
           <UserPlus className="h-4 w-4" />
@@ -89,14 +89,14 @@ export default async function UsuariosPage() {
                         ADMIN
                       </Badge>
                     ) : (
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-0 font-semibold">
+                      <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-0 font-semibold">
                         EJECUTIVO
                       </Badge>
                     )}
                   </TableCell>
                   <TableCell>
                     {u.activo ? (
-                      <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border border-emerald-200 font-semibold">
+                      <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 border border-blue-200 font-semibold">
                         Activo
                       </Badge>
                     ) : (
@@ -115,7 +115,7 @@ export default async function UsuariosPage() {
                   <TableCell className="text-right">
                     <Link
                       href={`/admin/usuarios/${u.id}`}
-                      className="text-sm font-medium text-[#1A7A30] hover:text-[#155E25] hover:underline"
+                      className="text-sm font-medium text-[#2872C7] hover:text-[#1F5FA8] hover:underline"
                     >
                       Editar
                     </Link>

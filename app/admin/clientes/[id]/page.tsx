@@ -44,7 +44,7 @@ function InfoItem({ label, value, wide }: { label: string; value: string; wide?:
 function SeccionHeader({ icon: Icon, titulo }: { icon: React.ElementType; titulo: string }) {
   return (
     <CardHeader className="pb-3 border-b border-gray-100">
-      <CardTitle className="text-sm font-semibold text-[#1B3C22] flex items-center gap-2">
+      <CardTitle className="text-sm font-semibold text-[#1B4F8A] flex items-center gap-2">
         <Icon className="h-4 w-4" />
         {titulo}
       </CardTitle>
@@ -55,8 +55,8 @@ function SeccionHeader({ icon: Icon, titulo }: { icon: React.ElementType; titulo
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; cls: string; icon: React.ReactNode }> = {
     PENDIENTE:  { label: "Pendiente",  cls: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: <Clock className="h-3 w-3" /> },
-    EN_PROCESO: { label: "En proceso", cls: "bg-[#1A7A30]/10 text-[#1B3C22] border-[#1A7A30]/20",       icon: <Loader2 className="h-3 w-3" /> },
-    COMPLETADO: { label: "Completado", cls: "bg-green-100 text-green-800 border-green-200",    icon: <CheckCircle2 className="h-3 w-3" /> },
+    EN_PROCESO: { label: "En proceso", cls: "bg-[#2872C7]/10 text-[#1B4F8A] border-[#2872C7]/20",       icon: <Loader2 className="h-3 w-3" /> },
+    COMPLETADO: { label: "Completado", cls: "bg-blue-100 text-blue-800 border-blue-200",    icon: <CheckCircle2 className="h-3 w-3" /> },
   };
   const e = map[estado] ?? { label: estado, cls: "", icon: null };
   return (
@@ -155,16 +155,16 @@ export default async function DetalleClientePage({
         const completado = tercero.estado === "COMPLETADO" || f.estado === "COMPLETADO";
         const pct = completado ? 100 : f.progreso;
         const barColor = completado
-          ? "bg-gradient-to-r from-emerald-400 to-emerald-600"
-          : pct >= 70 ? "bg-gradient-to-r from-[#1A7A30] to-[#1B3C22]"
+          ? "bg-gradient-to-r from-blue-400 to-blue-600"
+          : pct >= 70 ? "bg-gradient-to-r from-[#2872C7] to-[#1B4F8A]"
           : pct >= 40 ? "bg-gradient-to-r from-amber-400 to-amber-600"
           : "bg-gradient-to-r from-red-400 to-red-600";
         return (
-          <Card className={completado ? "border-emerald-200 bg-emerald-50/40" : ""}>
+          <Card className={completado ? "border-blue-200 bg-blue-50/40" : ""}>
             <CardContent className="pt-4 pb-3">
               <div className="flex items-center justify-between mb-1.5">
                 <p className="text-sm font-medium text-gray-700">Progreso del formulario</p>
-                <span className={`text-sm font-bold ${completado ? "text-emerald-700" : "text-[#1B3C22]"}`}>
+                <span className={`text-sm font-bold ${completado ? "text-blue-700" : "text-[#1B4F8A]"}`}>
                   {pct}%{completado ? " — Completado ✓" : ""}
                 </span>
               </div>

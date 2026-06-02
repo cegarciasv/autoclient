@@ -333,7 +333,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Tipo de Persona ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Tipo de Persona</CardTitle>
+            <CardTitle className="text-base text-[#1B4F8A]">Tipo de Persona</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex gap-3">
@@ -342,8 +342,8 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                 onClick={() => setValue("tipoPersona", "JURIDICA")}
                 className={`flex items-center gap-2 px-5 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
                   tipoPersona === "JURIDICA"
-                    ? "bg-[#1A7A30] text-white border-[#1A7A30]"
-                    : "border-gray-200 text-gray-600 hover:border-[#1A7A30] hover:text-[#1A7A30]"
+                    ? "bg-[#2872C7] text-white border-[#2872C7]"
+                    : "border-gray-200 text-gray-600 hover:border-[#2872C7] hover:text-[#2872C7]"
                 }`}
               >
                 <Building2 className="h-4 w-4" />
@@ -354,8 +354,8 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                 onClick={() => setValue("tipoPersona", "NATURAL")}
                 className={`flex items-center gap-2 px-5 py-3 rounded-lg border-2 text-sm font-medium transition-all ${
                   tipoPersona === "NATURAL"
-                    ? "bg-[#1A7A30] text-white border-[#1A7A30]"
-                    : "border-gray-200 text-gray-600 hover:border-[#1A7A30] hover:text-[#1A7A30]"
+                    ? "bg-[#2872C7] text-white border-[#2872C7]"
+                    : "border-gray-200 text-gray-600 hover:border-[#2872C7] hover:text-[#2872C7]"
                 }`}
               >
                 <User className="h-4 w-4" />
@@ -373,7 +373,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Datos de la Empresa ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Datos de la Empresa</CardTitle>
+            <CardTitle className="text-base text-[#1B4F8A]">Datos de la Empresa</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -409,7 +409,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Dirección y Contacto ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Dirección y Contacto</CardTitle>
+            <CardTitle className="text-base text-[#1B4F8A]">Dirección y Contacto</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -437,11 +437,11 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
 
         {/* ── Datos de Contacto Comercial (solo PROVEEDOR) ── */}
         {esProveedor && (
-          <Card className="border-[#1A7A30]/30 bg-[#1A7A30]/5">
+          <Card className="border-[#2872C7]/30 bg-[#2872C7]/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base text-[#1B3C22] flex items-center gap-2">
+              <CardTitle className="text-base text-[#1B4F8A] flex items-center gap-2">
                 Datos de Contacto Comercial
-                <span className="text-xs font-normal text-[#1A7A30] bg-green-100 px-2 py-0.5 rounded-full">Solo Proveedores</span>
+                <span className="text-xs font-normal text-[#2872C7] bg-blue-100 px-2 py-0.5 rounded-full">Solo Proveedores</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -461,7 +461,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Clientes Principales ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Clientes Principales</CardTitle>
+            <CardTitle className="text-base text-[#1B4F8A]">Clientes Principales</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {clientes.map((c, i) => (
@@ -502,11 +502,11 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
 
         {/* ── Información Bancaria (solo PROVEEDOR) ── */}
         {esProveedor && (
-          <Card className="border-emerald-200 bg-emerald-50/20">
+          <Card className="border-blue-200 bg-blue-50/20">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base text-[#1B3C22] flex items-center gap-2">
+              <CardTitle className="text-base text-[#1B4F8A] flex items-center gap-2">
                 Información Bancaria
-                <span className="text-xs font-normal text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Solo Proveedores</span>
+                <span className="text-xs font-normal text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">Solo Proveedores</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -540,7 +540,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Representante Legal ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">
+            <CardTitle className="text-base text-[#1B4F8A]">
               Representante Legal
               {esNatural && (
                 <span className="ml-2 text-xs font-normal text-gray-400">(Opcional para persona natural)</span>
@@ -591,7 +591,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
           <Button type="button" variant="outline" disabled={guardando} onClick={guardarBorrador}>
             Guardar borrador
           </Button>
-          <Button type="submit" disabled={guardando} className="bg-[#1A7A30] hover:bg-[#155E25]">
+          <Button type="submit" disabled={guardando} className="bg-[#2872C7] hover:bg-[#1F5FA8]">
             {guardando ? "Guardando..." : "Siguiente →"}
           </Button>
         </div>

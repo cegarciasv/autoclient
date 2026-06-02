@@ -55,19 +55,19 @@
   --card-foreground: oklch(0.18 0.02 250);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 250);
-  /* Verde corporativo Grupo Remor: #1A7A30 (principal) / #1B3C22 (oscuro) */
-  --primary: oklch(0.52 0.13 145);       /* #1A7A30 verde Remor */
+  /* Azul corporativo TSI Logistics Group: #2872C7 (principal) / #1B4F8A (oscuro) / #F47920 (acento naranja) */
+  --primary: oklch(0.52 0.13 264);       /* #2872C7 azul principal */
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.97 0.008 145);    /* verde muy tenue */
-  --secondary-foreground: oklch(0.26 0.08 145);
-  --muted: oklch(0.97 0.005 145);
-  --muted-foreground: oklch(0.50 0.02 145);
-  --accent: oklch(0.94 0.025 145);
-  --accent-foreground: oklch(0.26 0.08 145);
+  --secondary: oklch(0.97 0.008 264);    /* azul muy tenue */
+  --secondary-foreground: oklch(0.26 0.08 264);
+  --muted: oklch(0.97 0.005 264);
+  --muted-foreground: oklch(0.50 0.02 264);
+  --accent: oklch(0.94 0.025 264);
+  --accent-foreground: oklch(0.26 0.08 264);
   --destructive: oklch(0.62 0.22 25);
-  --border: oklch(0.92 0.01 145);
-  --input: oklch(0.92 0.01 145);
-  --ring: oklch(0.52 0.13 145);
+  --border: oklch(0.92 0.01 264);
+  --input: oklch(0.92 0.01 264);
+  --ring: oklch(0.52 0.13 264);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

@@ -67,7 +67,7 @@ export default function FichaSAP({ campos, defaultAbierto = false }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-slate-800">Datos para SAP</span>
               {listo ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
                   <CheckCircle2 className="h-3 w-3" /> Completo
                 </span>
               ) : (
@@ -107,7 +107,7 @@ export default function FichaSAP({ campos, defaultAbierto = false }: Props) {
               className="flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-200 bg-white text-slate-500 text-xs font-medium hover:bg-slate-50 hover:text-slate-700 transition-colors"
             >
               {copiado ? (
-                <><Check className="h-3.5 w-3.5 text-emerald-500" /> Copiado</>
+                <><Check className="h-3.5 w-3.5 text-blue-500" /> Copiado</>
               ) : (
                 <><ClipboardCopy className="h-3.5 w-3.5" /> Copiar todo</>
               )}
@@ -128,7 +128,7 @@ export default function FichaSAP({ campos, defaultAbierto = false }: Props) {
                   {/* Indicador lateral */}
                   <span
                     className={`flex-shrink-0 h-1.5 w-1.5 rounded-full ${
-                      vacio ? "bg-amber-400" : "bg-emerald-400"
+                      vacio ? "bg-amber-400" : "bg-blue-400"
                     }`}
                   />
 
@@ -175,7 +175,7 @@ function CopiarBtn({ texto }: { texto: string }) {
       className="opacity-0 group-hover/row:opacity-100 flex-shrink-0 p-1 rounded hover:bg-slate-100 text-slate-300 hover:text-slate-600 transition-all"
     >
       {copiado
-        ? <Check className="h-3.5 w-3.5 text-emerald-500" />
+        ? <Check className="h-3.5 w-3.5 text-blue-500" />
         : <ClipboardCopy className="h-3.5 w-3.5" />
       }
     </button>

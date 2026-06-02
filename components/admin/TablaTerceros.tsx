@@ -42,28 +42,28 @@ const ESTADO_MAP = {
   },
   EN_PROCESO: {
     label: "En proceso",
-    cls: "bg-[#1A7A30]/10 text-[#1B3C22] border-[#1A7A30]/20",
-    dot: "bg-[#1A7A30]",
+    cls: "bg-[#2872C7]/10 text-[#1B4F8A] border-[#2872C7]/20",
+    dot: "bg-[#2872C7]",
     pulse: true,
   },
   COMPLETADO: {
     label: "Completado",
-    cls: "bg-emerald-50 text-emerald-800 border-emerald-200",
-    dot: "bg-emerald-500",
+    cls: "bg-blue-50 text-blue-800 border-blue-200",
+    dot: "bg-blue-500",
     pulse: false,
   },
 };
 
 function getAvatarColors(tipo: "clientes" | "proveedores") {
   return tipo === "clientes"
-    ? "bg-green-100 text-[#1B3C22]"
+    ? "bg-blue-100 text-[#1B4F8A]"
     : "bg-purple-100 text-purple-700";
 }
 
 function getProgressColor(pct: number) {
   if (pct < 30) return "bg-red-500";
   if (pct < 70) return "bg-amber-400";
-  return "bg-emerald-500";
+  return "bg-blue-500";
 }
 
 export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
@@ -101,7 +101,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <Input
             placeholder="Buscar por nombre, email o documento..."
-            className="pl-9 h-10 border-slate-200 focus:border-[#1A7A30] focus:ring-[#1A7A30]/20 transition-colors"
+            className="pl-9 h-10 border-slate-200 focus:border-[#2872C7] focus:ring-[#2872C7]/20 transition-colors"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -110,7 +110,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
           href={`/admin/${tipo}/nuevo`}
           className={buttonVariants({
             className:
-              "bg-[#1A7A30] hover:bg-[#155E25] text-white shadow-sm shadow-green-900/10 transition-all",
+              "bg-[#2872C7] hover:bg-[#1F5FA8] text-white shadow-sm shadow-blue-900/10 transition-all",
           })}
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -122,7 +122,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
       <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-[#1B3C22] hover:bg-[#1B3C22] border-none">
+            <TableRow className="bg-[#1B4F8A] hover:bg-[#1B4F8A] border-none">
               <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
                 Razón Social
               </TableHead>
@@ -189,7 +189,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                 return (
                   <TableRow
                     key={t.id}
-                    className="group hover:bg-[#1A7A30]/5 transition-colors duration-150 border-l-2 border-transparent hover:border-[#1A7A30]"
+                    className="group hover:bg-[#2872C7]/5 transition-colors duration-150 border-l-2 border-transparent hover:border-[#2872C7]"
                   >
                     {/* Razón Social con avatar */}
                     <TableCell className="py-3">
@@ -280,7 +280,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                           onClick={() => reenviarLink(t.id, t.razonSocial)}
                           disabled={enviando === t.id}
                           title="Reenviar link de formulario"
-                          className="h-8 w-8 p-0 text-slate-500 hover:text-[#1A7A30] hover:bg-green-50 transition-colors"
+                          className="h-8 w-8 p-0 text-slate-500 hover:text-[#2872C7] hover:bg-blue-50 transition-colors"
                         >
                           <Send
                             className={`h-3.5 w-3.5 ${
@@ -295,7 +295,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                             size: "sm",
                             variant: "ghost",
                             className:
-                              "h-8 w-8 p-0 text-slate-500 hover:text-[#1A7A30] hover:bg-green-50 transition-colors",
+                              "h-8 w-8 p-0 text-slate-500 hover:text-[#2872C7] hover:bg-blue-50 transition-colors",
                           })}
                         >
                           <Eye className="h-3.5 w-3.5" />

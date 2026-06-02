@@ -26,15 +26,15 @@ export default function BarraProgreso({ pasos, pasoActual, progreso }: Props) {
           de{" "}
           <span className="text-slate-800 font-semibold">{pasos.length}</span>
           {" "}—{" "}
-          <span className="text-[#1A7A30] font-semibold">{labelActual}</span>
+          <span className="text-[#2872C7] font-semibold">{labelActual}</span>
         </span>
-        <span className="font-bold text-[#1A7A30]">{progreso}%</span>
+        <span className="font-bold text-[#2872C7]">{progreso}%</span>
       </div>
 
       {/* Barra de progreso elegante */}
       <div className="w-full h-1.5 rounded-full bg-slate-100">
         <div
-          className="h-1.5 rounded-full bg-gradient-to-r from-[#1A7A30] to-[#1B3C22] transition-all duration-500"
+          className="h-1.5 rounded-full bg-gradient-to-r from-[#2872C7] to-[#1B4F8A] transition-all duration-500"
           style={{ width: `${progreso}%` }}
         />
       </div>
@@ -50,15 +50,15 @@ export default function BarraProgreso({ pasos, pasoActual, progreso }: Props) {
               <div className="flex flex-col items-center gap-1.5 flex-1">
                 <div
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
-                    ${completado ? "bg-[#1A7A30] border-[#1A7A30] text-white shadow-sm" : ""}
-                    ${actual     ? "bg-white border-[#1A7A30] text-[#1A7A30] shadow-md ring-4 ring-[#1A7A30]/10" : ""}
+                    ${completado ? "bg-[#2872C7] border-[#2872C7] text-white shadow-sm" : ""}
+                    ${actual     ? "bg-white border-[#2872C7] text-[#2872C7] shadow-md ring-4 ring-[#2872C7]/10" : ""}
                     ${!completado && !actual ? "bg-white border-slate-200 text-slate-400" : ""}`}
                 >
                   {completado ? <Check className="h-4 w-4" /> : paso}
                 </div>
                 <span
                   className={`text-[10px] text-center leading-tight hidden sm:block
-                    ${actual ? "text-[#1A7A30] font-semibold" : "text-slate-400"}`}
+                    ${actual ? "text-[#2872C7] font-semibold" : "text-slate-400"}`}
                 >
                   {label}
                 </span>
@@ -69,7 +69,7 @@ export default function BarraProgreso({ pasos, pasoActual, progreso }: Props) {
                 <div className="flex-1 flex items-center" style={{ marginTop: "18px" }}>
                   <div
                     className={`h-0.5 w-full transition-all duration-500
-                      ${paso < pasoActual ? "bg-[#1A7A30]" : "bg-slate-200"}`}
+                      ${paso < pasoActual ? "bg-[#2872C7]" : "bg-slate-200"}`}
                   />
                 </div>
               )}

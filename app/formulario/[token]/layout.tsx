@@ -5,11 +5,11 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] text-white py-4 px-6 shadow-lg">
+      <header className="bg-gradient-to-r from-[#1B4F8A] to-[#2872C7] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <Image
             src="/logo.png"
-            alt="Grupo Remor"
+            alt="TSI Logistics Group"
             width={160}
             height={50}
             className="h-12 w-auto object-contain"
@@ -22,7 +22,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       </header>
 
       {/* Banda decorativa */}
-      <div className="h-[3px] bg-[#1A7A30] w-full" />
+      <div className="h-[3px] bg-[#2872C7] w-full" />
 
       <main className="bg-slate-50 flex-1 py-8 px-4">
         <div className="max-w-3xl mx-auto">{children}</div>
@@ -32,16 +32,16 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <Image
             src="/logo.png"
-            alt="Grupo Remor"
+            alt="TSI Logistics Group"
             width={90}
             height={28}
             className="h-7 w-auto object-contain opacity-70"
           />
           <span className="text-xs text-slate-400">
-            © {new Date().getFullYear()} Grupo Remor · Todos los derechos reservados
+            © {new Date().getFullYear()} TSI Logistics Group · Todos los derechos reservados
           </span>
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-green-500" />
+            <ShieldCheck className="h-3.5 w-3.5 text-blue-500" />
             <span className="text-xs text-slate-400">Proceso seguro con cifrado SSL</span>
           </div>
         </div>
