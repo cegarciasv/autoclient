@@ -7,7 +7,7 @@
  *   MICROSOFT_CLIENT_ID
  *   MICROSOFT_CLIENT_SECRET
  *   MICROSOFT_TENANT_ID
- *   MAIL_FROM          → buzón desde el que se envía (ej: formularios@tsilogistics.com.sv)
+ *   MAIL_FROM          → buzón desde el que se envía (ej: formularios@transebastian.com.sv)
  *   APP_URL            → URL base de la app
  */
 
@@ -109,7 +109,7 @@ export async function enviarLinkFormulario(
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background-color: #1B4F8A; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">TSI LOGISTICS GROUP</h1>
+        <h1 style="color: white; margin: 0;">TRANSEBASTIAN</h1>
       </div>
       <div style="padding: 30px; background: #f9f9f9;">
         <p>Estimado/a <strong>${razonSocial}</strong>,</p>
@@ -132,13 +132,13 @@ export async function enviarLinkFormulario(
         </p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — TSI Logistics Group
+        Correo enviado automáticamente — Transebastian
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, `TSI Logistics Group — Formulario de Vinculación ${tipoLabel}`, html);
+    await enviarCorreo(destinatario, `Transebastian — Formulario de Vinculación ${tipoLabel}`, html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
@@ -161,7 +161,7 @@ export async function enviarOTP(
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background-color: #1B4F8A; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">TSI LOGISTICS GROUP</h1>
+        <h1 style="color: white; margin: 0;">TRANSEBASTIAN</h1>
       </div>
       <div style="padding: 30px; background: #f9f9f9; text-align: center;">
         <p>Estimado/a <strong>${razonSocial}</strong>,</p>
@@ -177,13 +177,13 @@ export async function enviarOTP(
         </p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — TSI Logistics Group
+        Correo enviado automáticamente — Transebastian
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, "TSI Logistics Group — Código de verificación", html);
+    await enviarCorreo(destinatario, "Transebastian — Código de verificación", html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
@@ -209,7 +209,7 @@ export async function enviarAccesoSistema(
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background-color: #1B4F8A; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">TSI LOGISTICS GROUP</h1>
+        <h1 style="color: white; margin: 0;">TRANSEBASTIAN</h1>
       </div>
       <div style="padding: 30px; background: #f9f9f9;">
         <p>Estimado/a <strong>${nombre}</strong>,</p>
@@ -224,13 +224,13 @@ export async function enviarAccesoSistema(
         <p style="font-size: 12px; color: #666;">Su correo de Microsoft 365 registrado: <strong>${destinatario}</strong></p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — TSI Logistics Group
+        Correo enviado automáticamente — Transebastian
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, "TSI Logistics Group — Acceso al Sistema Interno", html);
+    await enviarCorreo(destinatario, "Transebastian — Acceso al Sistema Interno", html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(`⚠️  Graph API no disponible. Email de acceso para: ${destinatario} (${nombre}, ${rolTexto})`);

@@ -43,7 +43,7 @@ export default async function LoginPage({
         <div className="relative">
           <Image
             src="/logo.png"
-            alt="TSI Logistics Group"
+            alt="Transebastian"
             width={360}
             height={112}
             className="h-28 w-auto object-contain"
@@ -125,7 +125,7 @@ export default async function LoginPage({
         <div className="lg:hidden mb-10">
           <Image
             src="/logo.png"
-            alt="TSI Logistics Group"
+            alt="Transebastian"
             width={280}
             height={88}
             className="h-20 w-auto object-contain"
@@ -142,7 +142,7 @@ export default async function LoginPage({
                 Acceso administrativo
               </h1>
               <p className="text-sm text-slate-500 mt-1.5">
-                Inicie sesión con su cuenta Microsoft 365 de TSI Logistics Group
+                Inicie sesión con su cuenta Microsoft 365 de Transebastian
               </p>
             </div>
 
@@ -188,7 +188,7 @@ export default async function LoginPage({
 
           {/* Copyright */}
           <p className="text-center text-xs text-slate-400 mt-6">
-            &copy; {new Date().getFullYear()} TSI Logistics Group &middot; Todos los
+            &copy; {new Date().getFullYear()} Transebastian &middot; Todos los
             derechos reservados
           </p>
         </div>

@@ -55,7 +55,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         bufferPages: true,
         info: {
           Title: `Formulario de Vinculación — ${datos.tercero.razonSocial}`,
-          Author: "TSI Logistics Group",
+          Author: "Transebastian",
           Subject: `Conocimiento de ${datos.tercero.tipo === "PROVEEDOR" ? "Proveedor" : "Cliente"}`,
         },
       });
@@ -110,7 +110,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         // Logo / nombre empresa
         doc.fillColor("white")
           .font("Helvetica-Bold").fontSize(esPortada ? 22 : 14)
-          .text("TSI LOGISTICS GROUP", ML, esPortada ? 22 : 14, { width: CW });
+          .text("TRANSEBASTIAN", ML, esPortada ? 22 : 14, { width: CW });
 
         if (esPortada) {
           doc.font("Helvetica").fontSize(10).fillColor("#93c5fd")
@@ -298,7 +298,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         .text("INFORMACIÓN CONFIDENCIAL", ML + 10, Y + 6, { width: CW - 20 });
       doc.font("Helvetica").fontSize(7).fillColor("#78350f")
         .text(
-          "Este documento contiene información confidencial de uso exclusivo de TSI Logistics Group. " +
+          "Este documento contiene información confidencial de uso exclusivo de Transebastian. " +
           "Queda prohibida su reproducción o distribución sin autorización expresa.",
           ML + 10, Y + 17, { width: CW - 20 }
         );
@@ -484,9 +484,9 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         .text(
           "El suscrito, actuando en su calidad de Representante Legal, declara bajo juramento que toda la " +
           "información proporcionada en el presente formulario es veraz, completa y actualizada. Asimismo, " +
-          "se compromete a notificar a TSI Logistics Group cualquier modificación relevante en los datos aquí " +
+          "se compromete a notificar a Transebastian cualquier modificación relevante en los datos aquí " +
           "consignados dentro de los treinta (30) días siguientes a su ocurrencia.\n\n" +
-          "Autoriza expresamente a TSI Logistics Group a verificar la información suministrada y a utilizarla " +
+          "Autoriza expresamente a Transebastian a verificar la información suministrada y a utilizarla " +
           "conforme a sus políticas internas de conocimiento de terceros y prevención de lavado de activos.",
           ML + 10, Y + 8, { width: CW - 20, align: "justify", lineBreak: true }
         );
@@ -523,7 +523,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       avanzar(10);
       doc.fillColor(GRIS_L).font("Helvetica").fontSize(7)
         .text(
-          `Documento generado electrónicamente el ${new Date().toLocaleString("es-SV")} | TSI Logistics Group — Sistema de Vinculación de Terceros`,
+          `Documento generado electrónicamente el ${new Date().toLocaleString("es-SV")} | Transebastian — Sistema de Vinculación de Terceros`,
           ML, Y, { width: CW, align: "center", lineBreak: false }
         );
 

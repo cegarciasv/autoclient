@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TSI Logistics Group — Formulario de Vinculación",
-  description: "Sistema de vinculación de clientes y proveedores de TSI Logistics Group",
+  title: "Transebastian — Formulario de Vinculación",
+  description: "Sistema de vinculación de clientes y proveedores de Transebastian",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

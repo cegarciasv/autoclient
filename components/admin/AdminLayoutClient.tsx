@@ -73,7 +73,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
         <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
           <Image
             src="/logo.png"
-            alt="TSI Logistics Group"
+            alt="Transebastian"
             width={300}
             height={96}
             className="h-20 w-auto object-contain"
@@ -157,7 +157,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
           </button>
           <Image
             src="/logo.png"
-            alt="TSI Logistics Group"
+            alt="Transebastian"
             width={200}
             height={56}
             className="h-14 w-auto object-contain"

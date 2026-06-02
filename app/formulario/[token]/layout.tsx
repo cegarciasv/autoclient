@@ -9,7 +9,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <Image
             src="/logo.png"
-            alt="TSI Logistics Group"
+            alt="Transebastian"
             width={160}
             height={50}
             className="h-12 w-auto object-contain"
@@ -32,13 +32,13 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <Image
             src="/logo.png"
-            alt="TSI Logistics Group"
+            alt="Transebastian"
             width={90}
             height={28}
             className="h-7 w-auto object-contain opacity-70"
           />
           <span className="text-xs text-slate-400">
-            © {new Date().getFullYear()} TSI Logistics Group · Todos los derechos reservados
+            © {new Date().getFullYear()} Transebastian · Todos los derechos reservados
           </span>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5 text-blue-500" />
