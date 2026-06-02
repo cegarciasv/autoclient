@@ -133,7 +133,7 @@ export default function VisorDocumentos({ terceroId, documentos }: Props) {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => abrirDoc(doc)}
-                className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#2872C7] text-white text-xs font-medium hover:bg-[#1F5FA8] transition-colors shadow-sm"
+                className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#2B5BE2] text-white text-xs font-medium hover:bg-[#1E47C0] transition-colors shadow-sm"
               >
                 <Eye className="h-3.5 w-3.5" />
                 Ver
@@ -252,7 +252,7 @@ export default function VisorDocumentos({ terceroId, documentos }: Props) {
               {/* Spinner de carga */}
               {cargando && !error && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-10 gap-4">
-                  <Loader2 className="h-10 w-10 text-[#2872C7] animate-spin" />
+                  <Loader2 className="h-10 w-10 text-[#2B5BE2] animate-spin" />
                   <p className="text-sm text-slate-500">Cargando documento...</p>
                 </div>
               )}

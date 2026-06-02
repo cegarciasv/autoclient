@@ -27,15 +27,15 @@ function MiniStepper({ active }: { active: 1 | 2 | 3 }) {
             <div className="flex flex-col items-center gap-1">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all
-                  ${done    ? "bg-[#2872C7] border-[#2872C7] text-white" : ""}
-                  ${current ? "bg-white border-[#2872C7] text-[#2872C7] shadow-md ring-4 ring-[#2872C7]/10" : ""}
+                  ${done    ? "bg-[#2B5BE2] border-[#2B5BE2] text-white" : ""}
+                  ${current ? "bg-white border-[#2B5BE2] text-[#2B5BE2] shadow-md ring-4 ring-[#2B5BE2]/10" : ""}
                   ${!done && !current ? "bg-white border-slate-200 text-slate-300" : ""}`}
               >
                 {done ? <Check className="h-4 w-4" /> : <Icon className="h-3.5 w-3.5" />}
               </div>
               <span
                 className={`text-[10px] font-medium leading-none
-                  ${current ? "text-[#2872C7] font-semibold" : "text-slate-400"}`}
+                  ${current ? "text-[#2B5BE2] font-semibold" : "text-slate-400"}`}
               >
                 {step.label}
               </span>
@@ -43,7 +43,7 @@ function MiniStepper({ active }: { active: 1 | 2 | 3 }) {
             {idx < STEPS.length - 1 && (
               <div
                 className={`h-0.5 w-8 mx-1 mb-4 rounded-full transition-all
-                  ${step.id < active ? "bg-[#2872C7]" : "bg-slate-200"}`}
+                  ${step.id < active ? "bg-[#2B5BE2]" : "bg-slate-200"}`}
               />
             )}
           </div>
@@ -129,7 +129,7 @@ export default function FormularioLoginPage({
     <div className="max-w-md mx-auto">
       {/* Hero icon */}
       <div className="flex justify-center mb-5">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2872C7] to-[#1B4F8A] flex items-center justify-center shadow-lg ring-4 ring-[#2872C7]/10">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2B5BE2] to-[#1E3A8A] flex items-center justify-center shadow-lg ring-4 ring-[#2B5BE2]/10">
           <HeroIcon className="h-8 w-8 text-white" />
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function FormularioLoginPage({
               {error && <ErrorMsg text={error} />}
               <Button
                 type="submit"
-                className="w-full h-11 bg-gradient-to-r from-[#1B4F8A] to-[#2872C7] hover:from-[#1F5FA8] hover:to-[#2872C7] transition-all"
+                className="w-full h-11 bg-gradient-to-r from-[#1E3A8A] to-[#2B5BE2] hover:from-[#1E47C0] hover:to-[#2B5BE2] transition-all"
                 disabled={cargando}
               >
                 {cargando ? "Verificando..." : "Continuar"}
@@ -184,7 +184,7 @@ export default function FormularioLoginPage({
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="0  0  0  0  0  0"
                   maxLength={6}
-                  className="text-center text-3xl tracking-[0.5em] font-mono h-14 border-2 focus:border-[#2872C7]"
+                  className="text-center text-3xl tracking-[0.5em] font-mono h-14 border-2 focus:border-[#2B5BE2]"
                   autoFocus
                   required
                 />
@@ -195,7 +195,7 @@ export default function FormularioLoginPage({
               {error && <ErrorMsg text={error} />}
               <Button
                 type="submit"
-                className="w-full h-11 bg-gradient-to-r from-[#1B4F8A] to-[#2872C7] hover:from-[#1F5FA8] hover:to-[#2872C7] transition-all"
+                className="w-full h-11 bg-gradient-to-r from-[#1E3A8A] to-[#2B5BE2] hover:from-[#1E47C0] hover:to-[#2B5BE2] transition-all"
                 disabled={cargando || otp.length !== 6}
               >
                 {cargando ? "Verificando..." : "Ingresar al Formulario"}

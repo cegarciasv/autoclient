@@ -55,8 +55,8 @@
   --card-foreground: oklch(0.18 0.02 250);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 250);
-  /* Azul corporativo TSI Logistics Group: #2872C7 (principal) / #1B4F8A (oscuro) / #F47920 (acento naranja) */
-  --primary: oklch(0.52 0.13 264);       /* #2872C7 azul principal */
+  /* Azul corporativo TSI Logistics Group: #2B5BE2 (principal) / #1E3A8A (oscuro) / #F26A1A (acento naranja) */
+  --primary: oklch(0.51 0.19 264);       /* #2B5BE2 azul principal */
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.97 0.008 264);    /* azul muy tenue */
   --secondary-foreground: oklch(0.26 0.08 264);
@@ -67,7 +67,7 @@
   --destructive: oklch(0.62 0.22 25);
   --border: oklch(0.92 0.01 264);
   --input: oklch(0.92 0.01 264);
-  --ring: oklch(0.52 0.13 264);
+  --ring: oklch(0.51 0.19 264);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

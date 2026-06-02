@@ -5,7 +5,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#1B4F8A] to-[#2872C7] text-white py-4 px-6 shadow-lg">
+      <header className="bg-gradient-to-r from-[#1E3A8A] to-[#2B5BE2] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <div className="bg-white rounded-lg p-1.5 shadow-sm">
             <Image
@@ -24,7 +24,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       </header>
 
       {/* Banda decorativa */}
-      <div className="h-[3px] bg-[#2872C7] w-full" />
+      <div className="h-[3px] bg-[#2B5BE2] w-full" />
 
       <main className="bg-slate-50 flex-1 py-8 px-4">
         <div className="max-w-3xl mx-auto">{children}</div>
