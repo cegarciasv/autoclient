@@ -107,7 +107,7 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
     <div className="space-y-4">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Información de Accionistas</CardTitle>
+          <CardTitle className="text-base text-[#1E3A8A]">Información de Accionistas</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm text-gray-500">
@@ -133,7 +133,7 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                     {a.nombreRazonSocial || `Accionista ${i + 1}`}
                   </span>
                   {a.porcentajeParticipacion && (
-                    <span className="text-xs bg-green-100 text-[#1B3C22] px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-blue-100 text-[#1E3A8A] px-2 py-0.5 rounded-full">
                       {a.porcentajeParticipacion}%
                     </span>
                   )}
@@ -259,7 +259,7 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
           <Button
             type="button"
             disabled={guardando}
-            className="bg-[#1A7A30] hover:bg-[#155E25]"
+            className="bg-[#2563EB] hover:bg-[#1D4ED8]"
             onClick={() => guardar(true)}
           >
             {guardando ? "Guardando..." : "Siguiente →"}

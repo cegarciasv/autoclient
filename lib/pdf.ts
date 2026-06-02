@@ -70,13 +70,13 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       const ML      = 50;                      // margen izquierdo
       const MR      = 50;                      // margen derecho
       const CW      = W - ML - MR;            // 512 — ancho del contenido
-      const AZUL    = "#1B3C22";
-      const AZUL2   = "#1A7A30";
+      const AZUL    = "#1E3A8A";
+      const AZUL2   = "#2563EB";
       const GRIS    = "#4b5563";
       const GRIS_L  = "#9ca3af";
       const LINEA   = "#e5e7eb";
       const FONDO   = "#f8fafc";
-      const VERDE   = "#059669";
+      const VERDE   = "#2563EB";
       const ROJO    = "#dc2626";
 
       /* ── Estado de posición ── */

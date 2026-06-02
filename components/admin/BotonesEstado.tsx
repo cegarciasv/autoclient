@@ -68,7 +68,7 @@ export default function BotonesEstado({ terceroId, estadoActual, tieneFormulario
       size="sm"
       disabled={cargando}
       onClick={marcarCompletado}
-      className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+      className="border-blue-200 text-blue-700 hover:bg-blue-50"
     >
       {cargando ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5 mr-1" />}
       Marcar completado

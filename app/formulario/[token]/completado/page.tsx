@@ -4,8 +4,8 @@ export default function CompletadoPage() {
   return (
     <div className="max-w-md mx-auto text-center space-y-6 py-8">
       <div className="flex justify-center">
-        <div className="bg-green-50 rounded-full p-5">
-          <CheckCircle2 className="h-12 w-12 text-green-600" />
+        <div className="bg-blue-50 rounded-full p-5">
+          <CheckCircle2 className="h-12 w-12 text-blue-600" />
         </div>
       </div>
 

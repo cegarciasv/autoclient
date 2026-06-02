@@ -5,7 +5,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] text-white py-4 px-6 shadow-lg">
+      <header className="bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <Image
             src="/logo.png"
@@ -22,7 +22,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       </header>
 
       {/* Banda decorativa */}
-      <div className="h-[3px] bg-[#1A7A30] w-full" />
+      <div className="h-[3px] bg-[#2563EB] w-full" />
 
       <main className="bg-slate-50 flex-1 py-8 px-4">
         <div className="max-w-3xl mx-auto">{children}</div>
@@ -41,7 +41,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
             © {new Date().getFullYear()} Transporte Sebastián · Todos los derechos reservados
           </span>
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-green-500" />
+            <ShieldCheck className="h-3.5 w-3.5 text-blue-500" />
             <span className="text-xs text-slate-400">Proceso seguro con cifrado SSL</span>
           </div>
         </div>

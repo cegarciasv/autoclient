@@ -112,7 +112,7 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Trayectoria y Capacidad</CardTitle>
+            <CardTitle className="text-base text-[#1E3A8A]">Trayectoria y Capacidad</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -125,7 +125,7 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Certificaciones y Cumplimiento</CardTitle>
+            <CardTitle className="text-base text-[#1E3A8A]">Certificaciones y Cumplimiento</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <BoolCheck name="certificacionesInternacionales" label="Cuenta con certificaciones internacionales (ISO, CE, UL, etc.)" />
@@ -152,7 +152,7 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Condiciones Comerciales</CardTitle>
+            <CardTitle className="text-base text-[#1E3A8A]">Condiciones Comerciales</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -165,7 +165,7 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[#1B3C22]">Presencia Regional y Sostenibilidad</CardTitle>
+            <CardTitle className="text-base text-[#1E3A8A]">Presencia Regional y Sostenibilidad</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -198,7 +198,7 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
             >
               Guardar borrador
             </Button>
-            <Button type="submit" disabled={guardando} className="bg-[#1A7A30] hover:bg-[#155E25]">
+            <Button type="submit" disabled={guardando} className="bg-[#2563EB] hover:bg-[#1D4ED8]">
               {guardando ? "Guardando..." : "Siguiente →"}
             </Button>
           </div>

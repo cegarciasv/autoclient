@@ -23,11 +23,11 @@ export default async function LoginPage({
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-2">
       {/* ── Panel izquierdo (solo desktop) ── */}
-      <div className="hidden lg:flex flex-col justify-between bg-[#1B3C22] px-12 py-16 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-[#1E3A8A] px-12 py-16 relative overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#1A7A30]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1A7A30]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#2563EB]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#2563EB]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
           {/* Grid sutil */}
           <div
             className="absolute inset-0 opacity-[0.03]"
@@ -57,7 +57,7 @@ export default async function LoginPage({
             <h2 className="text-4xl font-bold text-white leading-tight">
               Panel de
               <br />
-              <span className="text-[#4ade80]">Administración</span>
+              <span className="text-[#60A5FA]">Administración</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed max-w-sm">
               Gestiona el proceso de vinculación de clientes y proveedores desde
@@ -68,8 +68,8 @@ export default async function LoginPage({
           {/* Bullet points */}
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
-                <ShieldCheck className="h-4 w-4 text-[#4ade80]" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[#2563EB]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <ShieldCheck className="h-4 w-4 text-[#60A5FA]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -82,8 +82,8 @@ export default async function LoginPage({
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
-                <Zap className="h-4 w-4 text-[#4ade80]" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[#2563EB]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <Zap className="h-4 w-4 text-[#60A5FA]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -96,8 +96,8 @@ export default async function LoginPage({
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
-                <BarChart3 className="h-4 w-4 text-[#4ade80]" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[#2563EB]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <BarChart3 className="h-4 w-4 text-[#60A5FA]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -114,7 +114,7 @@ export default async function LoginPage({
 
         {/* Footer izquierdo */}
         <div className="relative flex items-center gap-2 text-xs text-slate-600">
-          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+          <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />
           Todos los sistemas operativos
         </div>
       </div>

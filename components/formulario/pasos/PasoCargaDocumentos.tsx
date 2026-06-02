@@ -150,15 +150,15 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
   return (
     <div className="space-y-6">
       {/* Progreso */}
-      <Card className="border-[#1A7A30]/30 bg-[#1A7A30]/5">
+      <Card className="border-[#2563EB]/30 bg-[#2563EB]/5">
         <CardContent className="pt-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-[#1B3C22]">Documentos requeridos cargados</p>
-            <span className="text-sm font-bold text-[#1B3C22]">{completados} / {requeridos.length}</span>
+            <p className="text-sm font-medium text-[#1E3A8A]">Documentos requeridos cargados</p>
+            <span className="text-sm font-bold text-[#1E3A8A]">{completados} / {requeridos.length}</span>
           </div>
-          <div className="w-full bg-[#1A7A30]/20 rounded-full h-2">
+          <div className="w-full bg-[#2563EB]/20 rounded-full h-2">
             <div
-              className="bg-[#1A7A30] h-2 rounded-full transition-all"
+              className="bg-[#2563EB] h-2 rounded-full transition-all"
               style={{ width: `${(completados / requeridos.length) * 100}%` }}
             />
           </div>
@@ -168,7 +168,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
       {/* Documentos requeridos */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Documentos Requeridos</CardTitle>
+          <CardTitle className="text-base text-[#1E3A8A]">Documentos Requeridos</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {requeridos.map((doc) => (
@@ -188,7 +188,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
       {/* Documentos opcionales */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Documentos Opcionales (si aplica)</CardTitle>
+          <CardTitle className="text-base text-[#1E3A8A]">Documentos Opcionales (si aplica)</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {opcionales.map((doc) => (
@@ -206,9 +206,9 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
       </Card>
 
       {completados === requeridos.length && (
-        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-          <p className="text-sm text-green-700">
+        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" />
+          <p className="text-sm text-blue-700">
             Todos los documentos requeridos han sido cargados. Puede finalizar el proceso.
           </p>
         </div>
@@ -221,7 +221,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
         <Button
           type="button"
           disabled={finalizando || completados < requeridos.length}
-          className="bg-green-700 hover:bg-green-800"
+          className="bg-blue-700 hover:bg-blue-800"
           onClick={finalizar}
         >
           {finalizando ? (
@@ -260,9 +260,9 @@ function DocRow({
 
       <div className="shrink-0">
         {subiendo ? (
-          <Loader2 className="h-5 w-5 text-[#1A7A30] animate-spin" />
+          <Loader2 className="h-5 w-5 text-[#2563EB] animate-spin" />
         ) : subido ? (
-          <CheckCircle2 className="h-5 w-5 text-green-500" />
+          <CheckCircle2 className="h-5 w-5 text-blue-500" />
         ) : doc.requerido ? (
           <AlertCircle className="h-5 w-5 text-amber-400" />
         ) : (
@@ -288,7 +288,7 @@ function DocRow({
         size="sm"
         disabled={subiendo}
         onClick={onSeleccionar}
-        className={subido ? "" : "bg-[#1A7A30] hover:bg-[#155E25]"}
+        className={subido ? "" : "bg-[#2563EB] hover:bg-[#1D4ED8]"}
       >
         {subiendo ? (
           <Loader2 className="h-3 w-3 animate-spin" />
