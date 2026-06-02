@@ -23,7 +23,7 @@ export default async function LoginPage({
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-2">
       {/* ── Panel izquierdo (solo desktop) ── */}
-      <div className="hidden lg:flex flex-col justify-between bg-[#1E3A8A] px-12 py-16 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-[#1E3A8A] px-10 py-8 relative overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-80 h-80 bg-[#2563EB]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -46,7 +46,7 @@ export default async function LoginPage({
             alt="Transporte Sebastián"
             width={500}
             height={342}
-            className="w-80 h-auto object-contain"
+            className="w-80 max-h-36 object-contain"
             priority
           />
         </div>
@@ -120,15 +120,15 @@ export default async function LoginPage({
       </div>
 
       {/* ── Panel derecho ── */}
-      <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 bg-slate-50 px-6 py-12">
+      <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 bg-slate-50 px-6 py-8">
         {/* Logo visible solo en móvil */}
-        <div className="lg:hidden mb-10">
+        <div className="lg:hidden mb-6">
           <Image
             src="/logo.png"
             alt="Transporte Sebastián"
             width={400}
             height={274}
-            className="w-64 h-auto object-contain"
+            className="w-52 max-h-24 object-contain"
             priority
           />
         </div>
