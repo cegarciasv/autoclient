@@ -109,7 +109,7 @@ export default async function DetalleClientePage({
   const ig = f?.infoGeneral;
 
   return (
-    <div className="space-y-5 max-w-6xl">
+    <div className="space-y-5 max-w-6xl mx-auto">
 
       {/* ── Header ── */}
       <div className="surface-card flex items-start gap-4 flex-wrap p-5 sm:p-6">

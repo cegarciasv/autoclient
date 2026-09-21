@@ -11,7 +11,7 @@ export default async function EditarClientePage({ params }: { params: Promise<{ 
     select: { id: true, tipo: true, razonSocial: true, tipoDocumento: true, numeroDocumento: true, email: true },
   });
   if (!tercero || tercero.tipo !== "CLIENTE") notFound();
-  return <div className="space-y-6">
+  return <div className="space-y-6 max-w-5xl mx-auto">
     <div className="space-y-3">
       <Link href={`/admin/clientes/${id}`} className="inline-flex items-center gap-2 text-sm font-medium text-[#52657a] hover:text-[var(--brand-primary)]"><ArrowLeft className="size-4" /> Volver al expediente</Link>
       <p className="eyebrow">Directorio / Clientes</p>

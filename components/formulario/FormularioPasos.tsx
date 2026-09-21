@@ -121,7 +121,7 @@ export default function FormularioPasos({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="form-flow mx-auto w-full max-w-5xl space-y-5 sm:space-y-6">
       {/* Modal tipo persona: aparece en paso 1 si el usuario aún no eligió */}
       {tipoPersonaSinSeleccionar && (
         <ModalTipoPersona

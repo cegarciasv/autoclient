@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function NuevoClientePage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <div className="space-y-3">
         <Link href="/admin/clientes" className="inline-flex items-center gap-2 text-sm font-medium text-[#52657a] hover:text-[var(--brand-primary)]"><ArrowLeft className="size-4" /> Volver a clientes</Link>
         <p className="eyebrow">Directorio / Clientes</p>

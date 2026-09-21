@@ -166,7 +166,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
           />
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 lg:px-7 lg:py-6 overflow-auto w-full mx-auto">
+        <main className="flex-1 min-w-0 w-full max-w-[1800px] mx-auto p-4 sm:p-6 lg:px-8 lg:py-7 2xl:px-12 2xl:py-9">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

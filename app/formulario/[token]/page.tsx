@@ -1,73 +1,37 @@
 "use client";
 
-import { useState, use } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Check, FileText, KeyRound, LockKeyhole, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyRound, ShieldCheck, Check, FileText, LogIn } from "lucide-react";
 
-// ─── Mini stepper horizontal ───────────────────────────────────────────────
 const STEPS = [
   { id: 1, label: "Documento", icon: FileText },
-  { id: 2, label: "Código",    icon: KeyRound },
-  { id: 3, label: "Acceso",   icon: LogIn },
+  { id: 2, label: "Código", icon: KeyRound },
+  { id: 3, label: "Acceso", icon: LockKeyhole },
 ];
 
 function MiniStepper({ active }: { active: 1 | 2 | 3 }) {
-  return (
-    <div className="flex items-center justify-center gap-0 mb-6">
-      {STEPS.map((step, idx) => {
-        const done    = step.id < active;
-        const current = step.id === active;
-        const Icon    = step.icon;
-        return (
-          <div key={step.id} className="flex items-center">
-            <div className="flex flex-col items-center gap-1">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all
-                  ${done    ? "bg-[var(--brand-primary)] border-[var(--brand-primary)] text-white" : ""}
-                  ${current ? "bg-white border-[var(--brand-primary)] text-[var(--brand-primary)] shadow-md ring-4 ring-[var(--brand-primary)]/10" : ""}
-                  ${!done && !current ? "bg-white border-slate-200 text-slate-300" : ""}`}
-              >
-                {done ? <Check className="h-4 w-4" /> : <Icon className="h-3.5 w-3.5" />}
-              </div>
-              <span
-                className={`text-[10px] font-medium leading-none
-                  ${current ? "text-[var(--brand-primary)] font-semibold" : "text-slate-400"}`}
-              >
-                {step.label}
-              </span>
-            </div>
-            {idx < STEPS.length - 1 && (
-              <div
-                className={`h-0.5 w-8 mx-1 mb-4 rounded-full transition-all
-                  ${step.id < active ? "bg-[var(--brand-primary)]" : "bg-slate-200"}`}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
+  return <div className="flex items-start justify-between gap-2" aria-label="Pasos de verificación">
+    {STEPS.map(({ id, label, icon: Icon }, index) => <div key={id} className="flex flex-1 items-start">
+      <div className="flex flex-col items-center gap-2">
+        <span aria-current={id === active ? "step" : undefined} className={`grid size-9 place-items-center rounded-full border text-sm ${id < active ? "border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white" : id === active ? "border-[var(--brand-primary)] bg-[#e9f4ef] text-[var(--brand-primary)]" : "border-[#e2e8ec] bg-white text-[#8493a5]"}`}>
+          {id < active ? <Check className="size-4" /> : <Icon className="size-4" />}
+        </span>
+        <span className={`text-xs font-medium ${id === active ? "text-[var(--brand-primary)]" : "text-[#8493a5]"}`}>{label}</span>
+      </div>
+      {index < STEPS.length - 1 && <span className={`mt-[18px] mx-3 h-px flex-1 ${id < active ? "bg-[var(--brand-primary)]" : "bg-[#e2e8ec]"}`} />}
+    </div>)}
+  </div>;
 }
 
-// ─── Error message ─────────────────────────────────────────────────────────
 function ErrorMsg({ text }: { text: string }) {
-  return (
-    <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-      {text}
-    </p>
-  );
+  return <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{text}</p>;
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────
-export default function FormularioLoginPage({
-  params,
-}: {
-  params: Promise<{ token: string }>;
-}) {
+export default function FormularioLoginPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = use(params);
   const router = useRouter();
   const [etapa, setEtapa] = useState<"documento" | "otp">("documento");
@@ -77,144 +41,102 @@ export default function FormularioLoginPage({
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
 
-  async function verificarDocumento(e: React.FormEvent) {
-    e.preventDefault();
+  async function verificarDocumento(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError("");
     setCargando(true);
-
-    const res = await fetch(`/api/formulario/${token}/verificar`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ numeroDocumento: documento }),
-    });
-
-    setCargando(false);
-
-    if (res.ok) {
-      const data = await res.json().catch(() => ({ email: "" }));
-      setEmailOculto(data.email);
+    try {
+      const res = await fetch(`/api/formulario/${token}/verificar`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numeroDocumento: documento }),
+      });
+      const data = await res.json().catch(() => ({})) as { email?: string; error?: string };
+      if (!res.ok) throw new Error(data.error || `Error al verificar el documento (${res.status})`);
+      setEmailOculto(data.email || "");
       setEtapa("otp");
-    } else {
-      const data = await res.json().catch(() => ({ error: "" }));
-      setError(data.error || `Error al verificar el documento (${res.status})`);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Error de conexión");
+    } finally {
+      setCargando(false);
     }
   }
 
-  async function verificarOTP(e: React.FormEvent) {
-    e.preventDefault();
+  async function verificarOTP(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError("");
     setCargando(true);
-
-    const res = await fetch(`/api/formulario/${token}/otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ codigo: otp }),
-    });
-
-    setCargando(false);
-
-    if (res.ok) {
+    try {
+      const res = await fetch(`/api/formulario/${token}/otp`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo: otp }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({})) as { error?: string };
+        throw new Error(data.error || `Código incorrecto (${res.status})`);
+      }
       router.push(`/formulario/${token}/paso/1`);
       router.refresh();
-    } else {
-      const data = await res.json().catch(() => ({ error: "" }));
-      setError(data.error || `Código incorrecto (${res.status})`);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Error de conexión");
+    } finally {
+      setCargando(false);
     }
   }
 
-  const stepActual = etapa === "documento" ? 1 : 2;
-  const HeroIcon   = etapa === "documento" ? ShieldCheck : KeyRound;
-
-  return (
-    <div className="max-w-md mx-auto">
-      {/* Hero icon */}
-      <div className="flex justify-center mb-5">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-dark)] flex items-center justify-center shadow-lg ring-4 ring-[var(--brand-primary)]/10">
-          <HeroIcon className="h-8 w-8 text-white" />
-        </div>
-      </div>
-
-      <Card className="shadow-xl border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="text-center pb-2 pt-6 px-6">
-          <MiniStepper active={stepActual as 1 | 2 | 3} />
-          <CardTitle className="text-xl text-slate-800">
-            {etapa === "documento" ? "Acceso al Formulario" : "Verificación de Identidad"}
-          </CardTitle>
-          <p className="text-sm text-slate-500 mt-1">
-            {etapa === "documento"
-              ? "Ingrese su número de documento para continuar"
-              : `Ingrese el código enviado a ${emailOculto}`}
-          </p>
-        </CardHeader>
-
-        <CardContent className="px-6 pb-6 pt-4">
-          {etapa === "documento" ? (
-            <form onSubmit={verificarDocumento} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="documento">Número de Identificación</Label>
-                <Input
-                  id="documento"
-                  value={documento}
-                  onChange={(e) => setDocumento(e.target.value)}
-                  placeholder="Sin guiones, espacios ni puntos"
-                  autoFocus
-                  required
-                  className="h-11"
-                />
-                <p className="text-xs text-slate-400">
-                  Ingrese NIT, DUI o Pasaporte según el tipo registrado
-                </p>
-              </div>
-              {error && <ErrorMsg text={error} />}
-              <Button
-                type="submit"
-                className="w-full h-11 bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] hover:from-[var(--brand-dark)] hover:to-[var(--brand-primary)] transition-all"
-                disabled={cargando}
-              >
-                {cargando ? "Verificando..." : "Continuar"}
-              </Button>
-            </form>
-          ) : (
-            <form onSubmit={verificarOTP} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="otp" className="text-center block">Código de verificación</Label>
-                <Input
-                  id="otp"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="0  0  0  0  0  0"
-                  maxLength={6}
-                  className="text-center text-3xl tracking-[0.5em] font-mono h-14 border-2 focus:border-[var(--brand-primary)]"
-                  autoFocus
-                  required
-                />
-                <p className="text-xs text-slate-400 text-center">
-                  El código es válido por 15 minutos
-                </p>
-              </div>
-              {error && <ErrorMsg text={error} />}
-              <Button
-                type="submit"
-                className="w-full h-11 bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] hover:from-[var(--brand-dark)] hover:to-[var(--brand-primary)] transition-all"
-                disabled={cargando || otp.length !== 6}
-              >
-                {cargando ? "Verificando..." : "Ingresar al Formulario"}
-              </Button>
-              <button
-                type="button"
-                onClick={() => { setEtapa("documento"); setError(""); setOtp(""); }}
-                className="w-full text-sm text-slate-500 hover:text-slate-700 underline underline-offset-2"
-              >
-                Volver al paso anterior
-              </button>
-            </form>
-          )}
-        </CardContent>
-      </Card>
-
-      <p className="text-center text-xs text-slate-400 mt-5">
-        Si tiene problemas para acceder, contacte a su representante
+  return <div className="grid min-h-[520px] items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.95fr)] xl:gap-16">
+    <div className="max-w-xl">
+      <p className="eyebrow">Portal de vinculación</p>
+      <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-[#142033] sm:text-4xl lg:text-[42px]">
+        Un proceso claro para completar su expediente.
+      </h1>
+      <p className="mt-5 max-w-lg text-base leading-relaxed text-[#52657a]">
+        Verifique su identidad para ingresar al formulario. Podrá avanzar por secciones y consultar su progreso en cada paso.
       </p>
+      <div className="mt-8 hidden gap-3 sm:grid sm:grid-cols-3 lg:grid-cols-1">
+        {[
+          { number: "01", title: "Identifíquese", detail: "Ingrese el documento registrado." },
+          { number: "02", title: "Confirme su acceso", detail: "Use el código enviado a su correo." },
+          { number: "03", title: "Complete el formulario", detail: "Avance por las secciones del expediente." },
+        ].map((item) => <div key={item.number} className="flex gap-3 rounded-xl border border-[#e2e8ec] bg-white px-4 py-3">
+          <span className="text-sm font-bold text-[var(--brand-primary)]">{item.number}</span>
+          <div><p className="text-sm font-semibold text-[#142033]">{item.title}</p><p className="mt-0.5 text-xs leading-relaxed text-[#52657a]">{item.detail}</p></div>
+        </div>)}
+      </div>
     </div>
-  );
+
+    <div className="surface-card w-full max-w-[520px] lg:justify-self-end">
+      <div className="border-b border-[#e2e8ec] px-6 py-6 sm:px-8">
+        <MiniStepper active={etapa === "documento" ? 1 : 2} />
+      </div>
+      <div className="px-6 py-7 sm:px-8 sm:py-8">
+        <span className="grid size-11 place-items-center rounded-xl bg-[#e9f4ef] text-[var(--brand-primary)]">
+          {etapa === "documento" ? <ShieldCheck className="size-5" /> : <KeyRound className="size-5" />}
+        </span>
+        <h2 className="mt-5 text-xl font-bold text-[#142033]">{etapa === "documento" ? "Acceso al formulario" : "Verificación de identidad"}</h2>
+        <p className="mt-1 text-sm leading-relaxed text-[#52657a]">{etapa === "documento"
+          ? "Ingrese su número de documento para continuar."
+          : `Ingrese el código enviado a ${emailOculto}.`}</p>
+
+        {etapa === "documento" ? <form onSubmit={verificarDocumento} className="mt-7 space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="documento" className="font-semibold text-[#142033]">Número de identificación</Label>
+            <Input id="documento" value={documento} onChange={(e) => setDocumento(e.target.value)} placeholder="Sin guiones, espacios ni puntos" autoFocus required className="h-12 rounded-lg bg-[#f8fafb]" />
+            <p className="text-xs text-[#8493a5]">Ingrese NIT, DUI o pasaporte según el tipo registrado.</p>
+          </div>
+          {error && <ErrorMsg text={error} />}
+          <Button type="submit" disabled={cargando} className="brand-button h-12 w-full rounded-lg">{cargando ? "Verificando..." : "Continuar"}</Button>
+        </form> : <form onSubmit={verificarOTP} className="mt-7 space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="otp" className="font-semibold text-[#142033]">Código de verificación</Label>
+            <Input id="otp" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" placeholder="000000" maxLength={6} autoFocus required className="h-14 rounded-lg bg-[#f8fafb] text-center font-mono text-2xl tracking-[0.45em]" />
+            <p className="text-xs text-[#8493a5]">El código es válido por 15 minutos.</p>
+          </div>
+          {error && <ErrorMsg text={error} />}
+          <Button type="submit" disabled={cargando || otp.length !== 6} className="brand-button h-12 w-full rounded-lg">{cargando ? "Verificando..." : "Ingresar al formulario"}</Button>
+          <button type="button" onClick={() => { setEtapa("documento"); setError(""); setOtp(""); }} className="w-full text-sm font-medium text-[#52657a] hover:text-[var(--brand-primary)]">Volver al paso anterior</button>
+        </form>}
+      </div>
+      <div className="border-t border-[#e2e8ec] bg-[#f8fafb] px-6 py-4 text-xs text-[#52657a] sm:px-8">Si tiene problemas para acceder, contacte a su representante.</div>
+    </div>
+  </div>;
 }

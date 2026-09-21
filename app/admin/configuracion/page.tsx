@@ -8,7 +8,7 @@ export default async function ConfiguracionPage() {
   if (admin?.rol !== "ADMIN") redirect("/admin/dashboard");
   const branding = await obtenerBranding();
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-2xl mx-auto">
       <div className="space-y-2">
         <p className="eyebrow">Preferencias / Apariencia</p>
         <h1 className="display-title text-[32px] text-slate-900">Configuración de marca</h1>

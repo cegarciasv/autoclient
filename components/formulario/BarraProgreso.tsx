@@ -17,30 +17,26 @@ export default function BarraProgreso({ pasos, pasoActual, progreso }: Props) {
   const labelActual = pasos.find((p) => p.paso === pasoActual)?.label ?? "";
 
   return (
-    <div className="space-y-3">
+    <div className="surface-card space-y-5 p-5 sm:p-7">
       {/* Cabecera: "Paso X de Y — Label" + porcentaje */}
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-slate-500 font-medium">
-          Paso{" "}
-          <span className="text-slate-800 font-semibold">{pasoActual}</span>{" "}
-          de{" "}
-          <span className="text-slate-800 font-semibold">{pasos.length}</span>
-          {" "}—{" "}
-          <span className="text-[var(--brand-primary)] font-semibold">{labelActual}</span>
-        </span>
-        <span className="font-bold text-[var(--brand-primary)]">{progreso}%</span>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="eyebrow mb-2">Formulario de vinculación</p>
+          <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#142033]">{labelActual}</h1>
+        </div>
+        <span className="text-sm font-semibold text-[#52657a]">Paso {pasoActual} de {pasos.length} <span className="ml-2 text-[var(--brand-primary)]">{progreso}%</span></span>
       </div>
 
       {/* Barra de progreso elegante */}
-      <div className="w-full h-1.5 rounded-full bg-slate-100">
+      <div className="w-full h-2 rounded-full bg-[#e2e8ec]" role="progressbar" aria-valuenow={progreso} aria-valuemin={0} aria-valuemax={100} aria-label="Progreso del formulario">
         <div
-          className="h-1.5 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-dark)] transition-all duration-500"
+          className="h-2 rounded-full bg-[var(--brand-primary)] transition-all duration-500"
           style={{ width: `${progreso}%` }}
         />
       </div>
 
       {/* Círculos de paso con líneas conectoras */}
-      <div className="flex items-start">
+      <div className="flex items-start pt-1">
         {pasos.map(({ paso, label }, idx) => {
           const completado = paso < pasoActual;
           const actual     = paso === pasoActual;
@@ -49,16 +45,17 @@ export default function BarraProgreso({ pasos, pasoActual, progreso }: Props) {
               {/* Círculo + label */}
               <div className="flex flex-col items-center gap-1.5 flex-1">
                 <div
-                  className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
-                    ${completado ? "bg-[var(--brand-primary)] border-[var(--brand-primary)] text-white shadow-sm" : ""}
-                    ${actual     ? "bg-white border-[var(--brand-primary)] text-[var(--brand-primary)] shadow-md ring-4 ring-[var(--brand-primary)]/10" : ""}
-                    ${!completado && !actual ? "bg-white border-slate-200 text-slate-400" : ""}`}
+                  aria-current={actual ? "step" : undefined}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border transition-all
+                    ${completado ? "bg-[var(--brand-primary)] border-[var(--brand-primary)] text-white" : ""}
+                    ${actual     ? "bg-[#e9f4ef] border-[var(--brand-primary)] text-[var(--brand-primary)]" : ""}
+                    ${!completado && !actual ? "bg-white border-[#e2e8ec] text-[#8493a5]" : ""}`}
                 >
                   {completado ? <Check className="h-4 w-4" /> : paso}
                 </div>
                 <span
-                  className={`text-[10px] text-center leading-tight hidden sm:block
-                    ${actual ? "text-[var(--brand-primary)] font-semibold" : "text-slate-400"}`}
+                  className={`text-[11px] text-center leading-tight hidden sm:block
+                    ${actual ? "text-[var(--brand-primary)] font-semibold" : "text-[#8493a5]"}`}
                 >
                   {label}
                 </span>

@@ -17,7 +17,7 @@ const opciones = [
     titulo: "Persona Jurídica",
     subtitulo: "Empresa, sociedad o entidad legal",
     ejemplos: ["Sociedad Anónima (S.A.)", "Sociedad de Responsabilidad Limitada", "ONG / Asociación", "Cooperativa"],
-    color: "from-[var(--brand-dark)] to-[var(--brand-primary)]",
+    color: "bg-[var(--brand-dark)]",
     ring: "ring-[var(--brand-primary)]",
     badge: "bg-[var(--brand-primary)]/10 text-[var(--brand-dark)]",
   },
@@ -27,7 +27,7 @@ const opciones = [
     titulo: "Persona Natural",
     subtitulo: "Individuo que actúa a título personal",
     ejemplos: ["Empresario individual", "Profesional independiente", "Comerciante natural", "Proveedor personal"],
-    color: "from-slate-700 to-slate-900",
+    color: "bg-slate-700",
     ring: "ring-slate-700",
     badge: "bg-slate-100 text-slate-700",
   },
@@ -79,10 +79,10 @@ export default function ModalTipoPersona({ token, onSeleccion }: Props) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
+          className="bg-white rounded-xl shadow-lg w-full max-w-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] px-8 py-7">
+          <div className="bg-[var(--brand-dark)] px-6 sm:px-8 py-6">
             <h2 className="text-xl font-bold text-white">¿Cómo desea vincularse?</h2>
             <p className="text-sm text-white/70 mt-1">
               Seleccione el tipo de persona que mejor describe su situación. Esta elección determina los documentos requeridos.
@@ -104,15 +104,15 @@ export default function ModalTipoPersona({ token, onSeleccion }: Props) {
                   whileHover={!guardando ? { scale: 1.02 } : {}}
                   whileTap={!guardando ? { scale: 0.98 } : {}}
                   className={[
-                    "relative text-left rounded-xl border-2 p-5 transition-all duration-200 focus:outline-none",
+                    "relative text-left rounded-xl border p-5 transition-all duration-200 brand-focus",
                     "disabled:cursor-not-allowed",
                     esteSeleccionado
-                      ? `border-transparent ring-2 ${op.ring} shadow-lg`
-                      : "border-slate-200 hover:border-slate-300 hover:shadow-md",
+                      ? `border-transparent ring-2 ${op.ring}`
+                      : "border-slate-200 hover:border-[var(--brand-primary)]/40",
                   ].join(" ")}
                 >
                   {/* Icon */}
-                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${op.color} mb-4`}>
+                  <div className={`inline-flex p-3 rounded-xl ${op.color} mb-4`}>
                     {esteGuardando ? (
                       <Loader2 className="h-6 w-6 text-white animate-spin" />
                     ) : (

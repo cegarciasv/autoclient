@@ -46,7 +46,7 @@ export default function FormNuevoTercero({ tipo, id, initial }: Props) {
     }
   }
 
-  return <div className="grid max-w-5xl gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+  return <div className="grid w-full max-w-5xl mx-auto gap-5 lg:grid-cols-[minmax(0,1fr)_280px] 2xl:gap-7">
     <form onSubmit={handleSubmit} className="surface-card overflow-hidden">
       <div className="border-b border-[#e2e8ec] px-5 py-5 sm:px-7">
         <p className="eyebrow mb-2">Datos de registro</p>

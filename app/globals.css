@@ -183,6 +183,27 @@
     outline: 3px solid color-mix(in srgb, var(--brand-primary) 38%, white);
     outline-offset: 3px;
   }
+
+  .form-flow [data-slot="card"] {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgb(15 35 50 / 4%);
+  }
+
+  .form-flow [data-slot="card-header"] {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+
+  .form-flow [data-slot="card-content"] {
+    padding-left: clamp(1rem, 3vw, 1.75rem);
+    padding-right: clamp(1rem, 3vw, 1.75rem);
+  }
+
+  .form-flow input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+    min-height: 2.75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
