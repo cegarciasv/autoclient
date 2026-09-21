@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import TablaTerceros from "@/components/admin/TablaTerceros";
+import { obtenerAdminActual } from "@/lib/auth-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProveedoresPage() {
+  const admin = await obtenerAdminActual();
   const proveedores = await prisma.tercero.findMany({
     where: { tipo: "PROVEEDOR" },
     include: { formulario: { select: { progreso: true, pasoActual: true } } },
@@ -19,6 +21,7 @@ export default async function ProveedoresPage() {
       </div>
       <TablaTerceros
         tipo="proveedores"
+        esAdmin={admin?.rol === "ADMIN"}
         terceros={proveedores.map((p: (typeof proveedores)[0]) => ({ ...p, creadoEn: p.creadoEn.toISOString() }))}
       />
     </div>

@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
+import { obtenerAdminActual } from "@/lib/auth-admin";
+import EliminarTerceroButton from "@/components/admin/EliminarTerceroButton";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowLeft, FileText, CheckCircle2, Clock, Loader2,
+  ArrowLeft, FileText, CheckCircle2, Clock, Loader2, Pencil,
   Building2, MapPin, User, Users, DollarSign, Phone,
   ShieldCheck, ClipboardList,
 } from "lucide-react";
@@ -57,9 +59,9 @@ function SeccionHeader({ icon: Icon, titulo }: { icon: React.ElementType; titulo
 
 function EstadoBadge({ estado }: { estado: string }) {
   const map: Record<string, { label: string; cls: string; icon: React.ReactNode }> = {
-    PENDIENTE:  { label: "Pendiente",  cls: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: <Clock className="h-3 w-3" /> },
-    EN_PROCESO: { label: "En proceso", cls: "bg-[var(--brand-primary)]/10 text-[var(--brand-dark)] border-[var(--brand-primary)]/20",       icon: <Loader2 className="h-3 w-3" /> },
-    COMPLETADO: { label: "Completado", cls: "bg-green-100 text-green-800 border-green-200",    icon: <CheckCircle2 className="h-3 w-3" /> },
+    PENDIENTE:  { label: "Pendiente",  cls: "bg-slate-100 text-slate-700 border-slate-200", icon: <Clock className="h-3 w-3" /> },
+    EN_PROCESO: { label: "En proceso", cls: "bg-[#fff3e3] text-[#a75c17] border-[#f4dfc7]", icon: <Loader2 className="h-3 w-3" /> },
+    COMPLETADO: { label: "Completado", cls: "bg-[#e8f5ee] text-[#16734d] border-[#cee8d8]", icon: <CheckCircle2 className="h-3 w-3" /> },
   };
   const e = map[estado] ?? { label: estado, cls: "", icon: null };
   return (
@@ -88,6 +90,7 @@ export default async function DetalleProveedorPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const admin = await obtenerAdminActual();
   const tercero = await prisma.tercero.findUnique({
     where: { id },
     include: {
@@ -111,15 +114,16 @@ export default async function DetalleProveedorPage({
   const ep = f?.encuestaProveedor;
 
   return (
-    <div className="space-y-5 max-w-5xl">
+    <div className="space-y-5 max-w-6xl">
 
       {/* ── Header ── */}
-      <div className="flex items-start gap-4 flex-wrap">
+      <div className="surface-card flex items-start gap-4 flex-wrap p-5 sm:p-6">
         <Link href="/admin/proveedores" className={buttonVariants({ variant: "outline", size: "sm" })}>
           <ArrowLeft className="h-4 w-4 mr-1" /> Volver
         </Link>
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl font-bold text-gray-900 leading-tight">{tercero.razonSocial}</h1>
+          <p className="eyebrow mb-2">Expediente / Proveedor</p>
+          <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#142033] leading-tight">{tercero.razonSocial}</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             {tercero.tipoDocumento}: {tercero.numeroDocumento} · {tercero.email}
           </p>
@@ -129,6 +133,8 @@ export default async function DetalleProveedorPage({
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <EstadoBadge estado={tercero.estado} />
+          <Link href={`/admin/proveedores/${tercero.id}/editar`} className={buttonVariants({ variant: "outline", size: "sm", className: "min-h-10" })}><Pencil className="h-4 w-4 mr-1" /> Editar</Link>
+          {admin?.rol === "ADMIN" && !f && <EliminarTerceroButton id={tercero.id} nombre={tercero.razonSocial} tipo="proveedores" desdeDetalle />}
           <BotonesEstado
             terceroId={tercero.id}
             estadoActual={tercero.estado}
@@ -148,9 +154,9 @@ export default async function DetalleProveedorPage({
 
       {/* ── Sin formulario ── */}
       {!f && (
-        <Card className="border-yellow-200 bg-yellow-50">
+        <Card className="surface-card">
           <CardContent className="pt-4">
-            <p className="text-sm text-yellow-700">El proveedor aún no ha iniciado el formulario.</p>
+            <p className="text-sm text-[#52657a]">El proveedor aún no ha iniciado el formulario.</p>
           </CardContent>
         </Card>
       )}
@@ -159,11 +165,7 @@ export default async function DetalleProveedorPage({
       {f && (() => {
         const completado = tercero.estado === "COMPLETADO" || f.estado === "COMPLETADO";
         const pct = completado ? 100 : f.progreso;
-        const barColor = completado
-          ? "bg-gradient-to-r from-emerald-400 to-emerald-600"
-          : pct >= 70 ? "bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-dark)]"
-          : pct >= 40 ? "bg-gradient-to-r from-amber-400 to-amber-600"
-          : "bg-gradient-to-r from-red-400 to-red-600";
+        const barColor = completado || pct >= 70 ? "bg-[var(--brand-primary)]" : pct >= 40 ? "bg-[#657586]" : "bg-slate-400";
         return (
           <Card className={completado ? "border-emerald-200 bg-emerald-50/40" : ""}>
             <CardContent className="pt-4 pb-3">
@@ -186,8 +188,8 @@ export default async function DetalleProveedorPage({
 
       {/* ── Ficha SAP ── */}
       {ig && (
-        <Card className="border-slate-200 shadow-sm overflow-hidden">
-          <div className="bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] px-5 py-3 flex items-center gap-2">
+        <Card className="surface-card overflow-hidden">
+          <div className="bg-[var(--brand-dark)] px-5 py-3 flex items-center gap-2">
             <Database className="h-4 w-4 text-green-300 flex-shrink-0" />
             <span className="text-sm font-bold text-white">Ficha SAP</span>
             <span className="text-xs text-slate-400 ml-1">— Datos esenciales para registro</span>
