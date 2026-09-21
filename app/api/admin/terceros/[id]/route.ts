@@ -64,3 +64,31 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }
+
+/** Devuelve el enlace vigente para compartirlo manualmente, sin enviar correo. */
+export async function PATCH(req: NextRequest, ctx: Ctx) {
+  try {
+    const admin = await obtenerAdminActual();
+    if (!admin) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
+    const { id } = await ctx.params;
+    const tercero = await prisma.tercero.findFirst({ where: { id } });
+    if (!tercero) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+
+    let token = tercero.token;
+    if (tercero.tokenExpira <= new Date()) {
+      token = generarTokenUnico();
+      await prisma.tercero.update({
+        where: { id },
+        data: { token, tokenExpira: tokenExpiraEn(5) },
+      });
+    }
+
+    const origin = process.env.APP_URL || req.nextUrl.origin;
+    const url = new URL(`/formulario/${token}`, origin).toString();
+    return NextResponse.json({ url });
+  } catch (err) {
+    console.error("[copiar-link] Error:", err);
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+  }
+}

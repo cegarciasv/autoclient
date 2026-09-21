@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Plus, Send, Eye } from "lucide-react";
+import { Search, Plus, Send, Eye, Copy } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +69,7 @@ function getProgressColor(pct: number) {
 export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
   const [busqueda, setBusqueda] = useState("");
   const [enviando, setEnviando] = useState<string | null>(null);
+  const [copiando, setCopiando] = useState<string | null>(null);
 
   const filtrados = inicial.filter(
     (t) =>
@@ -90,6 +91,21 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
       toast.error("Error de conexión");
     } finally {
       setEnviando(null);
+    }
+  }
+
+  async function copiarLink(id: string) {
+    setCopiando(id);
+    try {
+      const res = await fetch(`/api/admin/terceros/${id}`, { method: "PATCH" });
+      if (!res.ok) throw new Error("No se pudo obtener el enlace");
+      const { url } = (await res.json()) as { url: string };
+      await navigator.clipboard.writeText(url);
+      toast.success("Enlace copiado al portapapeles");
+    } catch {
+      toast.error("No se pudo copiar el enlace");
+    } finally {
+      setCopiando(null);
     }
   }
 
@@ -274,6 +290,19 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                     {/* Acciones */}
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1.5">
+                        {tipo === "clientes" && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => copiarLink(t.id)}
+                            disabled={copiando === t.id}
+                            title="Copiar enlace de formulario"
+                            aria-label={`Copiar enlace de ${t.razonSocial}`}
+                            className="h-8 w-8 p-0 text-slate-500 hover:text-[#2B5BE2] hover:bg-blue-50 transition-colors"
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                         <Button
                           size="sm"
                           variant="ghost"
