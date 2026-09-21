@@ -36,31 +36,32 @@ export default async function UsuariosPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Usuarios del Sistema</h1>
-          <p className="text-sm text-gray-500 mt-1">Gestión de acceso al panel administrativo</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-2">
+          <p className="eyebrow">Administración / Accesos</p>
+          <h1 className="display-title text-[32px] text-slate-900">Usuarios del sistema</h1>
+          <p className="text-sm text-slate-500">Gestión de acceso al panel administrativo</p>
         </div>
         <Link
           href="/admin/usuarios/nuevo"
           className={buttonVariants({
             className:
-              "bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)] text-white font-semibold gap-2",
+              "brand-button min-h-11 rounded-xl px-5 font-semibold gap-2",
           })}
         >
           <UserPlus className="h-4 w-4" />
-          Nuevo Usuario
+          Nuevo usuario
         </Link>
       </div>
 
-      <Card className="border border-slate-100 shadow-sm">
+      <Card className="surface-card overflow-x-auto">
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-bold text-slate-800">
             {usuarios.length} usuario{usuarios.length !== 1 ? "s" : ""} registrado{usuarios.length !== 1 ? "s" : ""}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
+          <Table className="min-w-[760px]">
             <TableHeader>
               <TableRow className="bg-slate-50">
                 <TableHead className="font-semibold text-slate-700">Nombre</TableHead>
@@ -85,11 +86,11 @@ export default async function UsuariosPage() {
                   <TableCell className="text-slate-600">{u.email}</TableCell>
                   <TableCell>
                     {u.rol === "ADMIN" ? (
-                      <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-0 font-semibold">
+                      <Badge className="bg-[#e9f4ef] text-[var(--brand-dark)] hover:bg-[#e9f4ef] border-0 font-semibold">
                         ADMIN
                       </Badge>
                     ) : (
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-0 font-semibold">
+                      <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100 border-0 font-semibold">
                         EJECUTIVO
                       </Badge>
                     )}

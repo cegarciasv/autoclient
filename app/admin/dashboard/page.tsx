@@ -1,5 +1,6 @@
-import { TrendingUp } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { obtenerAdminActual } from "@/lib/auth-admin";
 import DashboardAnimado from "@/components/admin/DashboardAnimado";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,7 @@ function getFechaEspanol(): string {
 }
 
 export default async function DashboardPage() {
+  const admin = await obtenerAdminActual();
   const [totalClientes, totalProveedores, pendientes, enProceso, completados, recientes] =
     await Promise.all([
       prisma.tercero.count({ where: { tipo: "CLIENTE" } }),
@@ -44,36 +46,26 @@ export default async function DashboardPage() {
       label: "Total Clientes",
       value: totalClientes,
       icon: "Users",
-      iconBg: "bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-dark)]",
-      border: "border-[var(--brand-primary)]/20",
     },
     {
       label: "Total Proveedores",
       value: totalProveedores,
       icon: "Truck",
-      iconBg: "bg-gradient-to-br from-purple-500 to-purple-700",
-      border: "border-purple-100",
     },
     {
       label: "Pendientes",
       value: pendientes,
       icon: "Clock",
-      iconBg: "bg-gradient-to-br from-amber-400 to-amber-600",
-      border: "border-amber-100",
     },
     {
       label: "En proceso",
       value: enProceso,
       icon: "Loader2",
-      iconBg: "bg-gradient-to-br from-orange-400 to-orange-600",
-      border: "border-orange-100",
     },
     {
       label: "Completados",
       value: completados,
       icon: "CheckCircle2",
-      iconBg: "bg-gradient-to-br from-emerald-400 to-emerald-600",
-      border: "border-emerald-100",
     },
   ];
 
@@ -82,16 +74,13 @@ export default async function DashboardPage() {
   const fechaCapital = fecha.charAt(0).toUpperCase() + fecha.slice(1);
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-          Bienvenido al Panel de Control
-        </h1>
-        <p className="text-sm text-slate-500 flex items-center gap-1.5">
-          <TrendingUp className="h-3.5 w-3.5 text-slate-400" />
-          {fechaCapital}
-        </p>
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-1">
+        <div>
+          <h1 className="text-[32px] leading-tight font-bold tracking-tight text-[#142033]">Hola, {admin?.nombre?.split(" ")[0] || "bienvenido"}</h1>
+          <p className="mt-1 text-sm sm:text-base text-[#52657a]">Aquí tienes el resumen de la operación. Todo bajo control.</p>
+        </div>
+        <div className="flex items-center gap-3 text-[#142033]"><CalendarDays className="size-5" /><span className="text-sm font-medium">{fechaCapital}</span></div>
       </div>
 
       <DashboardAnimado

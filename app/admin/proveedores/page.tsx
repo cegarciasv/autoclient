@@ -12,9 +12,10 @@ export default async function ProveedoresPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Proveedores</h1>
-        <p className="text-sm text-gray-500 mt-1">Gestión de expedientes de proveedores</p>
+      <div className="space-y-2">
+        <p className="eyebrow">Directorio / Proveedores</p>
+        <h1 className="display-title text-[32px] text-slate-900">Proveedores</h1>
+        <p className="text-sm text-slate-500">Consulta expedientes y sigue cada vinculación en un solo lugar.</p>
       </div>
       <TablaTerceros
         tipo="proveedores"

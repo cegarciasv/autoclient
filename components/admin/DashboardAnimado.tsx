@@ -1,214 +1,96 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, UserPlus, Truck, Users, Clock, Loader2, CheckCircle2 } from "lucide-react";
+import { Activity, ArrowRight, CheckCircle2, Clock3, LoaderCircle, Plus, Truck, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-const ICON_MAP: Record<string, LucideIcon> = {
-  Users,
-  Truck,
-  Clock,
-  Loader2,
-  CheckCircle2,
-};
+const ICONS: Record<string, LucideIcon> = { Users, Truck, Clock: Clock3, Loader2: LoaderCircle, CheckCircle2 };
+const card = "rounded-xl border border-[#e2e8ec] bg-white shadow-[0_2px_8px_rgba(15,35,50,0.04)]";
 
-interface KpiCard {
-  label: string;
-  value: number;
-  icon: string;
-  iconBg: string;
-  border: string;
-}
-
-interface Reciente {
-  id: string;
-  razonSocial: string;
-  tipo: string;
-  estado: string;
-  creadoEn: Date | string;
-}
-
+interface KpiCard { label: string; value: number; icon: string }
+interface Reciente { id: string; razonSocial: string; tipo: string; estado: string; creadoEn: Date | string }
 interface Props {
   kpiCards: KpiCard[];
-  pendientes: number;
-  enProceso: number;
-  completados: number;
-  pctPendientes: number;
-  pctEnProceso: number;
-  pctCompletados: number;
+  pendientes: number; enProceso: number; completados: number;
+  pctPendientes: number; pctEnProceso: number; pctCompletados: number;
   recientes: Reciente[];
 }
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.07, duration: 0.4, ease: "easeOut" as const },
-  }),
-};
-
-const fadeIn = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
-};
-
 function EstadoBadge({ estado }: { estado: string }) {
   const styles: Record<string, string> = {
-    PENDIENTE: "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
-    EN_PROCESO: "bg-orange-50 text-orange-700 ring-1 ring-orange-200",
-    COMPLETADO: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+    PENDIENTE: "bg-[#f1f3f5] text-[#52657a]",
+    EN_PROCESO: "bg-[#fff3e3] text-[#a75c17]",
+    COMPLETADO: "bg-[#e8f5ee] text-[#16734d]",
   };
-  const labels: Record<string, string> = {
-    PENDIENTE: "Pendiente",
-    EN_PROCESO: "En proceso",
-    COMPLETADO: "Completado",
-  };
-  return (
-    <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-semibold ${styles[estado] ?? "bg-slate-100 text-slate-600"}`}>
-      {labels[estado] ?? estado}
-    </span>
-  );
+  const labels: Record<string, string> = { PENDIENTE: "Pendiente", EN_PROCESO: "En proceso", COMPLETADO: "Completado" };
+  return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap ${styles[estado] ?? "bg-slate-100 text-slate-600"}`}>{labels[estado] ?? estado}</span>;
 }
 
-export default function DashboardAnimado({
-  kpiCards, pendientes, enProceso, completados,
-  pctPendientes, pctEnProceso, pctCompletados, recientes,
-}: Props) {
-  return (
-    <>
-      {/* KPI Cards con stagger */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        {kpiCards.map((card, i) => (
-          <motion.div key={card.label} custom={i} initial="hidden" animate="visible" variants={fadeUp}>
-            <Card className={`border ${card.border} shadow-sm hover:shadow-md transition-shadow bg-white`}>
-              <CardContent className="pt-5 pb-5">
-                <div className={`inline-flex p-2.5 rounded-xl ${card.iconBg} shadow-sm mb-4`}>
-                  {(() => { const Icon = ICON_MAP[card.icon] ?? Users; return <Icon className="h-4 w-4 text-white" />; })()}
-                </div>
-                <p className="text-3xl font-black text-slate-900 leading-none">{card.value}</p>
-                <p className="text-xs text-slate-500 mt-1.5 font-medium">{card.label}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+function StatCard({ item }: { item: KpiCard }) {
+  const Icon = ICONS[item.icon] ?? Users;
+  return <div className={`${card} min-w-0 p-4 sm:p-5`}>
+    <div className="flex items-start gap-3">
+      <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#eef5f2] text-[var(--brand-primary)]"><Icon className="size-5" /></span>
+      <div className="min-w-0"><p className="text-xs sm:text-sm leading-tight text-[#52657a]">{item.label}</p><p className="mt-1 text-[32px] leading-none font-bold tracking-tight tabular-nums text-[#142033]">{item.value}</p></div>
+    </div>
+  </div>;
+}
+
+function ActivitySummary({ rows, total }: { rows: { label: string; count: number; pct: number; bar: string }[]; total: number }) {
+  return <section className={`${card} p-5 min-h-[290px]`} aria-labelledby="activity-title">
+    <div className="flex items-center justify-between gap-4"><h2 id="activity-title" className="flex items-center gap-2.5 text-base font-bold text-[#142033]"><Activity className="size-5" /> Resumen de actividad</h2><span className="rounded-lg border border-[#e2e8ec] bg-[#f8fafb] px-3 py-1.5 text-xs text-[#52657a]">Estado actual</span></div>
+    <p className="mt-2 text-sm text-[#52657a]">{total} expedientes registrados en total</p>
+    <div className="mt-8 space-y-6">{rows.map((row) => <div key={row.label}>
+      <div className="mb-2 flex justify-between gap-3 text-sm"><span className="font-medium text-[#142033]">{row.label}</span><span className="font-semibold tabular-nums text-[#52657a]">{row.count} <span className="font-normal">({row.pct}%)</span></span></div>
+      <div className="h-3 overflow-hidden rounded-full bg-[#f0f3f5]"><div className={`h-full rounded-full ${row.bar}`} style={{ width: `${row.pct}%` }} /></div>
+    </div>)}</div>
+  </section>;
+}
+
+function StatusDistribution({ rows, total }: { rows: { label: string; pct: number; color: string }[]; total: number }) {
+  const segments = rows.map((row, index) => {
+    const start = rows.slice(0, index).reduce((sum, value) => sum + value.pct, 0);
+    return `${row.color} ${start}% ${start + row.pct}%`;
+  }).join(", ");
+  return <section className={`${card} p-5 min-h-[290px]`} aria-labelledby="distribution-title">
+    <h2 id="distribution-title" className="flex items-center gap-2.5 text-base font-bold text-[#142033]"><Clock3 className="size-5" /> Distribución de estados</h2>
+    <div className="mt-7 flex flex-col sm:flex-row xl:flex-row items-center justify-center gap-6">
+      <div role="img" aria-label={rows.map((r) => `${r.label}: ${r.pct}%`).join(", ")} className="relative size-40 shrink-0 rounded-full" style={{ background: total ? `conic-gradient(${segments})` : "#e2e8ec" }}>
+        <div className="absolute inset-[27px] rounded-full bg-white grid place-content-center text-center"><strong className="text-3xl leading-none text-[#142033]">{total}</strong><span className="mt-1 text-xs text-[#52657a]">Total</span></div>
       </div>
+      <div className="w-full max-w-56 space-y-3">{rows.map((row) => <div key={row.label} className="flex items-center gap-2 text-xs sm:text-sm"><span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: row.color }} /><span className="flex-1 text-[#52657a]">{row.label}</span><strong className="tabular-nums text-[#142033]">{row.pct}%</strong></div>)}</div>
+    </div>
+  </section>;
+}
 
-      {/* Resumen de actividad */}
-      <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.35 }}>
-        <Card className="border border-slate-100 shadow-sm bg-white">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-bold text-slate-800 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-slate-500" />
-              Resumen de actividad
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {[
-              { label: "Pendientes", count: pendientes, pct: pctPendientes, color: "from-amber-400 to-amber-500", dot: "bg-amber-400" },
-              { label: "En proceso", count: enProceso, pct: pctEnProceso, color: "from-orange-400 to-orange-500", dot: "bg-orange-400" },
-              { label: "Completados", count: completados, pct: pctCompletados, color: "from-emerald-400 to-emerald-600", dot: "bg-emerald-500" },
-            ].map((row) => (
-              <div key={row.label} className="space-y-1.5">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-600 font-medium flex items-center gap-1.5">
-                    <span className={`inline-block h-2 w-2 rounded-full ${row.dot}`} />
-                    {row.label}
-                  </span>
-                  <span className="text-slate-500 font-semibold tabular-nums">
-                    {row.count} <span className="text-slate-400 font-normal">({row.pct}%)</span>
-                  </span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
-                  <motion.div
-                    className={`h-full rounded-full bg-gradient-to-r ${row.color}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${row.pct}%` }}
-                    transition={{ duration: 0.8, ease: "easeOut" as const, delay: 0.5 }}
-                  />
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </motion.div>
+function RecentRecords({ recientes }: { recientes: Reciente[] }) {
+  return <section className={`${card} min-w-0 p-5`} aria-labelledby="recent-title">
+    <div className="flex items-center justify-between gap-3"><h2 id="recent-title" className="text-base font-bold text-[#142033]">Registros recientes</h2><Link href="/admin/clientes" className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--brand-primary)] hover:underline brand-focus">Ver clientes <ArrowRight className="size-4" /></Link></div>
+    <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[540px] text-left text-xs sm:text-sm">
+      <thead className="bg-[#f5f7f8] text-[#52657a]"><tr><th className="rounded-l-lg px-3 py-2 font-medium">Cliente o proveedor</th><th className="px-3 py-2 font-medium">Fecha</th><th className="rounded-r-lg px-3 py-2 font-medium">Estado</th></tr></thead>
+      <tbody className="divide-y divide-[#eef1f3]">{recientes.map((t) => <tr key={t.id} className="hover:bg-[#f8fafb]"><td className="px-3 py-2.5"><Link className="flex items-center gap-2.5 font-medium text-[#142033] hover:text-[var(--brand-primary)] brand-focus" href={`/admin/${t.tipo === "CLIENTE" ? "clientes" : "proveedores"}/${t.id}`}><span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#e9f4ef] text-xs text-[var(--brand-primary)]">{t.razonSocial.charAt(0).toUpperCase()}</span><span className="truncate max-w-[270px]">{t.razonSocial}</span></Link></td><td className="px-3 py-2.5 whitespace-nowrap text-[#52657a]">{new Date(t.creadoEn).toLocaleDateString("es-SV")}</td><td className="px-3 py-2.5"><EstadoBadge estado={t.estado} /></td></tr>)}</tbody>
+    </table>{recientes.length === 0 && <p className="py-8 text-center text-sm text-[#52657a]">Aún no hay expedientes registrados.</p>}</div>
+  </section>;
+}
 
-      {/* Acciones rápidas + Recientes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.45 }}>
-          <Card className="border border-slate-100 shadow-sm bg-white">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-bold text-slate-800">Acciones rápidas</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Link
-                href="/admin/clientes/nuevo"
-                className={buttonVariants({
-                  className: "w-full bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] hover:from-[var(--brand-dark)] hover:to-[var(--brand-primary)] text-white font-semibold gap-2 justify-center",
-                })}
-              >
-                <UserPlus className="h-4 w-4" />
-                Nuevo Cliente
-              </Link>
-              <Link
-                href="/admin/proveedores/nuevo"
-                className={buttonVariants({
-                  variant: "outline",
-                  className: "w-full font-semibold gap-2 justify-center border-slate-200 text-slate-700 hover:bg-slate-50",
-                })}
-              >
-                <Truck className="h-4 w-4" />
-                Nuevo Proveedor
-              </Link>
-            </CardContent>
-          </Card>
-        </motion.div>
+function QuickActions() {
+  const actions = [
+    { href: "/admin/clientes/nuevo", label: "Nuevo cliente", detail: "Registra un nuevo cliente", icon: Users },
+    { href: "/admin/proveedores/nuevo", label: "Nuevo proveedor", detail: "Añade un proveedor", icon: Truck },
+  ];
+  return <section className={`${card} p-5`} aria-labelledby="quick-title"><h2 id="quick-title" className="flex items-center gap-2 text-base font-bold text-[#142033]"><Plus className="size-5" /> Acciones rápidas</h2><div className="mt-4 space-y-2">{actions.map(({ href, label, detail, icon: Icon }) => <Link key={href} href={href} className="flex items-center gap-3 rounded-xl border border-[#e2e8ec] p-3 hover:border-[var(--brand-primary)] hover:bg-[#f8fafb] brand-focus"><span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#e9f4ef] text-[var(--brand-primary)]"><Icon className="size-5" /></span><span className="min-w-0 flex-1"><strong className="block text-sm text-[#142033]">{label}</strong><span className="block text-xs text-[#52657a]">{detail}</span></span><ArrowRight className="size-4 text-[#52657a]" /></Link>)}</div></section>;
+}
 
-        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.5 }}>
-          <Card className="border border-slate-100 shadow-sm bg-white">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-bold text-slate-800">Registros recientes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                {recientes.map((t, i) => {
-                  const inicial = t.razonSocial?.charAt(0)?.toUpperCase() ?? "?";
-                  const esCliente = t.tipo === "CLIENTE";
-                  return (
-                    <motion.div
-                      key={t.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.55 + i * 0.06, duration: 0.3 }}
-                    >
-                      <Link
-                        href={`/admin/${esCliente ? "clientes" : "proveedores"}/${t.id}`}
-                        className="flex items-center gap-3 py-2.5 px-2 rounded-lg border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all"
-                      >
-                        <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                          esCliente ? "bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-dark)]" : "bg-gradient-to-br from-purple-500 to-purple-700"
-                        }`}>
-                          {inicial}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-slate-800 truncate">{t.razonSocial}</p>
-                          <p className="text-xs text-slate-400">
-                            {esCliente ? "Cliente" : "Proveedor"} · {new Date(t.creadoEn).toLocaleDateString("es-SV")}
-                          </p>
-                        </div>
-                        <EstadoBadge estado={t.estado} />
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </>
-  );
+export default function DashboardAnimado({ kpiCards, pendientes, enProceso, completados, pctPendientes, pctEnProceso, pctCompletados, recientes }: Props) {
+  const total = pendientes + enProceso + completados;
+  const rows = [
+    { label: "Completados", count: completados, pct: pctCompletados, color: "var(--brand-primary)", bar: "bg-[var(--brand-primary)]" },
+    { label: "En proceso", count: enProceso, pct: pctEnProceso, color: "#657586", bar: "bg-[#657586]" },
+    { label: "Pendientes", count: pendientes, pct: pctPendientes, color: "#c8d0d7", bar: "bg-[#c8d0d7]" },
+  ];
+  return <>
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">{kpiCards.map((item) => <StatCard item={item} key={item.label} />)}</div>
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]"><ActivitySummary rows={rows} total={total} /><StatusDistribution rows={rows} total={total} /></div>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]"><RecentRecords recientes={recientes} /><QuickActions /></div>
+  </>;
 }

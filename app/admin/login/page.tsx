@@ -21,20 +21,20 @@ export default async function LoginPage({
   const errorMessage = error ? ERROR_MESSAGES[error] ?? null : null;
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-2">
+    <div className="min-h-screen lg:grid lg:grid-cols-[1.08fr_0.92fr] workspace-canvas">
       {/* ── Panel izquierdo (solo desktop) ── */}
-      <div className="hidden lg:flex flex-col justify-between bg-[var(--brand-dark)] px-12 py-16 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-[var(--brand-dark)] px-12 xl:px-16 py-12 relative overflow-hidden text-white">
         {/* Decoración de fondo */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--brand-primary)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--brand-primary)]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute -top-40 -right-40 w-[36rem] h-[36rem] border-[90px] border-white/5 rounded-full" />
+          <div className="absolute -bottom-56 -left-32 w-[42rem] h-[42rem] border-[1px] border-white/15 rounded-full" />
           {/* Grid sutil */}
           <div
             className="absolute inset-0 opacity-[0.03]"
             style={{
               backgroundImage:
                 "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
+              backgroundSize: "32px 32px",
             }}
           />
         </div>
@@ -45,66 +45,66 @@ export default async function LoginPage({
             src="/api/branding/logo"
             unoptimized
             alt="Logo de la empresa"
-            width={360}
-            height={112}
-            className="h-28 w-auto object-contain"
+            width={280}
+            height={90}
+            className="h-20 w-auto object-contain object-left"
             priority
           />
         </div>
 
         {/* Contenido central */}
-        <div className="relative space-y-8">
-          <div className="space-y-4">
-            <h2 className="text-4xl font-bold text-white leading-tight">
-              Panel de
+        <div className="relative space-y-9 max-w-[600px]">
+          <div className="space-y-5">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">01 / Espacio de trabajo</p>
+            <h2 className="display-title text-5xl xl:text-6xl text-white">
+              Cada vinculación,
               <br />
-              <span className="text-[var(--brand-accent)]">Administración</span>
+              <span className="italic text-[var(--brand-accent)]">en orden.</span>
             </h2>
-            <p className="text-slate-400 text-base leading-relaxed max-w-sm">
-              Gestiona el proceso de vinculación de clientes y proveedores desde
-              un solo lugar, con trazabilidad completa y en tiempo real.
+            <p className="text-white/70 text-base leading-relaxed max-w-md">
+              Un espacio claro para acompañar a clientes y proveedores desde el primer contacto hasta su expediente completo.
             </p>
           </div>
 
           {/* Bullet points */}
-          <ul className="space-y-4">
+          <ul className="space-y-4 border-t border-white/15 pt-7">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[var(--brand-primary)]/20 rounded-lg flex items-center justify-center mt-0.5">
+              <span className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mt-0.5">
                 <ShieldCheck className="h-4 w-4 text-[var(--brand-accent)]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
                   Seguridad empresarial
                 </p>
-                <p className="text-slate-500 text-xs mt-0.5">
+                <p className="text-white/55 text-xs mt-0.5">
                   Acceso controlado con sesiones cifradas y auditoría de
                   actividad.
                 </p>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[var(--brand-primary)]/20 rounded-lg flex items-center justify-center mt-0.5">
+              <span className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mt-0.5">
                 <Zap className="h-4 w-4 text-[var(--brand-accent)]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
                   Eficiencia operativa
                 </p>
-                <p className="text-slate-500 text-xs mt-0.5">
+                <p className="text-white/55 text-xs mt-0.5">
                   Automatiza el envío de formularios y reduce tiempos de
                   onboarding.
                 </p>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[var(--brand-primary)]/20 rounded-lg flex items-center justify-center mt-0.5">
+              <span className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mt-0.5">
                 <BarChart3 className="h-4 w-4 text-[var(--brand-accent)]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
                   Control y visibilidad
                 </p>
-                <p className="text-slate-500 text-xs mt-0.5">
+                <p className="text-white/55 text-xs mt-0.5">
                   Seguimiento del progreso de cada tercero con reportes
                   detallados.
                 </p>
@@ -114,33 +114,34 @@ export default async function LoginPage({
         </div>
 
         {/* Footer izquierdo */}
-        <div className="relative flex items-center gap-2 text-xs text-slate-600">
+        <div className="relative flex items-center gap-2 text-xs text-white/50">
           <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-          Todos los sistemas operativos
+          Acceso protegido para personal autorizado
         </div>
       </div>
 
       {/* ── Panel derecho ── */}
-      <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 bg-slate-50 px-6 py-12">
+      <div className="flex flex-col items-center justify-center min-h-screen lg:min-h-0 px-6 py-12">
         {/* Logo visible solo en móvil */}
-        <div className="lg:hidden mb-10">
+        <div className="lg:hidden mb-10 rounded-2xl bg-[var(--brand-dark)] px-7 py-4 shadow-lg shadow-slate-900/10">
           <Image
             src="/api/branding/logo"
             unoptimized
             alt="Logo de la empresa"
             width={280}
             height={88}
-            className="h-20 w-auto object-contain"
+            className="h-16 w-auto object-contain"
             priority
           />
         </div>
 
         <div className="w-full max-w-md">
           {/* Card */}
-          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-200/60 overflow-hidden">
+          <div className="surface-card overflow-hidden">
             {/* Header */}
             <div className="px-8 pt-8 pb-6 border-b border-slate-100 text-center">
-              <h1 className="text-2xl font-bold text-slate-900">
+              <p className="eyebrow mb-3">Bienvenido</p>
+              <h1 className="display-title text-3xl text-slate-900">
                 Acceso administrativo
               </h1>
               <p className="text-sm text-slate-500 mt-1.5">
@@ -161,7 +162,7 @@ export default async function LoginPage({
               {/* Microsoft login button */}
               <a
                 href="/api/auth/microsoft/login"
-                className="flex items-center justify-center gap-3 w-full h-12 rounded-xl bg-white border border-[#e2e8f0] text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
+                className="flex items-center justify-center gap-3 w-full min-h-12 rounded-xl bg-[var(--brand-dark)] text-white text-sm font-semibold hover:opacity-90 transition-opacity brand-focus"
               >
                 <svg
                   width="20"

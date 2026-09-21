@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { obtenerBranding } from "@/lib/branding";
 import type { CSSProperties } from "react";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Formulario de Vinculación",
@@ -28,8 +21,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     "--ring": branding.colorPrimary,
   } as CSSProperties;
   return (
-    <html lang="es" className={`${inter.variable} h-full antialiased`} style={brandStyle}>
-      <body className="min-h-full font-sans bg-slate-50 text-slate-900">
+    <html lang="es" className="h-full antialiased" style={brandStyle}>
+      <body className="min-h-full font-sans bg-background text-foreground">
         {children}
         <Toaster richColors position="top-right" closeButton />
       </body>

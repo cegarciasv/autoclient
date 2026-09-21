@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma";
 
 export const DEFAULT_BRANDING = {
-  colorPrimary: "#1A7A30",
-  colorDark: "#1B3C22",
-  colorAccent: "#4ADE80",
+  colorPrimary: "#0B6B50",
+  colorDark: "#08251D",
+  colorAccent: "#4AD49F",
 };
 
 export async function obtenerBranding() {

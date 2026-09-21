@@ -40,7 +40,7 @@ export default function BrandingForm({ initial }: { initial: Colors & { actualiz
 
   return (
     <form onSubmit={save} className="space-y-6">
-      <section className="rounded-xl border bg-white p-6 space-y-4">
+      <section className="surface-card p-6 space-y-4">
         <div>
           <h2 className="font-semibold text-slate-900">Logo</h2>
           <p className="text-sm text-slate-500">PNG, JPG o WebP, hasta 2 MB. Se muestra en el panel, acceso y formulario.</p>
@@ -69,7 +69,7 @@ export default function BrandingForm({ initial }: { initial: Colors & { actualiz
           className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:font-medium file:text-slate-700 hover:file:bg-slate-200"
         />
       </section>
-      <section className="rounded-xl border bg-white p-6 space-y-5">
+      <section className="surface-card p-6 space-y-5">
         <div>
           <h2 className="font-semibold text-slate-900">Colores</h2>
           <p className="text-sm text-slate-500">Elige los tres colores que identifican a la empresa.</p>
@@ -84,7 +84,7 @@ export default function BrandingForm({ initial }: { initial: Colors & { actualiz
           </div>
         ))}
       </section>
-      <Button type="submit" disabled={saving} className="text-white">{saving ? "Guardando..." : "Guardar cambios"}</Button>
+      <Button type="submit" disabled={saving} className="brand-button min-h-11 px-6">{saving ? "Guardando..." : "Guardar cambios"}</Button>
     </form>
   );
 }

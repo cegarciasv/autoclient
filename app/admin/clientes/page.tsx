@@ -12,9 +12,10 @@ export default async function ClientesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Clientes</h1>
-        <p className="text-sm text-gray-500 mt-1">Gestión de expedientes de clientes</p>
+      <div className="space-y-2">
+        <p className="eyebrow">Directorio / Clientes</p>
+        <h1 className="display-title text-[32px] text-slate-900">Clientes</h1>
+        <p className="text-sm text-slate-500">Consulta expedientes, revisa su avance y comparte el enlace de registro.</p>
       </div>
       <TablaTerceros
         tipo="clientes"

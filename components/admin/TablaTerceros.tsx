@@ -56,8 +56,8 @@ const ESTADO_MAP = {
 
 function getAvatarColors(tipo: "clientes" | "proveedores") {
   return tipo === "clientes"
-    ? "bg-green-100 text-[var(--brand-dark)]"
-    : "bg-purple-100 text-purple-700";
+    ? "bg-[var(--brand-primary)]/10 text-[var(--brand-dark)]"
+    : "bg-slate-100 text-slate-700";
 }
 
 function getProgressColor(pct: number) {
@@ -113,11 +113,11 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
     <div className="space-y-4">
       {/* Barra de acciones */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative w-full sm:max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
           <Input
             placeholder="Buscar por nombre, email o documento..."
-            className="pl-9 h-10 border-slate-200 focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]/20 transition-colors"
+            className="pl-10 h-11 rounded-xl border-slate-200 bg-white focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]/20 transition-colors"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -126,38 +126,75 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
           href={`/admin/${tipo}/nuevo`}
           className={buttonVariants({
             className:
-              "bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)] text-white shadow-sm shadow-green-900/10 transition-all",
+              "brand-button min-h-11 w-full sm:w-auto rounded-xl px-5",
           })}
         >
           <Plus className="h-4 w-4 mr-2" />
-          {tipo === "clientes" ? "Nuevo Cliente" : "Nuevo Proveedor"}
+          {tipo === "clientes" ? "Nuevo cliente" : "Nuevo proveedor"}
         </Link>
       </div>
 
-      {/* Tabla */}
-      <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
-        <Table>
+      {/* En pantallas pequeñas cada registro conserva sus acciones visibles. */}
+      <div className="grid gap-3 md:hidden">
+        {filtrados.length === 0 && (
+          <div className="surface-card px-6 py-12 text-center text-sm text-slate-500">
+            No se encontraron registros{busqueda ? " para esta búsqueda" : ""}.
+          </div>
+        )}
+        {filtrados.map((t) => {
+          const estado = ESTADO_MAP[t.estado as keyof typeof ESTADO_MAP] ?? {
+            label: t.estado, cls: "bg-slate-100 text-slate-700 border-slate-200", dot: "bg-slate-400", pulse: false,
+          };
+          return (
+            <article key={t.id} className="surface-card p-5 space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-semibold text-slate-900 leading-snug break-words">{t.razonSocial}</p>
+                  <p className="mt-1 text-xs text-slate-500 break-all">{t.email}</p>
+                </div>
+                <Badge variant="outline" className={`${estado.cls} shrink-0 gap-1.5 text-xs`}>
+                  <span className={`size-1.5 rounded-full ${estado.dot}`} />{estado.label}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 text-xs text-slate-500">
+                <span className="break-all"><span className="font-semibold text-slate-700">{t.tipoDocumento}</span> · {t.numeroDocumento}</span>
+                <span className="shrink-0 font-semibold tabular-nums text-slate-700">{t.formulario ? `${t.formulario.progreso}%` : "Sin iniciar"}</span>
+              </div>
+              {t.formulario && <div className="h-1.5 overflow-hidden rounded-full bg-slate-100"><div className={`h-full rounded-full ${getProgressColor(t.formulario.progreso)}`} style={{ width: `${t.formulario.progreso}%` }} /></div>}
+              <div className="flex gap-2 pt-1">
+                {tipo === "clientes" && <Button variant="outline" onClick={() => copiarLink(t.id)} disabled={copiando === t.id} className="min-h-11 flex-1 rounded-xl" aria-label={`Copiar enlace de ${t.razonSocial}`}><Copy className="size-4" /> Copiar</Button>}
+                <Button variant="outline" onClick={() => reenviarLink(t.id, t.razonSocial)} disabled={enviando === t.id} className="min-h-11 flex-1 rounded-xl" aria-label={`Reenviar enlace a ${t.razonSocial}`}><Send className="size-4" /> Reenviar</Button>
+                <Link href={`/admin/${tipo}/${t.id}`} className={buttonVariants({variant: "outline", className: "min-h-11 flex-1 rounded-xl"})} aria-label={`Ver detalle de ${t.razonSocial}`}><Eye className="size-4" /> Ver</Link>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      {/* Tabla de escritorio */}
+      <div className="surface-card hidden md:block overflow-x-auto">
+        <Table className="min-w-[960px]">
           <TableHeader>
-            <TableRow className="bg-[var(--brand-dark)] hover:bg-[var(--brand-dark)] border-none">
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+            <TableRow className="bg-slate-50 hover:bg-slate-50 border-slate-100">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider">
                 Razón Social
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider">
                 Tipo
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider">
                 Documento
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider">
                 Email
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider">
                 Estado
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider">
                 Progreso
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold text-xs uppercase tracking-wider text-right">
+              <TableHead className="text-slate-500 font-semibold text-xs uppercase tracking-wider text-right">
                 Acciones
               </TableHead>
             </TableRow>
@@ -226,8 +263,8 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                       {tipoDefinido ? (
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
                           t.tipoPersona === "NATURAL"
-                            ? "bg-blue-50 text-blue-700 border-blue-200"
-                            : "bg-violet-50 text-violet-700 border-violet-200"
+                            ? "bg-[#e9f4ef] text-[var(--brand-dark)] border-[var(--brand-primary)]/20"
+                            : "bg-slate-100 text-slate-700 border-slate-200"
                         }`}>
                           {t.tipoPersona === "NATURAL" ? "Natural" : "Jurídica"}
                         </span>
@@ -298,7 +335,7 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                             disabled={copiando === t.id}
                             title="Copiar enlace de formulario"
                             aria-label={`Copiar enlace de ${t.razonSocial}`}
-                            className="h-8 w-8 p-0 text-slate-500 hover:text-[#2B5BE2] hover:bg-blue-50 transition-colors"
+                            className="h-10 w-10 p-0 text-slate-500 hover:text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/10 transition-colors"
                           >
                             <Copy className="h-3.5 w-3.5" />
                           </Button>
@@ -309,7 +346,8 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                           onClick={() => reenviarLink(t.id, t.razonSocial)}
                           disabled={enviando === t.id}
                           title="Reenviar link de formulario"
-                          className="h-8 w-8 p-0 text-slate-500 hover:text-[var(--brand-primary)] hover:bg-green-50 transition-colors"
+                          aria-label={`Reenviar enlace a ${t.razonSocial}`}
+                          className="h-10 w-10 p-0 text-slate-500 hover:text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/10 transition-colors"
                         >
                           <Send
                             className={`h-3.5 w-3.5 ${
@@ -320,11 +358,12 @@ export default function TablaTerceros({ tipo, terceros: inicial }: Props) {
                         <Link
                           href={`/admin/${tipo}/${t.id}`}
                           title="Ver detalle"
+                          aria-label={`Ver detalle de ${t.razonSocial}`}
                           className={buttonVariants({
                             size: "sm",
                             variant: "ghost",
                             className:
-                              "h-8 w-8 p-0 text-slate-500 hover:text-[var(--brand-primary)] hover:bg-green-50 transition-colors",
+                              "h-10 w-10 p-0 text-slate-500 hover:text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/10 transition-colors",
                           })}
                         >
                           <Eye className="h-3.5 w-3.5" />
