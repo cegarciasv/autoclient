@@ -49,25 +49,27 @@
 }
 
 :root {
+  --brand-primary: #1A7A30;
+  --brand-dark: #1B3C22;
+  --brand-accent: #4ADE80;
   --background: oklch(1 0 0);
   --foreground: oklch(0.18 0.02 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.02 250);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 250);
-  /* Verde corporativo Grupo Remor: #1A7A30 (principal) / #1B3C22 (oscuro) */
-  --primary: oklch(0.52 0.13 145);       /* #1A7A30 verde Remor */
+  --primary: var(--brand-primary);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.97 0.008 145);    /* verde muy tenue */
-  --secondary-foreground: oklch(0.26 0.08 145);
-  --muted: oklch(0.97 0.005 145);
-  --muted-foreground: oklch(0.50 0.02 145);
-  --accent: oklch(0.94 0.025 145);
-  --accent-foreground: oklch(0.26 0.08 145);
+  --secondary: color-mix(in srgb, var(--brand-primary) 6%, white);
+  --secondary-foreground: var(--brand-dark);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.50 0 0);
+  --accent: color-mix(in srgb, var(--brand-primary) 12%, white);
+  --accent-foreground: var(--brand-dark);
   --destructive: oklch(0.62 0.22 25);
-  --border: oklch(0.92 0.01 145);
-  --input: oklch(0.92 0.01 145);
-  --ring: oklch(0.52 0.13 145);
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.92 0 0);
+  --ring: var(--brand-primary);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

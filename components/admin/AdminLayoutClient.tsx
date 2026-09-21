@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   UserCog,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const navItems = [
   { href: "/admin/clientes", label: "Clientes", icon: Users, adminOnly: false },
   { href: "/admin/proveedores", label: "Proveedores", icon: Truck, adminOnly: false },
   { href: "/admin/usuarios", label: "Usuarios", icon: UserCog, adminOnly: true },
+  { href: "/admin/configuracion", label: "Configuración", icon: Settings, adminOnly: true },
 ];
 
 async function cerrarSesion() {
@@ -63,7 +65,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-30 w-64 flex flex-col lg:translate-x-0 lg:static lg:z-auto",
-          "bg-[#1B3C22] text-white",
+          "bg-[var(--brand-dark)] text-white",
           // En desktop siempre visible; en móvil lo manejamos con motion
           "max-lg:transition-transform max-lg:duration-200",
           sidebarAbierto ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
@@ -72,8 +74,9 @@ export default function AdminLayoutClient({ children, session }: Props) {
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
           <Image
-            src="/logo.png"
-            alt="Grupo Remor"
+            src="/api/branding/logo"
+            unoptimized
+            alt="Logo de la empresa"
             width={300}
             height={96}
             className="h-20 w-auto object-contain"
@@ -103,7 +106,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
                 className={cn(
                   "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                   activo
-                    ? "bg-[#1A7A30] text-white shadow-sm shadow-black/20 border-l-2 border-[#4ade80]"
+                    ? "bg-[var(--brand-primary)] text-white shadow-sm shadow-black/20 border-l-2 border-[var(--brand-accent)]"
                     : "text-white/60 hover:bg-white/10 hover:text-white"
                 )}
               >
@@ -148,7 +151,7 @@ export default function AdminLayoutClient({ children, session }: Props) {
       {/* ── Main ────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar móvil */}
-        <header className="bg-[#1B3C22] text-white border-b border-white/10 px-4 py-3 flex items-center gap-4 lg:hidden">
+        <header className="bg-[var(--brand-dark)] text-white border-b border-white/10 px-4 py-3 flex items-center gap-4 lg:hidden">
           <button
             onClick={() => setSidebarAbierto(true)}
             className="text-white/60 hover:text-white transition-colors"
@@ -156,8 +159,9 @@ export default function AdminLayoutClient({ children, session }: Props) {
             <Menu className="h-5 w-5" />
           </button>
           <Image
-            src="/logo.png"
-            alt="Grupo Remor"
+            src="/api/branding/logo"
+            unoptimized
+            alt="Logo de la empresa"
             width={200}
             height={56}
             className="h-14 w-auto object-contain"

@@ -17,9 +17,9 @@ const opciones = [
     titulo: "Persona Jurídica",
     subtitulo: "Empresa, sociedad o entidad legal",
     ejemplos: ["Sociedad Anónima (S.A.)", "Sociedad de Responsabilidad Limitada", "ONG / Asociación", "Cooperativa"],
-    color: "from-[#1B3C22] to-[#1A7A30]",
-    ring: "ring-[#1A7A30]",
-    badge: "bg-[#1A7A30]/10 text-[#1B3C22]",
+    color: "from-[var(--brand-dark)] to-[var(--brand-primary)]",
+    ring: "ring-[var(--brand-primary)]",
+    badge: "bg-[var(--brand-primary)]/10 text-[var(--brand-dark)]",
   },
   {
     tipo: "NATURAL" as const,
@@ -82,7 +82,7 @@ export default function ModalTipoPersona({ token, onSeleccion }: Props) {
           className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] px-8 py-7">
+          <div className="bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] px-8 py-7">
             <h2 className="text-xl font-bold text-white">¿Cómo desea vincularse?</h2>
             <p className="text-sm text-white/70 mt-1">
               Seleccione el tipo de persona que mejor describe su situación. Esta elección determina los documentos requeridos.
@@ -136,7 +136,7 @@ export default function ModalTipoPersona({ token, onSeleccion }: Props) {
 
                   {/* Arrow indicator */}
                   <div className="absolute bottom-4 right-4">
-                    <ChevronRight className={`h-4 w-4 transition-colors ${esteSeleccionado ? "text-[#1A7A30]" : "text-slate-300"}`} />
+                    <ChevronRight className={`h-4 w-4 transition-colors ${esteSeleccionado ? "text-[var(--brand-primary)]" : "text-slate-300"}`} />
                   </div>
                 </motion.button>
               );

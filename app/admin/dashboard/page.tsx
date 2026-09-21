@@ -44,8 +44,8 @@ export default async function DashboardPage() {
       label: "Total Clientes",
       value: totalClientes,
       icon: "Users",
-      iconBg: "bg-gradient-to-br from-[#1A7A30] to-[#1B3C22]",
-      border: "border-[#1A7A30]/20",
+      iconBg: "bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-dark)]",
+      border: "border-[var(--brand-primary)]/20",
     },
     {
       label: "Total Proveedores",

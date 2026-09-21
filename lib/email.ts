@@ -10,6 +10,7 @@
  *   MAIL_FROM          → buzón desde el que se envía (ej: formularios@gruporemor.com.sv)
  *   APP_URL            → URL base de la app
  */
+import { obtenerBranding } from "@/lib/branding";
 
 // ─── Token cache en memoria ───────────────────────────────────────────────────
 // Evita pedir un token nuevo en cada correo (duran 3600 s por defecto).
@@ -103,13 +104,14 @@ export async function enviarLinkFormulario(
   tipo: "CLIENTE" | "PROVEEDOR"
 ) {
   const url = `${process.env.APP_URL}/formulario/${token}`;
-  const tipoTexto = tipo === "CLIENTE" ? "cliente" : "proveedor";
+  const branding = await obtenerBranding();
+  const logoUrl = `${process.env.APP_URL}/api/branding/logo`;
   const tipoLabel = tipo === "CLIENTE" ? "de Cliente" : "de Proveedor";
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+      <div style="background-color: ${branding.colorDark}; padding: 20px; text-align: center;">
+        <img src="${logoUrl}" alt="Logo" style="max-width: 240px; max-height: 80px;" />
       </div>
       <div style="padding: 30px; background: #f9f9f9;">
         <p>Estimado/a <strong>${razonSocial}</strong>,</p>
@@ -118,7 +120,7 @@ export async function enviarLinkFormulario(
           para conocimiento de nuestras contrapartes y cumplimiento de nuestros procesos internos.
         </p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" style="background-color: #1B3C22; color: white; padding: 14px 28px;
+          <a href="${url}" style="background-color: ${branding.colorPrimary}; color: white; padding: 14px 28px;
              text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">
             Completar Formulario
           </a>
@@ -132,13 +134,13 @@ export async function enviarLinkFormulario(
         </p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — Grupo Remor
+        Correo enviado automáticamente
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, `Grupo Remor — Formulario de Vinculación ${tipoLabel}`, html);
+    await enviarCorreo(destinatario, `Formulario de Vinculación ${tipoLabel}`, html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
@@ -158,17 +160,19 @@ export async function enviarOTP(
   razonSocial: string,
   codigo: string
 ) {
+  const branding = await obtenerBranding();
+  const logoUrl = `${process.env.APP_URL}/api/branding/logo`;
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+      <div style="background-color: ${branding.colorDark}; padding: 20px; text-align: center;">
+        <img src="${logoUrl}" alt="Logo" style="max-width: 240px; max-height: 80px;" />
       </div>
       <div style="padding: 30px; background: #f9f9f9; text-align: center;">
         <p>Estimado/a <strong>${razonSocial}</strong>,</p>
         <p>Su código de verificación para acceder al formulario es:</p>
         <div style="font-size: 36px; font-weight: bold; letter-spacing: 8px;
-             color: #1B3C22; margin: 20px 0; padding: 20px;
-             background: white; border-radius: 8px; border: 2px solid #1B3C22;">
+             color: ${branding.colorDark}; margin: 20px 0; padding: 20px;
+             background: white; border-radius: 8px; border: 2px solid ${branding.colorDark};">
           ${codigo}
         </div>
         <p style="color: #666; font-size: 13px;">
@@ -177,13 +181,13 @@ export async function enviarOTP(
         </p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — Grupo Remor
+        Correo enviado automáticamente
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, "Grupo Remor — Código de verificación", html);
+    await enviarCorreo(destinatario, "Código de verificación", html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
@@ -205,18 +209,20 @@ export async function enviarAccesoSistema(
 ) {
   const rolTexto = rol === "ADMIN" ? "Administrador" : "Ejecutivo";
   const url = `${process.env.APP_URL}/admin/login`;
+  const branding = await obtenerBranding();
+  const logoUrl = `${process.env.APP_URL}/api/branding/logo`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background-color: #1B3C22; padding: 20px; text-align: center;">
-        <h1 style="color: white; margin: 0;">GRUPO REMOR</h1>
+      <div style="background-color: ${branding.colorDark}; padding: 20px; text-align: center;">
+        <img src="${logoUrl}" alt="Logo" style="max-width: 240px; max-height: 80px;" />
       </div>
       <div style="padding: 30px; background: #f9f9f9;">
         <p>Estimado/a <strong>${nombre}</strong>,</p>
         <p>Se le ha otorgado acceso al <strong>Sistema Interno de Vinculación</strong> con el rol de <strong>${rolTexto}</strong>.</p>
         <p>Para acceder, haga clic en el siguiente botón e inicie sesión con su cuenta Microsoft 365:</p>
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" style="background-color: #1B3C22; color: white; padding: 14px 28px;
+          <a href="${url}" style="background-color: ${branding.colorPrimary}; color: white; padding: 14px 28px;
              text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">
             Acceder al Sistema
           </a>
@@ -224,13 +230,13 @@ export async function enviarAccesoSistema(
         <p style="font-size: 12px; color: #666;">Su correo de Microsoft 365 registrado: <strong>${destinatario}</strong></p>
       </div>
       <div style="background: #eee; padding: 15px; font-size: 11px; color: #888; text-align: center;">
-        Correo enviado automáticamente — Grupo Remor
+        Correo enviado automáticamente
       </div>
     </div>
   `;
 
   try {
-    await enviarCorreo(destinatario, "Grupo Remor — Acceso al Sistema Interno", html);
+    await enviarCorreo(destinatario, "Acceso al Sistema Interno", html);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(`⚠️  Graph API no disponible. Email de acceso para: ${destinatario} (${nombre}, ${rolTexto})`);

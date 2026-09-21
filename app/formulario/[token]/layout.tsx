@@ -5,11 +5,12 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] text-white py-4 px-6 shadow-lg">
+      <header className="bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] text-white py-4 px-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <Image
-            src="/logo.png"
-            alt="Grupo Remor"
+            src="/api/branding/logo"
+            unoptimized
+            alt="Logo de la empresa"
             width={160}
             height={50}
             className="h-12 w-auto object-contain"
@@ -22,7 +23,7 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       </header>
 
       {/* Banda decorativa */}
-      <div className="h-[3px] bg-[#1A7A30] w-full" />
+      <div className="h-[3px] bg-[var(--brand-primary)] w-full" />
 
       <main className="bg-slate-50 flex-1 py-8 px-4">
         <div className="max-w-3xl mx-auto">{children}</div>
@@ -31,14 +32,15 @@ export default function FormularioLayout({ children }: { children: React.ReactNo
       <footer className="bg-white border-t border-slate-200 py-4 px-6">
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <Image
-            src="/logo.png"
-            alt="Grupo Remor"
+            src="/api/branding/logo"
+            unoptimized
+            alt="Logo de la empresa"
             width={90}
             height={28}
             className="h-7 w-auto object-contain opacity-70"
           />
           <span className="text-xs text-slate-400">
-            © {new Date().getFullYear()} Grupo Remor · Todos los derechos reservados
+            © {new Date().getFullYear()} · Todos los derechos reservados
           </span>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5 text-green-500" />

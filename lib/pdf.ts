@@ -1,4 +1,6 @@
 import PDFDocument from "pdfkit";
+import { prisma } from "@/lib/prisma";
+import { DEFAULT_BRANDING } from "@/lib/branding";
 
 /* ─────────────────────────────────────────────────────────────
    TIPOS
@@ -46,6 +48,9 @@ function bool(v: unknown): string { return v ? "Sí" : "No"; }
    GENERADOR PRINCIPAL
 ───────────────────────────────────────────────────────────── */
 export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buffer> {
+  const branding = await prisma.branding.findUnique({ where: { id: 1 } });
+  const colorPrimary = branding?.colorPrimary ?? DEFAULT_BRANDING.colorPrimary;
+  const colorDark = branding?.colorDark ?? DEFAULT_BRANDING.colorDark;
   return new Promise((resolve, reject) => {
     try {
       /* ── Setup ── */
@@ -55,7 +60,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         bufferPages: true,
         info: {
           Title: `Formulario de Vinculación — ${datos.tercero.razonSocial}`,
-          Author: "Grupo Remor",
+          Author: "Sistema de Vinculación",
           Subject: `Conocimiento de ${datos.tercero.tipo === "PROVEEDOR" ? "Proveedor" : "Cliente"}`,
         },
       });
@@ -70,8 +75,8 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       const ML      = 50;                      // margen izquierdo
       const MR      = 50;                      // margen derecho
       const CW      = W - ML - MR;            // 512 — ancho del contenido
-      const AZUL    = "#1B3C22";
-      const AZUL2   = "#1A7A30";
+      const AZUL    = colorDark;
+      const AZUL2   = colorPrimary;
       const GRIS    = "#4b5563";
       const GRIS_L  = "#9ca3af";
       const LINEA   = "#e5e7eb";
@@ -107,10 +112,14 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         const h = esPortada ? 90 : 48;
         doc.rect(0, 0, W, h).fill(AZUL);
 
-        // Logo / nombre empresa
-        doc.fillColor("white")
-          .font("Helvetica-Bold").fontSize(esPortada ? 22 : 14)
-          .text("GRUPO REMOR", ML, esPortada ? 22 : 14, { width: CW });
+        // PDFKit admite PNG y JPG; para WebP se usa el título genérico.
+        if (branding?.logoData && ["image/png", "image/jpeg"].includes(branding.logoMime ?? "")) {
+          doc.image(Buffer.from(branding.logoData), ML, esPortada ? 8 : 6, { fit: [180, esPortada ? 34 : 18] });
+        } else {
+          doc.fillColor("white")
+            .font("Helvetica-Bold").fontSize(esPortada ? 22 : 14)
+            .text("VINCULACIÓN", ML, esPortada ? 22 : 14, { width: CW });
+        }
 
         if (esPortada) {
           doc.font("Helvetica").fontSize(10).fillColor("#93c5fd")
@@ -298,7 +307,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         .text("INFORMACIÓN CONFIDENCIAL", ML + 10, Y + 6, { width: CW - 20 });
       doc.font("Helvetica").fontSize(7).fillColor("#78350f")
         .text(
-          "Este documento contiene información confidencial de uso exclusivo de Grupo Remor. " +
+          "Este documento contiene información confidencial de uso exclusivo de la empresa solicitante. " +
           "Queda prohibida su reproducción o distribución sin autorización expresa.",
           ML + 10, Y + 17, { width: CW - 20 }
         );
@@ -484,9 +493,9 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
         .text(
           "El suscrito, actuando en su calidad de Representante Legal, declara bajo juramento que toda la " +
           "información proporcionada en el presente formulario es veraz, completa y actualizada. Asimismo, " +
-          "se compromete a notificar a Grupo Remor cualquier modificación relevante en los datos aquí " +
+          "se compromete a notificar a la empresa solicitante cualquier modificación relevante en los datos aquí " +
           "consignados dentro de los treinta (30) días siguientes a su ocurrencia.\n\n" +
-          "Autoriza expresamente a Grupo Remor a verificar la información suministrada y a utilizarla " +
+          "Autoriza expresamente a la empresa solicitante a verificar la información suministrada y a utilizarla " +
           "conforme a sus políticas internas de conocimiento de terceros y prevención de lavado de activos.",
           ML + 10, Y + 8, { width: CW - 20, align: "justify", lineBreak: true }
         );
@@ -523,7 +532,7 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       avanzar(10);
       doc.fillColor(GRIS_L).font("Helvetica").fontSize(7)
         .text(
-          `Documento generado electrónicamente el ${new Date().toLocaleString("es-SV")} | Grupo Remor — Sistema de Vinculación de Terceros`,
+          `Documento generado electrónicamente el ${new Date().toLocaleString("es-SV")} | Sistema de Vinculación de Terceros`,
           ML, Y, { width: CW, align: "center", lineBreak: false }
         );
 

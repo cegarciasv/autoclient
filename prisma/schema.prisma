@@ -39,6 +39,16 @@ model AdminUser {
   creadoEn    DateTime @default(now())
 }
 
+model Branding {
+  id           Int      @id @default(1)
+  colorPrimary String   @default("#1A7A30") @db.VarChar(7)
+  colorDark    String   @default("#1B3C22") @db.VarChar(7)
+  colorAccent  String   @default("#4ADE80") @db.VarChar(7)
+  logoMime     String?  @db.VarChar(20)
+  logoData     Bytes?   @db.LongBlob
+  actualizado  DateTime @updatedAt
+}
+
 model Tercero {
   id              String        @id @default(cuid())
   tipo            TipoTercero
@@ -224,4 +234,3 @@ model Documento {
 
   @@index([formularioId])
 }
-

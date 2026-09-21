@@ -83,7 +83,7 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
     <div className="space-y-6">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Referencias Comerciales</CardTitle>
+          <CardTitle className="text-base text-[var(--brand-dark)]">Referencias Comerciales</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-gray-500">
@@ -161,7 +161,7 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
           <Button
             type="button"
             disabled={guardando}
-            className="bg-[#1A7A30] hover:bg-[#155E25]"
+            className="bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)]"
             onClick={() => guardar(true)}
           >
             {guardando ? "Guardando..." : "Siguiente →"}

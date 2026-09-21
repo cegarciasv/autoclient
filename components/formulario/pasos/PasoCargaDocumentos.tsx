@@ -150,15 +150,15 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
   return (
     <div className="space-y-6">
       {/* Progreso */}
-      <Card className="border-[#1A7A30]/30 bg-[#1A7A30]/5">
+      <Card className="border-[var(--brand-primary)]/30 bg-[var(--brand-primary)]/5">
         <CardContent className="pt-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-[#1B3C22]">Documentos requeridos cargados</p>
-            <span className="text-sm font-bold text-[#1B3C22]">{completados} / {requeridos.length}</span>
+            <p className="text-sm font-medium text-[var(--brand-dark)]">Documentos requeridos cargados</p>
+            <span className="text-sm font-bold text-[var(--brand-dark)]">{completados} / {requeridos.length}</span>
           </div>
-          <div className="w-full bg-[#1A7A30]/20 rounded-full h-2">
+          <div className="w-full bg-[var(--brand-primary)]/20 rounded-full h-2">
             <div
-              className="bg-[#1A7A30] h-2 rounded-full transition-all"
+              className="bg-[var(--brand-primary)] h-2 rounded-full transition-all"
               style={{ width: `${(completados / requeridos.length) * 100}%` }}
             />
           </div>
@@ -168,7 +168,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
       {/* Documentos requeridos */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Documentos Requeridos</CardTitle>
+          <CardTitle className="text-base text-[var(--brand-dark)]">Documentos Requeridos</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {requeridos.map((doc) => (
@@ -188,7 +188,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
       {/* Documentos opcionales */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-[#1B3C22]">Documentos Opcionales (si aplica)</CardTitle>
+          <CardTitle className="text-base text-[var(--brand-dark)]">Documentos Opcionales (si aplica)</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {opcionales.map((doc) => (
@@ -260,7 +260,7 @@ function DocRow({
 
       <div className="shrink-0">
         {subiendo ? (
-          <Loader2 className="h-5 w-5 text-[#1A7A30] animate-spin" />
+          <Loader2 className="h-5 w-5 text-[var(--brand-primary)] animate-spin" />
         ) : subido ? (
           <CheckCircle2 className="h-5 w-5 text-green-500" />
         ) : doc.requerido ? (
@@ -288,7 +288,7 @@ function DocRow({
         size="sm"
         disabled={subiendo}
         onClick={onSeleccionar}
-        className={subido ? "" : "bg-[#1A7A30] hover:bg-[#155E25]"}
+        className={subido ? "" : "bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)]"}
       >
         {subiendo ? (
           <Loader2 className="h-3 w-3 animate-spin" />

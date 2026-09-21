@@ -147,7 +147,7 @@ export default function DashboardAnimado({
               <Link
                 href="/admin/clientes/nuevo"
                 className={buttonVariants({
-                  className: "w-full bg-gradient-to-r from-[#1B3C22] to-[#1A7A30] hover:from-[#155E25] hover:to-[#1A7A30] text-white font-semibold gap-2 justify-center",
+                  className: "w-full bg-gradient-to-r from-[var(--brand-dark)] to-[var(--brand-primary)] hover:from-[var(--brand-dark)] hover:to-[var(--brand-primary)] text-white font-semibold gap-2 justify-center",
                 })}
               >
                 <UserPlus className="h-4 w-4" />
@@ -189,7 +189,7 @@ export default function DashboardAnimado({
                         className="flex items-center gap-3 py-2.5 px-2 rounded-lg border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all"
                       >
                         <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                          esCliente ? "bg-gradient-to-br from-[#1A7A30] to-[#1B3C22]" : "bg-gradient-to-br from-purple-500 to-purple-700"
+                          esCliente ? "bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-dark)]" : "bg-gradient-to-br from-purple-500 to-purple-700"
                         }`}>
                           {inicial}
                         </div>

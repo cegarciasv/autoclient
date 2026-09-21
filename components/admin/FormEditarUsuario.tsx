@@ -211,7 +211,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-[#1A7A30] hover:bg-[#155E25]"
+                className="flex-1 bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)]"
                 disabled={cargando}
               >
                 {cargando ? "Guardando..." : "Guardar Cambios"}

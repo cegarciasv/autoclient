@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { obtenerBranding } from "@/lib/branding";
+import type { CSSProperties } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,13 +12,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Grupo Remor — Formulario de Vinculación",
-  description: "Sistema de vinculación de clientes y proveedores de Grupo Remor",
+  title: "Formulario de Vinculación",
+  description: "Sistema de vinculación de clientes y proveedores",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const branding = await obtenerBranding();
+  const brandStyle = {
+    "--brand-primary": branding.colorPrimary,
+    "--brand-dark": branding.colorDark,
+    "--brand-accent": branding.colorAccent,
+    "--primary": branding.colorPrimary,
+    "--ring": branding.colorPrimary,
+  } as CSSProperties;
   return (
-    <html lang="es" className={`${inter.variable} h-full antialiased`}>
+    <html lang="es" className={`${inter.variable} h-full antialiased`} style={brandStyle}>
       <body className="min-h-full font-sans bg-slate-50 text-slate-900">
         {children}
         <Toaster richColors position="top-right" closeButton />

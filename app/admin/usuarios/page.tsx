@@ -45,7 +45,7 @@ export default async function UsuariosPage() {
           href="/admin/usuarios/nuevo"
           className={buttonVariants({
             className:
-              "bg-[#1A7A30] hover:bg-[#155E25] text-white font-semibold gap-2",
+              "bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)] text-white font-semibold gap-2",
           })}
         >
           <UserPlus className="h-4 w-4" />
@@ -115,7 +115,7 @@ export default async function UsuariosPage() {
                   <TableCell className="text-right">
                     <Link
                       href={`/admin/usuarios/${u.id}`}
-                      className="text-sm font-medium text-[#1A7A30] hover:text-[#155E25] hover:underline"
+                      className="text-sm font-medium text-[var(--brand-primary)] hover:text-[var(--brand-dark)] hover:underline"
                     >
                       Editar
                     </Link>

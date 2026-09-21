@@ -23,11 +23,11 @@ export default async function LoginPage({
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-2">
       {/* ── Panel izquierdo (solo desktop) ── */}
-      <div className="hidden lg:flex flex-col justify-between bg-[#1B3C22] px-12 py-16 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-[var(--brand-dark)] px-12 py-16 relative overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#1A7A30]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1A7A30]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--brand-primary)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--brand-primary)]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
           {/* Grid sutil */}
           <div
             className="absolute inset-0 opacity-[0.03]"
@@ -42,8 +42,9 @@ export default async function LoginPage({
         {/* Logo */}
         <div className="relative">
           <Image
-            src="/logo.png"
-            alt="Grupo Remor"
+            src="/api/branding/logo"
+            unoptimized
+            alt="Logo de la empresa"
             width={360}
             height={112}
             className="h-28 w-auto object-contain"
@@ -57,7 +58,7 @@ export default async function LoginPage({
             <h2 className="text-4xl font-bold text-white leading-tight">
               Panel de
               <br />
-              <span className="text-[#4ade80]">Administración</span>
+              <span className="text-[var(--brand-accent)]">Administración</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed max-w-sm">
               Gestiona el proceso de vinculación de clientes y proveedores desde
@@ -68,8 +69,8 @@ export default async function LoginPage({
           {/* Bullet points */}
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
-                <ShieldCheck className="h-4 w-4 text-[#4ade80]" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[var(--brand-primary)]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <ShieldCheck className="h-4 w-4 text-[var(--brand-accent)]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -82,8 +83,8 @@ export default async function LoginPage({
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
-                <Zap className="h-4 w-4 text-[#4ade80]" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[var(--brand-primary)]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <Zap className="h-4 w-4 text-[var(--brand-accent)]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -96,8 +97,8 @@ export default async function LoginPage({
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-[#1A7A30]/20 rounded-lg flex items-center justify-center mt-0.5">
-                <BarChart3 className="h-4 w-4 text-[#4ade80]" />
+              <span className="flex-shrink-0 w-8 h-8 bg-[var(--brand-primary)]/20 rounded-lg flex items-center justify-center mt-0.5">
+                <BarChart3 className="h-4 w-4 text-[var(--brand-accent)]" />
               </span>
               <div>
                 <p className="text-white text-sm font-medium">
@@ -124,8 +125,9 @@ export default async function LoginPage({
         {/* Logo visible solo en móvil */}
         <div className="lg:hidden mb-10">
           <Image
-            src="/logo.png"
-            alt="Grupo Remor"
+            src="/api/branding/logo"
+            unoptimized
+            alt="Logo de la empresa"
             width={280}
             height={88}
             className="h-20 w-auto object-contain"
@@ -142,7 +144,7 @@ export default async function LoginPage({
                 Acceso administrativo
               </h1>
               <p className="text-sm text-slate-500 mt-1.5">
-                Inicie sesión con su cuenta Microsoft 365 de Grupo Remor
+                Inicie sesión con su cuenta Microsoft 365
               </p>
             </div>
 
@@ -188,7 +190,7 @@ export default async function LoginPage({
 
           {/* Copyright */}
           <p className="text-center text-xs text-slate-400 mt-6">
-            &copy; {new Date().getFullYear()} Grupo Remor &middot; Todos los
+            &copy; {new Date().getFullYear()} &middot; Todos los
             derechos reservados
           </p>
         </div>
