@@ -14,7 +14,8 @@ export default async function PasoPage({
   if (!sesion) redirect(`/formulario/${token}`);
 
   const pasoNum = Number(step);
-  if (isNaN(pasoNum) || pasoNum < 1 || pasoNum > 6) notFound();
+  const totalPasos = sesion.tipo === "PROVEEDOR" ? 6 : 5;
+  if (!Number.isInteger(pasoNum) || pasoNum < 1 || pasoNum > totalPasos) notFound();
 
   const formulario = await prisma.formulario.findUnique({
     where: { terceroId: sesion.terceroId },
@@ -33,8 +34,6 @@ export default async function PasoPage({
   });
 
   if (!formulario) redirect(`/formulario/${token}`);
-
-  const totalPasos = sesion.tipo === "PROVEEDOR" ? 6 : 5;
 
   return (
     <FormularioPasos

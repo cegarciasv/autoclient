@@ -40,6 +40,7 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
   return new NextResponse(buffer, {
     headers: {
       "Content-Type": "application/pdf",
+      "X-Content-Type-Options": "nosniff",
       "Content-Disposition": `inline; filename="${encodeURIComponent(doc.nombreArchivo)}"`,
       "Content-Length": String(buffer.length),
       // Evitar caché para documentos sensibles

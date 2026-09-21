@@ -39,18 +39,22 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
 
+  const totalPasos = sesion.tipo === "PROVEEDOR" ? TOTAL_PASOS_PROVEEDOR : TOTAL_PASOS_CLIENTE;
   const pasoNum = Number(step);
+  if (!Number.isInteger(pasoNum) || pasoNum < 1 || pasoNum > totalPasos) {
+    return NextResponse.json({ error: "Paso inválido" }, { status: 400 });
+  }
+
   const formulario = await prisma.formulario.findUnique({
     where: { terceroId: sesion.terceroId },
   });
   if (!formulario) return NextResponse.json({ error: "Formulario no encontrado" }, { status: 404 });
 
-  const totalPasos = sesion.tipo === "PROVEEDOR" ? TOTAL_PASOS_PROVEEDOR : TOTAL_PASOS_CLIENTE;
-  const nuevoPasoActual = Math.max(formulario.pasoActual, pasoNum + 1);
+  const nuevoPasoActual = Math.min(Math.max(formulario.pasoActual, pasoNum + 1), totalPasos);
 
   // El progreso nunca retrocede: si el formulario ya está más avanzado (o completado), se respeta.
   // Un formulario COMPLETADO (estado = COMPLETADO) siempre muestra 100%.
-  const progresoCalculado = Math.round((pasoNum / totalPasos) * 100);
+  const progresoCalculado = Math.min(100, Math.round((pasoNum / totalPasos) * 100));
   const estaCompletado = formulario.estado === "COMPLETADO";
   const progreso = estaCompletado ? 100 : Math.max(formulario.progreso, progresoCalculado);
 

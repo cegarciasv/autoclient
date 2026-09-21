@@ -64,8 +64,12 @@ function StatusDistribution({ rows, total }: { rows: { label: string; pct: numbe
 }
 
 function RecentRecords({ recientes }: { recientes: Reciente[] }) {
+  const hayProveedores = recientes.some((t) => t.tipo === "PROVEEDOR");
+  const hayClientes = recientes.some((t) => t.tipo === "CLIENTE");
+  const href = hayClientes || !hayProveedores ? "/admin/clientes" : "/admin/proveedores";
+  const label = hayClientes || !hayProveedores ? "Ver clientes" : "Ver proveedores";
   return <section className={`${card} min-w-0 p-5`} aria-labelledby="recent-title">
-    <div className="flex items-center justify-between gap-3"><h2 id="recent-title" className="text-base font-bold text-[#142033]">Registros recientes</h2><Link href="/admin/clientes" className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--brand-primary)] hover:underline brand-focus">Ver clientes <ArrowRight className="size-4" /></Link></div>
+    <div className="flex items-center justify-between gap-3"><h2 id="recent-title" className="text-base font-bold text-[#142033]">Registros recientes</h2><Link href={href} className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--brand-primary)] hover:underline brand-focus">{label} <ArrowRight className="size-4" /></Link></div>
     <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[540px] text-left text-xs sm:text-sm">
       <thead className="bg-[#f5f7f8] text-[#52657a]"><tr><th className="rounded-l-lg px-3 py-2 font-medium">Cliente o proveedor</th><th className="px-3 py-2 font-medium">Fecha</th><th className="rounded-r-lg px-3 py-2 font-medium">Estado</th></tr></thead>
       <tbody className="divide-y divide-[#eef1f3]">{recientes.map((t) => <tr key={t.id} className="hover:bg-[#f8fafb]"><td className="px-3 py-2.5"><Link className="flex items-center gap-2.5 font-medium text-[#142033] hover:text-[var(--brand-primary)] brand-focus" href={`/admin/${t.tipo === "CLIENTE" ? "clientes" : "proveedores"}/${t.id}`}><span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#e9f4ef] text-xs text-[var(--brand-primary)]">{t.razonSocial.charAt(0).toUpperCase()}</span><span className="truncate max-w-[270px]">{t.razonSocial}</span></Link></td><td className="px-3 py-2.5 whitespace-nowrap text-[#52657a]">{new Date(t.creadoEn).toLocaleDateString("es-SV")}</td><td className="px-3 py-2.5"><EstadoBadge estado={t.estado} /></td></tr>)}</tbody>

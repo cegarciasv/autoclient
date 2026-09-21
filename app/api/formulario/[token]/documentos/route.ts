@@ -41,6 +41,12 @@ export async function POST(request: NextRequest, ctx: Ctx) {
   }
 
   const buffer = Buffer.from(await archivo.arrayBuffer());
+
+  const esPDF = buffer.length >= 5 && buffer.subarray(0, 5).toString("latin1") === "%PDF-";
+  if (!esPDF) {
+    return NextResponse.json({ error: "El archivo no es un PDF válido" }, { status: 400 });
+  }
+
   const carpetaTipo = tercero.tipo === "CLIENTE" ? "clientes" : "proveedores";
   const rutaDir = obtenerRutaExpediente(tercero.id, tercero.razonSocial, carpetaTipo);
 
@@ -52,21 +58,23 @@ export async function POST(request: NextRequest, ctx: Ctx) {
     return NextResponse.json({ error: "Error al guardar el archivo" }, { status: 500 });
   }
 
-  const existente = await prisma.documento.findFirst({
-    where: { formularioId: formulario.id, tipo },
-  });
-  if (existente) {
-    await prisma.documento.delete({ where: { id: existente.id } });
-  }
+  const documento = await prisma.$transaction(async (tx) => {
+    const existente = await tx.documento.findFirst({
+      where: { formularioId: formulario.id, tipo },
+    });
+    if (existente) {
+      await tx.documento.delete({ where: { id: existente.id } });
+    }
 
-  const documento = await prisma.documento.create({
-    data: {
-      formularioId: formulario.id,
-      tipo,
-      nombreArchivo: archivo.name,
-      rutaNAS,
-      tamanoBytes: archivo.size,
-    },
+    return tx.documento.create({
+      data: {
+        formularioId: formulario.id,
+        tipo,
+        nombreArchivo: archivo.name,
+        rutaNAS,
+        tamanoBytes: archivo.size,
+      },
+    });
   });
 
   return NextResponse.json({

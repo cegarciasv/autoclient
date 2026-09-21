@@ -227,7 +227,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
 
   const [clientes, setClientes] = useState<ClientePrincipal[]>(clientesIniciales);
 
-  const { register, handleSubmit, getValues, setValue, watch, formState: { errors } } = useForm<Datos>({
+  const { register, handleSubmit, getValues, setValue, setError, watch, formState: { errors } } = useForm<Datos>({
     resolver: zodResolver(schema),
     defaultValues: {
       tipoPersona:             (toStr(tercero.tipoPersona) as "NATURAL" | "JURIDICA") || "JURIDICA",
@@ -284,6 +284,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   function validarJuridica(datos: Datos): boolean {
     const faltantes = CAMPOS_REQUERIDOS_JURIDICA.filter((campo) => !datos[campo]);
     if (faltantes.length > 0) {
+      faltantes.forEach((campo) => setError(campo, { type: "required", message: "Requerido" }));
       const nombres = faltantes.map((c) => LABELS_CAMPO[c] ?? c).join(", ");
       toast.error(`Campos requeridos para persona jurídica: ${nombres}`);
       return false;
@@ -295,6 +296,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   function validarProveedor(datos: Datos): boolean {
     const faltantes = CAMPOS_REQUERIDOS_PROVEEDOR.filter((campo) => !datos[campo]);
     if (faltantes.length > 0) {
+      faltantes.forEach((campo) => setError(campo, { type: "required", message: "Requerido" }));
       const nombres = faltantes.map((c) => LABELS_CAMPO[c] ?? c).join(", ");
       toast.error(`Campos requeridos para proveedor: ${nombres}`);
       return false;

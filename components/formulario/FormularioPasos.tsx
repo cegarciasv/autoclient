@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -42,11 +42,11 @@ function etiquetasPasos(tipo: "CLIENTE" | "PROVEEDOR") {
 }
 
 export default function FormularioPasos({
-  token, pasoActual, totalPasos, progreso, tipo, formulario,
+  token, pasoActual, progreso, tipo, formulario,
 }: Props) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
-  const direccion = useRef<1 | -1>(1); // 1=adelante, -1=atrás
+  const [direccion, setDireccion] = useState<1 | -1>(1); // 1=adelante, -1=atrás
 
   // Mostrar modal de selección de tipo persona solo si no fue seleccionado aún
   const tercero = formulario.tercero as Record<string, unknown> | undefined;
@@ -67,10 +67,9 @@ export default function FormularioPasos({
         return false;
       }
 
-      const data = await res.json();
       if (siguiente) {
         const proxPaso = pasoActual + 1;
-        direccion.current = 1;
+        setDireccion(1);
         router.push(`/formulario/${token}/paso/${proxPaso}`);
         router.refresh();
       } else {
@@ -87,7 +86,8 @@ export default function FormularioPasos({
   }
 
   function irAnterior() {
-    direccion.current = -1;
+    if (guardando) return;
+    setDireccion(-1);
     router.push(`/formulario/${token}/paso/${pasoActual - 1}`);
   }
 
@@ -135,10 +135,10 @@ export default function FormularioPasos({
       )}
 
       <BarraProgreso pasos={pasos} pasoActual={pasoActual} progreso={progreso} />
-      <AnimatePresence mode="wait" custom={direccion.current}>
+      <AnimatePresence mode="wait" custom={direccion}>
         <motion.div
           key={pasoActual}
-          custom={direccion.current}
+          custom={direccion}
           variants={variants}
           initial="enter"
           animate="center"

@@ -74,8 +74,11 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
 
   function eliminar(i: number) {
     setAccionistas(accionistas.filter((_, idx) => idx !== i));
-    const nuevo = new Set(expandidos);
-    nuevo.delete(i);
+    const nuevo = new Set<number>();
+    for (const idx of expandidos) {
+      if (idx < i) nuevo.add(idx);
+      else if (idx > i) nuevo.add(idx - 1);
+    }
     setExpandidos(nuevo);
   }
 

@@ -38,8 +38,9 @@ function fecha(v: unknown): string {
   } catch { return "—"; }
 }
 function dinero(v: unknown): string {
+  if (v === null || v === undefined || v === "") return "—";
   const n = Number(v);
-  if (!v || isNaN(n) || n === 0) return "—";
+  if (isNaN(n)) return "—";
   return `$ ${n.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 }
 function bool(v: unknown): string { return v ? "Sí" : "No"; }
@@ -283,9 +284,10 @@ export async function generarPDFFormulario(datos: DatosFormulario): Promise<Buff
       avanzar(badgeH + 10);
 
       // Razón social grande
-      doc.fillColor(AZUL).font("Helvetica-Bold").fontSize(18)
-        .text(datos.tercero.razonSocial, ML, Y, { width: CW });
-      Y += doc.currentLineHeight(true) * Math.ceil(datos.tercero.razonSocial.length / 55) + 6;
+      doc.fillColor(AZUL).font("Helvetica-Bold").fontSize(18);
+      const alturaRazonSocial = doc.heightOfString(datos.tercero.razonSocial, { width: CW });
+      doc.text(datos.tercero.razonSocial, ML, Y, { width: CW });
+      Y += alturaRazonSocial + 6;
 
       // Línea decorativa
       doc.rect(ML, Y, 60, 3).fill(AZUL);

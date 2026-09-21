@@ -19,6 +19,10 @@ export async function POST(request: NextRequest, ctx: Ctx) {
   const tercero = await prisma.tercero.findUnique({ where: { token } });
   if (!tercero) return NextResponse.json({ error: "Enlace inválido" }, { status: 404 });
 
+  if (tercero.tokenExpira < new Date()) {
+    return NextResponse.json({ error: "El enlace ha expirado. Solicite uno nuevo." }, { status: 410 });
+  }
+
   const otp = await prisma.otpToken.findFirst({
     where: {
       terceroId: tercero.id,
