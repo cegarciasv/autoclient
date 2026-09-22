@@ -1,9 +1,6 @@
 import Image from "next/image";
 import {
   ShieldCheck,
-  Zap,
-  BarChart3,
-  CheckCircle2,
   AlertCircle,
 } from "lucide-react";
 
@@ -45,77 +42,28 @@ export default async function LoginPage({
             src="/api/branding/logo"
             unoptimized
             alt="Logo de la empresa"
-            width={280}
-            height={90}
-            className="h-20 w-auto object-contain object-left"
+            width={360}
+            height={120}
+            className="h-24 xl:h-28 w-auto max-w-[300px] object-contain object-left"
             priority
           />
         </div>
 
         {/* Contenido central */}
-        <div className="relative space-y-9 max-w-[600px]">
-          <div className="space-y-5">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">01 / Espacio de trabajo</p>
-            <h2 className="display-title text-5xl xl:text-6xl text-white">
-              Cada vinculación,
-              <br />
-              <span className="italic text-[var(--brand-accent)]">en orden.</span>
-            </h2>
-            <p className="text-white/70 text-base leading-relaxed max-w-md">
-              Un espacio claro para acompañar a clientes y proveedores desde el primer contacto hasta su expediente completo.
-            </p>
-          </div>
-
-          {/* Bullet points */}
-          <ul className="space-y-4 border-t border-white/15 pt-7">
-            <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mt-0.5">
-                <ShieldCheck className="h-4 w-4 text-[var(--brand-accent)]" />
-              </span>
-              <div>
-                <p className="text-white text-sm font-medium">
-                  Seguridad empresarial
-                </p>
-                <p className="text-white/55 text-xs mt-0.5">
-                  Acceso controlado con sesiones cifradas y auditoría de
-                  actividad.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mt-0.5">
-                <Zap className="h-4 w-4 text-[var(--brand-accent)]" />
-              </span>
-              <div>
-                <p className="text-white text-sm font-medium">
-                  Eficiencia operativa
-                </p>
-                <p className="text-white/55 text-xs mt-0.5">
-                  Automatiza el envío de formularios y reduce tiempos de
-                  onboarding.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mt-0.5">
-                <BarChart3 className="h-4 w-4 text-[var(--brand-accent)]" />
-              </span>
-              <div>
-                <p className="text-white text-sm font-medium">
-                  Control y visibilidad
-                </p>
-                <p className="text-white/55 text-xs mt-0.5">
-                  Seguimiento del progreso de cada tercero con reportes
-                  detallados.
-                </p>
-              </div>
-            </li>
-          </ul>
+        <div className="relative max-w-[560px] space-y-6">
+          <h2 className="display-title text-4xl xl:text-5xl text-white">
+            Vinculaciones
+            <br />
+            <span className="text-[var(--brand-accent)]">en un solo lugar.</span>
+          </h2>
+          <p className="max-w-md text-sm leading-relaxed text-white/70">
+            Administre clientes y proveedores de forma clara y segura.
+          </p>
         </div>
 
         {/* Footer izquierdo */}
         <div className="relative flex items-center gap-2 text-xs text-white/50">
-          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+          <ShieldCheck className="h-3.5 w-3.5 text-[var(--brand-accent)]" />
           Acceso protegido para personal autorizado
         </div>
       </div>
@@ -128,9 +76,9 @@ export default async function LoginPage({
             src="/api/branding/logo"
             unoptimized
             alt="Logo de la empresa"
-            width={280}
-            height={88}
-            className="h-16 w-auto object-contain"
+            width={320}
+            height={100}
+            className="h-20 w-auto max-w-[250px] object-contain"
             priority
           />
         </div>
