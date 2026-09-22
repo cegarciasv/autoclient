@@ -52,13 +52,10 @@ export default async function LoginPage({
         {/* Contenido central */}
         <div className="relative max-w-[560px] space-y-6">
           <h2 className="display-title text-4xl xl:text-5xl text-white">
-            Vinculaciones
+            Sistema de vinculación
             <br />
-            <span className="text-[var(--brand-accent)]">en un solo lugar.</span>
+            <span className="text-[var(--brand-accent)]">de clientes y proveedores.</span>
           </h2>
-          <p className="max-w-md text-sm leading-relaxed text-white/70">
-            Administre clientes y proveedores de forma clara y segura.
-          </p>
         </div>
 
         {/* Footer izquierdo */}
