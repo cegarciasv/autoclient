@@ -80,7 +80,9 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
   }
 
   async function subirArchivo(tipo: string, file: File) {
-    if (file.type !== "application/pdf") {
+    // Algunas apps de firma/escaneo no reportan "application/pdf" como tipo del archivo,
+    // así que también aceptamos por extensión.
+    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
       toast.error("Solo se aceptan archivos en formato PDF");
       return;
     }
@@ -252,7 +254,7 @@ function DocRow({
     <div className="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0">
       <input
         type="file"
-        accept="application/pdf"
+        accept="application/pdf,.pdf"
         className="hidden"
         ref={inputRef}
         onChange={(e) => { const f = e.target.files?.[0]; if (f) onArchivo(f); e.target.value = ""; }}

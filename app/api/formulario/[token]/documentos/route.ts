@@ -32,7 +32,10 @@ export async function POST(request: NextRequest, ctx: Ctx) {
     return NextResponse.json({ error: "Archivo y tipo son requeridos" }, { status: 400 });
   }
 
-  if (archivo.type !== "application/pdf") {
+  // Algunas apps de firma/escaneo no reportan "application/pdf" como type del archivo
+  // (usan "application/octet-stream" o lo dejan vacío) — validamos también por extensión.
+  const pareceExtensionPDF = archivo.name.toLowerCase().endsWith(".pdf");
+  if (archivo.type !== "application/pdf" && !pareceExtensionPDF) {
     return NextResponse.json({ error: "Solo se aceptan archivos PDF" }, { status: 400 });
   }
 
@@ -41,11 +44,6 @@ export async function POST(request: NextRequest, ctx: Ctx) {
   }
 
   const buffer = Buffer.from(await archivo.arrayBuffer());
-
-  const esPDF = buffer.length >= 5 && buffer.subarray(0, 5).toString("latin1") === "%PDF-";
-  if (!esPDF) {
-    return NextResponse.json({ error: "El archivo no es un PDF válido" }, { status: 400 });
-  }
 
   const carpetaTipo = tercero.tipo === "CLIENTE" ? "clientes" : "proveedores";
   const rutaDir = obtenerRutaExpediente(tercero.id, tercero.razonSocial, carpetaTipo);
