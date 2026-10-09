@@ -20,6 +20,7 @@ interface Props {
   progreso: number;
   tipo: "CLIENTE" | "PROVEEDOR";
   formulario: Record<string, unknown>;
+  cartasActivas: boolean;
 }
 
 const ETIQUETAS_PASOS: Record<number, string> = {
@@ -42,7 +43,7 @@ function etiquetasPasos(tipo: "CLIENTE" | "PROVEEDOR") {
 }
 
 export default function FormularioPasos({
-  token, pasoActual, progreso, tipo, formulario,
+  token, pasoActual, progreso, tipo, formulario, cartasActivas,
 }: Props) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
@@ -101,8 +102,8 @@ export default function FormularioPasos({
       if (pasoActual === 4) return <PasoDescargaFirma {...pasoProps} tipo={tipo} />;
       if (pasoActual === 5) return <PasoCargaDocumentos {...pasoProps} tipo={tipo} />;
     } else {
-      if (pasoActual === 5) return <PasoDescargaFirma {...pasoProps} tipo={tipo} />;
-      if (pasoActual === 6) return <PasoCargaDocumentos {...pasoProps} tipo={tipo} />;
+      if (pasoActual === 5) return <PasoDescargaFirma {...pasoProps} tipo={tipo} cartasActivas={cartasActivas} />;
+      if (pasoActual === 6) return <PasoCargaDocumentos {...pasoProps} tipo={tipo} cartasActivas={cartasActivas} />;
     }
 
     switch (pasoActual) {

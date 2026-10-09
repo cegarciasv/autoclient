@@ -46,6 +46,7 @@ model Branding {
   colorAccent  String   @default("#4ADE80") @db.VarChar(7)
   logoMime     String?  @db.VarChar(20)
   logoData     Bytes?   @db.LongBlob
+  cartasAutorizacion Boolean @default(false) // exige cartas de autorización de investigación a proveedores
   actualizado  DateTime @updatedAt
 }
 

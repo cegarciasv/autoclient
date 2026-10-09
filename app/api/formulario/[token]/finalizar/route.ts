@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { obtenerSesionFormulario } from "@/lib/auth-formulario";
+import { cartasAutorizacionActivas } from "@/lib/branding";
 
 type Ctx = { params: Promise<{ token: string }> };
 
@@ -16,14 +17,14 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
     }),
     prisma.tercero.findUnique({
       where: { id: sesion.terceroId },
-      select: { tipoPersona: true },
+      select: { tipoPersona: true, tipo: true },
     }),
   ]);
   if (!formulario) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
 
   const esNatural = tercero?.tipoPersona === "NATURAL";
 
-  const tiposObligatorios = esNatural
+  const tiposBase = esNatural
     ? [
         "formulario_firmado",
         "dui_representante",
@@ -40,6 +41,9 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
         "comprobante_domicilio",
         "nit_nrc_empresa",
       ];
+
+  const exigeCarta = tercero?.tipo === "PROVEEDOR" && (await cartasAutorizacionActivas());
+  const tiposObligatorios = exigeCarta ? [...tiposBase, "carta_autorizacion_investigacion"] : tiposBase;
 
   const tiposCargados = new Set(formulario.documentos.map((d: { tipo: string }) => d.tipo));
   const faltantes = tiposObligatorios.filter((t) => !tiposCargados.has(t));

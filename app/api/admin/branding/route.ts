@@ -31,10 +31,17 @@ export async function POST(req: Request) {
     logoData = bytes;
   }
 
-  await prisma.branding.upsert({
-    where: { id: 1 },
-    create: { id: 1, colorPrimary, colorDark, colorAccent, ...(logoData ? { logoData, logoMime } : {}) },
-    update: { colorPrimary, colorDark, colorAccent, ...(logoData ? { logoData, logoMime } : {}) },
-  });
+  const cartasAutorizacion = form.get("cartasAutorizacion") === "true";
+
+  try {
+    await prisma.branding.upsert({
+      where: { id: 1 },
+      create: { id: 1, colorPrimary, colorDark, colorAccent, cartasAutorizacion, ...(logoData ? { logoData, logoMime } : {}) },
+      update: { colorPrimary, colorDark, colorAccent, cartasAutorizacion, ...(logoData ? { logoData, logoMime } : {}) },
+    });
+  } catch (err) {
+    console.error("Error guardando configuración:", err);
+    return NextResponse.json({ error: "No se pudo guardar. ¿Se aplicó la migración de la base de datos?" }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }

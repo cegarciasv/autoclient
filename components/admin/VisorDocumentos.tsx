@@ -20,6 +20,7 @@ interface Props {
 
 const ETIQUETAS: Record<string, string> = {
   formulario_firmado:       "Formulario firmado",
+  carta_autorizacion_investigacion: "Carta de Autorización de Investigación",
   dui_representante:        "DUI Representante Legal",
   nit_representante:        "NIT Representante Legal",
   credencial_administrador: "Credencial Administrador",

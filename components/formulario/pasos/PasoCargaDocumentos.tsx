@@ -55,12 +55,20 @@ interface Props {
   onAnterior: () => void;
   token: string;
   tipo: "CLIENTE" | "PROVEEDOR";
+  cartasActivas?: boolean;
 }
 
-export default function PasoCargaDocumentos({ formulario, onAnterior, token }: Props) {
+const DOC_CARTA_AUTORIZACION: TipoDoc = {
+  tipo: "carta_autorizacion_investigacion",
+  label: "Carta de Autorización de Investigación Firmada",
+  requerido: true,
+};
+
+export default function PasoCargaDocumentos({ formulario, onAnterior, token, tipo: tipoTercero, cartasActivas }: Props) {
   // Determinar lista de documentos según tipo de persona
   const tipoPersona = (formulario.tercero as Record<string, unknown> | null)?.tipoPersona as string | undefined;
-  const DOCUMENTOS = tipoPersona === "NATURAL" ? DOCS_NATURAL : DOCS_JURIDICA;
+  const base = tipoPersona === "NATURAL" ? DOCS_NATURAL : DOCS_JURIDICA;
+  const DOCUMENTOS = tipoTercero === "PROVEEDOR" && cartasActivas ? [base[0], DOC_CARTA_AUTORIZACION, ...base.slice(1)] : base;
 
   const docsIniciales: DocSubido[] = Array.isArray(formulario.documentos)
     ? (formulario.documentos as { tipo: string; nombreArchivo: string; tamanoBytes: number }[]).map((d) => ({
@@ -137,7 +145,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token }: P
         return;
       }
       toast.success("¡Formulario completado exitosamente!");
-      window.location.href = `/formulario/${token}/completado`;
+      window.location.assign(`/formulario/${token}/completado`);
     } catch {
       toast.error("Error de conexión");
     } finally {

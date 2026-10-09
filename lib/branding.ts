@@ -14,6 +14,19 @@ export async function obtenerBranding() {
   return branding ?? { ...DEFAULT_BRANDING, actualizado: null };
 }
 
+// Consulta aparte (y tolerante a fallos) para que una BD sin la columna nueva no rompa el resto de la marca.
+export async function cartasAutorizacionActivas(): Promise<boolean> {
+  try {
+    const config = await prisma.branding.findUnique({
+      where: { id: 1 },
+      select: { cartasAutorizacion: true },
+    });
+    return config?.cartasAutorizacion ?? false;
+  } catch {
+    return false;
+  }
+}
+
 export function esColorHex(valor: unknown): valor is string {
   return typeof valor === "string" && /^#[0-9a-fA-F]{6}$/.test(valor);
 }

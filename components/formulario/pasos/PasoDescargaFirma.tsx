@@ -13,10 +13,27 @@ interface Props {
   onAnterior: () => void;
   token: string;
   tipo: "CLIENTE" | "PROVEEDOR";
+  cartasActivas?: boolean;
 }
 
-export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, guardando }: Props) {
+const CARTAS_AUTORIZACION = [
+  {
+    persona: "JURIDICA",
+    label: "Carta de Autorización de Investigación — Persona Jurídica",
+    href: "/plantillas/carta-autorizacion-investigacion-persona-juridica.pdf",
+  },
+  {
+    persona: "NATURAL",
+    label: "Carta de Autorización de Investigación — Persona Natural",
+    href: "/plantillas/carta-autorizacion-investigacion-persona-natural.pdf",
+  },
+];
+
+export default function PasoDescargaFirma({ formulario, onGuardar, onAnterior, token, tipo, guardando, cartasActivas }: Props) {
   const [descargando, setDescargando] = useState(false);
+  const mostrarCartas = tipo === "PROVEEDOR" && !!cartasActivas;
+  const tipoPersona = (formulario.tercero as Record<string, unknown> | undefined)?.tipoPersona as string | undefined;
+  const cartas = CARTAS_AUTORIZACION.filter((c) => !tipoPersona || c.persona === tipoPersona);
   const [descargado, setDescargado] = useState(false);
 
   async function descargarPDF() {
@@ -117,10 +134,35 @@ export default function PasoDescargaFirma({ onGuardar, onAnterior, token, tipo, 
             )}
           </div>
 
+          {mostrarCartas && (
+            <div className="space-y-3 rounded-lg border border-gray-200 p-4">
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Carta de Autorización de Investigación</p>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  Descargue la carta, llénela, fírmela y escanéela en PDF. La subirá junto con los demás documentos en el siguiente paso.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2">
+                {cartas.map((c) => (
+                  <a
+                    key={c.href}
+                    href={c.href}
+                    download
+                    className="inline-flex items-center gap-2 rounded-md border border-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/5"
+                  >
+                    <Download className="h-4 w-4 shrink-0" />
+                    {c.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
             <p className="text-xs text-amber-800">
-              <strong>Importante:</strong> El formulario firmado es un documento requerido obligatorio.
-              Sin él, no podrá completar el proceso de vinculación.
+              <strong>Importante:</strong> El formulario firmado
+              {mostrarCartas ? " y la carta de autorización firmada son documentos requeridos obligatorios" : " es un documento requerido obligatorio"}.
+              Sin {mostrarCartas ? "ellos" : "él"}, no podrá completar el proceso de vinculación.
             </p>
           </div>
         </CardContent>

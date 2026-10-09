@@ -12,8 +12,9 @@ const fields: { key: keyof Colors; label: string; help: string }[] = [
   { key: "colorAccent", label: "Color de acento", help: "Detalles y estados activos" },
 ];
 
-export default function BrandingForm({ initial }: { initial: Colors & { actualizado: Date | null } }) {
+export default function BrandingForm({ initial, cartasInicial }: { initial: Colors & { actualizado: Date | null }; cartasInicial: boolean }) {
   const [colors, setColors] = useState<Colors>(initial);
+  const [cartas, setCartas] = useState(cartasInicial);
   const [logo, setLogo] = useState<File | null>(null);
   const [preview, setPreview] = useState("/api/branding/logo");
   const [saving, setSaving] = useState(false);
@@ -24,6 +25,7 @@ export default function BrandingForm({ initial }: { initial: Colors & { actualiz
     const data = new FormData();
     for (const field of fields) data.set(field.key, colors[field.key]);
     if (logo) data.set("logo", logo);
+    data.set("cartasAutorizacion", String(cartas));
     try {
       const response = await fetch("/api/admin/branding", { method: "POST", body: data });
       const result = await response.json() as { error?: string };
@@ -83,6 +85,26 @@ export default function BrandingForm({ initial }: { initial: Colors & { actualiz
             <input id={key} type="color" value={colors[key]} onChange={(event) => setColors({ ...colors, [key]: event.target.value })} className="h-11 w-16 cursor-pointer rounded-md border bg-white p-1" />
           </div>
         ))}
+      </section>
+      <section className="surface-card p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <label htmlFor="cartasAutorizacion" className="font-semibold text-slate-900">Cartas de autorización de investigación</label>
+            <p className="text-sm text-slate-500">
+              Cuando está activado, los proveedores descargan la carta (persona natural o jurídica), la firman y deben subirla antes de finalizar. Los clientes no se ven afectados.
+            </p>
+          </div>
+          <button
+            id="cartasAutorizacion"
+            type="button"
+            role="switch"
+            aria-checked={cartas}
+            onClick={() => setCartas(!cartas)}
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors brand-focus ${cartas ? "bg-[var(--brand-primary)]" : "bg-slate-300"}`}
+          >
+            <span className={`absolute top-0.5 left-0.5 size-6 rounded-full bg-white shadow transition-transform ${cartas ? "translate-x-5" : ""}`} />
+          </button>
+        </div>
       </section>
       <Button type="submit" disabled={saving} className="brand-button min-h-11 px-6">{saving ? "Guardando..." : "Guardar cambios"}</Button>
     </form>

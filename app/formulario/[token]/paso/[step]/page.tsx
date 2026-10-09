@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { obtenerSesionFormulario } from "@/lib/auth-formulario";
+import { cartasAutorizacionActivas } from "@/lib/branding";
 import FormularioPasos from "@/components/formulario/FormularioPasos";
 
 export default async function PasoPage({
@@ -35,8 +36,11 @@ export default async function PasoPage({
 
   if (!formulario) redirect(`/formulario/${token}`);
 
+  const cartasActivas = sesion.tipo === "PROVEEDOR" && (await cartasAutorizacionActivas());
+
   return (
     <FormularioPasos
+      cartasActivas={cartasActivas}
       token={token}
       pasoActual={pasoNum}
       totalPasos={totalPasos}
