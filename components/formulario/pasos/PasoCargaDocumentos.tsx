@@ -141,7 +141,7 @@ export default function PasoCargaDocumentos({ formulario, onAnterior, token, tip
       const res = await fetch(`/api/formulario/${token}/finalizar`, { method: "POST" });
       if (!res.ok) {
         const err = await res.json();
-        toast.error(err.error || "Error al finalizar");
+        toast.error(err.error || "Error al finalizar", { duration: 12000 });
         return;
       }
       toast.success("¡Formulario completado exitosamente!");

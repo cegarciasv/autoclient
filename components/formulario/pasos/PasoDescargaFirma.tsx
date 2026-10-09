@@ -19,13 +19,15 @@ interface Props {
 const CARTAS_AUTORIZACION = [
   {
     persona: "JURIDICA",
-    label: "Carta de Autorización de Investigación — Persona Jurídica",
+    label: "Carta de Autorización (Persona Jurídica)",
     href: "/plantillas/carta-autorizacion-investigacion-persona-juridica.pdf",
+    archivo: "carta_autorizacion_investigacion_persona_juridica.pdf",
   },
   {
     persona: "NATURAL",
-    label: "Carta de Autorización de Investigación — Persona Natural",
+    label: "Carta de Autorización (Persona Natural)",
     href: "/plantillas/carta-autorizacion-investigacion-persona-natural.pdf",
+    archivo: "carta_autorizacion_investigacion_persona_natural.pdf",
   },
 ];
 
@@ -35,6 +37,7 @@ export default function PasoDescargaFirma({ formulario, onGuardar, onAnterior, t
   const tipoPersona = (formulario.tercero as Record<string, unknown> | undefined)?.tipoPersona as string | undefined;
   const cartas = CARTAS_AUTORIZACION.filter((c) => !tipoPersona || c.persona === tipoPersona);
   const [descargado, setDescargado] = useState(false);
+  const [cartasDescargadas, setCartasDescargadas] = useState<string[]>([]);
 
   async function descargarPDF() {
     setDescargando(true);
@@ -58,6 +61,15 @@ export default function PasoDescargaFirma({ formulario, onGuardar, onAnterior, t
     } finally {
       setDescargando(false);
     }
+  }
+
+  function descargarCarta(href: string, archivo: string) {
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = archivo;
+    a.click();
+    setCartasDescargadas((prev) => (prev.includes(href) ? prev : [...prev, href]));
+    toast.success("Carta descargada correctamente");
   }
 
   async function continuar() {
@@ -135,26 +147,35 @@ export default function PasoDescargaFirma({ formulario, onGuardar, onAnterior, t
           </div>
 
           {mostrarCartas && (
-            <div className="space-y-3 rounded-lg border border-gray-200 p-4">
+            <div className="flex flex-col items-center gap-3 rounded-lg border-2 border-[var(--brand-primary)]/40 bg-[var(--brand-primary)]/5 p-4 text-center">
+              <span className="rounded-full bg-[var(--brand-primary)] px-3 py-0.5 text-xs font-semibold text-white">
+                Documento adicional obligatorio para proveedores
+              </span>
               <div>
                 <p className="text-sm font-semibold text-gray-800">Carta de Autorización de Investigación</p>
-                <p className="text-sm text-gray-500 mt-0.5">
+                <p className="text-sm text-gray-600 mt-0.5">
                   Descargue la carta, llénela, fírmela y escanéela en PDF. La subirá junto con los demás documentos en el siguiente paso.
                 </p>
               </div>
-              <div className="flex flex-col gap-2">
-                {cartas.map((c) => (
-                  <a
-                    key={c.href}
-                    href={c.href}
-                    download
-                    className="inline-flex items-center gap-2 rounded-md border border-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/5"
+              {cartas.map((c) => (
+                <div key={c.href} className="flex flex-col items-center gap-2 w-full">
+                  <Button
+                    type="button"
+                    onClick={() => descargarCarta(c.href, c.archivo)}
+                    className="bg-[var(--brand-primary)] hover:bg-[var(--brand-dark)] w-full sm:w-auto px-8"
+                    size="lg"
                   >
-                    <Download className="h-4 w-4 shrink-0" />
-                    {c.label}
-                  </a>
-                ))}
-              </div>
+                    <FileText className="h-5 w-5 mr-2" />
+                    Descargar {c.label}
+                  </Button>
+                  {cartasDescargadas.includes(c.href) && (
+                    <div className="flex items-center gap-2 text-green-600 text-sm">
+                      <CheckCircle2 className="h-4 w-4" />
+                      Carta descargada — recuerde firmarla antes de subirla
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
 

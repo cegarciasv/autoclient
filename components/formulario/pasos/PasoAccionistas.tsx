@@ -43,8 +43,16 @@ function accionistaVacio(): Accionista {
   };
 }
 
+// Fila sin ningún dato capturado (se ignora en persona natural)
+function estaVacio(a: Accionista): boolean {
+  return !a.tipoIdentificacion && !a.numeroDocumento.trim() && !a.nombreRazonSocial.trim() && !a.porcentajeParticipacion;
+}
+
 export default function PasoAccionistas({ formulario, guardando, onGuardar, onAnterior }: Props) {
-  const accionistasIniciales: Accionista[] = Array.isArray(formulario.accionistas)
+  // Para persona natural este paso es opcional
+  const esNatural = (formulario.tercero as Record<string, unknown> | undefined)?.tipoPersona === "NATURAL";
+
+  const accionistasIniciales: Accionista[] = Array.isArray(formulario.accionistas) && formulario.accionistas.length > 0
     ? (formulario.accionistas as Record<string, unknown>[]).map((a) => ({
         tipoIdentificacion: String(a.tipoIdentificacion ?? ""),
         numeroDocumento: String(a.numeroDocumento ?? ""),
@@ -55,10 +63,11 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
         declaracionPais: String(a.declaracionPais ?? "El Salvador"),
         porcentajeParticipacion: String(a.porcentajeParticipacion ?? ""),
       }))
-    : [accionistaVacio()];
+    : esNatural ? [] : [accionistaVacio()];
 
   const [accionistas, setAccionistas] = useState<Accionista[]>(accionistasIniciales);
   const [expandidos, setExpandidos] = useState<Set<number>>(new Set([0]));
+  const [intentado, setIntentado] = useState(false);
 
   function actualizar(i: number, campo: keyof Accionista, valor: unknown) {
     const nuevos = [...accionistas];
@@ -89,21 +98,39 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
   }
 
   function validar(): boolean {
+    setIntentado(true);
     for (let i = 0; i < accionistas.length; i++) {
       const a = accionistas[i];
-      if (!a.tipoIdentificacion || !a.numeroDocumento || !a.nombreRazonSocial || !a.porcentajeParticipacion) {
+      if (esNatural && estaVacio(a)) continue;
+      if (!a.tipoIdentificacion || !a.numeroDocumento.trim() || !a.nombreRazonSocial.trim() || !a.porcentajeParticipacion || !a.declaracionPais.trim()) {
         toast.error(`Complete todos los campos requeridos del accionista ${i + 1}`);
         setExpandidos(new Set([...expandidos, i]));
         return false;
       }
+      const pct = Number(a.porcentajeParticipacion);
+      if (!(pct > 0 && pct <= 100)) {
+        toast.error(`El % de participación del accionista ${i + 1} debe ser mayor a 0 y no superar 100`);
+        setExpandidos(new Set([...expandidos, i]));
+        return false;
+      }
+    }
+    const total = accionistas.reduce((suma, a) => suma + Number(a.porcentajeParticipacion), 0);
+    if (total > 100.001) {
+      toast.error(`La suma de participaciones (${total.toFixed(2)}%) no puede superar 100%`);
+      return false;
     }
     return true;
   }
 
+  // Resalta en rojo los campos requeridos vacíos una vez que se intentó avanzar
+  const invalido = (a: Accionista, valor: string) =>
+    intentado && !valor.trim() && !(esNatural && estaVacio(a)) ? "border-red-500" : "";
+
   async function guardar(siguiente: boolean) {
     // Al avanzar (Siguiente) validamos; al guardar borrador no
     if (siguiente && !validar()) return;
-    await onGuardar({ accionistas }, siguiente);
+    const aGuardar = esNatural ? accionistas.filter((a) => !estaVacio(a)) : accionistas;
+    await onGuardar({ accionistas: aGuardar }, siguiente);
   }
 
   return (
@@ -116,6 +143,11 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
           <p className="text-sm text-gray-500">
             Registre todos los accionistas con participación igual o superior al 5%.
           </p>
+          {esNatural && (
+            <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+              Para persona natural este paso es opcional. Si no aplica, puede continuar sin agregar accionistas.
+            </p>
+          )}
 
           <AnimatePresence initial={false}>
           {accionistas.map((a, i) => (
@@ -142,7 +174,7 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  {accionistas.length > 1 && (
+                  {(accionistas.length > 1 || esNatural) && (
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); eliminar(i); }}
@@ -161,7 +193,7 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                     <div className="space-y-1">
                       <Label>Tipo de Identificación <span className="text-red-500">*</span></Label>
                       <Select value={a.tipoIdentificacion} onValueChange={(v) => actualizar(i, "tipoIdentificacion", v)}>
-                        <SelectTrigger>
+                        <SelectTrigger className={invalido(a, a.tipoIdentificacion)}>
                           <SelectValue placeholder="Seleccione..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -176,6 +208,8 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                       <Input
                         value={a.numeroDocumento}
                         onChange={(e) => actualizar(i, "numeroDocumento", e.target.value)}
+                        maxLength={191}
+                        className={invalido(a, a.numeroDocumento)}
                       />
                     </div>
                     <div className="space-y-1 sm:col-span-2">
@@ -183,6 +217,8 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                       <Input
                         value={a.nombreRazonSocial}
                         onChange={(e) => actualizar(i, "nombreRazonSocial", e.target.value)}
+                        maxLength={191}
+                        className={invalido(a, a.nombreRazonSocial)}
                       />
                     </div>
                     <div className="space-y-1">
@@ -195,6 +231,7 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                         value={a.porcentajeParticipacion}
                         onChange={(e) => actualizar(i, "porcentajeParticipacion", e.target.value)}
                         placeholder="0.00"
+                        className={invalido(a, a.porcentajeParticipacion)}
                       />
                     </div>
                     <div className="space-y-1">
@@ -202,6 +239,8 @@ export default function PasoAccionistas({ formulario, guardando, onGuardar, onAn
                       <Input
                         value={a.declaracionPais}
                         onChange={(e) => actualizar(i, "declaracionPais", e.target.value)}
+                        maxLength={191}
+                        className={invalido(a, a.declaracionPais)}
                       />
                     </div>
                   </div>

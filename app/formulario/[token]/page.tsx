@@ -119,7 +119,7 @@ export default function FormularioLoginPage({ params }: { params: Promise<{ toke
 
         {etapa === "documento" ? <form onSubmit={verificarDocumento} className="mt-7 space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="documento" className="font-semibold text-[#142033]">Número de identificación</Label>
+            <Label htmlFor="documento" className="font-semibold text-[#142033]">Número de identificación <span className="text-red-600">*</span></Label>
             <Input id="documento" value={documento} onChange={(e) => setDocumento(e.target.value)} placeholder="Sin guiones, espacios ni puntos" autoFocus required className="h-12 rounded-lg bg-[#f8fafb]" />
             <p className="text-xs text-[#8493a5]">Ingrese NIT, DUI o pasaporte según el tipo registrado.</p>
           </div>
@@ -127,7 +127,7 @@ export default function FormularioLoginPage({ params }: { params: Promise<{ toke
           <Button type="submit" disabled={cargando} className="brand-button h-12 w-full rounded-lg">{cargando ? "Verificando..." : "Continuar"}</Button>
         </form> : <form onSubmit={verificarOTP} className="mt-7 space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="otp" className="font-semibold text-[#142033]">Código de verificación</Label>
+            <Label htmlFor="otp" className="font-semibold text-[#142033]">Código de verificación <span className="text-red-600">*</span></Label>
             <Input id="otp" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" placeholder="000000" maxLength={6} autoFocus required className="h-14 rounded-lg bg-[#f8fafb] text-center font-mono text-2xl tracking-[0.45em]" />
             <p className="text-xs text-[#8493a5]">El código es válido por 15 minutos.</p>
           </div>

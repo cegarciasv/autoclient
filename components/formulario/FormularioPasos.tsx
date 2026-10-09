@@ -136,6 +136,11 @@ export default function FormularioPasos({
       )}
 
       <BarraProgreso pasos={pasos} pasoActual={pasoActual} progreso={progreso} />
+      {pasoActual !== (tipo === "CLIENTE" ? 4 : 5) && (
+        <p className="text-xs text-gray-500">
+          Los campos marcados con <span className="text-red-500 font-semibold">*</span> son obligatorios.
+        </p>
+      )}
       <AnimatePresence mode="wait" custom={direccion}>
         <motion.div
           key={pasoActual}

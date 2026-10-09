@@ -147,7 +147,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="nombre">Nombre completo *</Label>
+              <Label htmlFor="nombre">Nombre completo <span className="text-red-600">*</span></Label>
               <Input
                 id="nombre"
                 value={form.nombre}
@@ -169,7 +169,7 @@ export default function FormEditarUsuario({ usuario, esSelf }: Props) {
             </div>
 
             <div className="space-y-1.5">
-              <Label>Rol *</Label>
+              <Label>Rol <span className="text-red-600">*</span></Label>
               <Select
                 value={form.rol}
                 onValueChange={(v) => set("rol", v ?? "EJECUTIVO")}

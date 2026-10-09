@@ -13,6 +13,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import { Plus, Trash2, Building2, User } from "lucide-react";
 import { toast } from "sonner";
+import {
+  CAMPOS_REQUERIDOS_JURIDICA as JURIDICA,
+  CAMPOS_REQUERIDOS_PROVEEDOR as PROVEEDOR,
+  LABELS_CAMPO as LABELS,
+  EMAIL_REGEX,
+  MAX_TEXTO,
+} from "@/lib/formulario-reglas";
 
 // ── Schema base — campos opcionales en Zod; se validan manualmente según tipo ─
 const schema = z.object({
@@ -66,49 +73,14 @@ const schema = z.object({
 
 type Datos = z.infer<typeof schema>;
 
-// Campos requeridos para PERSONA JURÍDICA
-const CAMPOS_REQUERIDOS_JURIDICA: (keyof Datos)[] = [
-  "nombreComercial", "tipoEmpresa", "nrc",
-  "rlPrimerApellido", "rlSegundoApellido", "rlNombres",
-  "rlTipoIdentificacion", "rlNumeroDocumento", "rlFechaExpedicion",
-  "rlLugarExpedicion", "rlGenero", "rlEstadoCivil",
-  "rlFechaNacimiento", "rlLugarNacimiento",
-];
+// Las reglas de obligatoriedad viven en lib/formulario-reglas.ts (las usa también el servidor)
+const CAMPOS_REQUERIDOS_JURIDICA = JURIDICA as (keyof Datos)[];
+const CAMPOS_REQUERIDOS_PROVEEDOR = PROVEEDOR as (keyof Datos)[];
+const CAMPOS_CORREO_PROVEEDOR = ["correoVendedor", "correoComprobantes"] as (keyof Datos)[];
+const LABELS_CAMPO = LABELS as Partial<Record<keyof Datos, string>>;
 
-// Campos requeridos para PROVEEDOR al hacer clic en "Siguiente"
-const CAMPOS_REQUERIDOS_PROVEEDOR: (keyof Datos)[] = [
-  "codigoActividadEconomica", "categoriaContribuyente",
-  "telefonoCelular",
-  "nombreContacto", "correoVendedor", "correoComprobantes",
-  "numeroCuentaBancaria", "titularCuenta", "tipoCuenta", "banco",
-];
-
-const LABELS_CAMPO: Partial<Record<keyof Datos, string>> = {
-  nrc:                      "N° de Registro IVA / NRC",
-  codigoActividadEconomica: "Código de Actividad Económica",
-  categoriaContribuyente:   "Categoría de Contribuyente",
-  telefonoCelular:          "Teléfono Celular",
-  nombreContacto:           "Nombre de Contacto",
-  correoVendedor:           "Correo del Vendedor",
-  correoComprobantes:       "Correo de Comprobantes de Pago",
-  numeroCuentaBancaria:     "Número de Cuenta Bancaria",
-  titularCuenta:            "Titular de la Cuenta",
-  tipoCuenta:               "Tipo de Cuenta",
-  banco:                    "Banco",
-  nombreComercial:          "Nombre Comercial",
-  tipoEmpresa:              "Tipo de Empresa",
-  rlPrimerApellido:         "Primer Apellido (Representante Legal)",
-  rlSegundoApellido:        "Segundo Apellido (Representante Legal)",
-  rlNombres:                "Nombres (Representante Legal)",
-  rlTipoIdentificacion:     "Tipo de Identificación (Representante Legal)",
-  rlNumeroDocumento:        "Número de Documento (Representante Legal)",
-  rlFechaExpedicion:        "Fecha de Expedición (Representante Legal)",
-  rlLugarExpedicion:        "Lugar de Expedición (Representante Legal)",
-  rlGenero:                 "Género (Representante Legal)",
-  rlEstadoCivil:            "Estado Civil (Representante Legal)",
-  rlFechaNacimiento:        "Fecha de Nacimiento (Representante Legal)",
-  rlLugarNacimiento:        "Lugar de Nacimiento (Representante Legal)",
-};
+// Selects que ofrecen "Otro" y piden especificar el valor
+const CAMPOS_CON_OTRO: (keyof Datos)[] = ["tipoEmpresa", "tipoActividadEconomica", "categoriaContribuyente", "banco"];
 
 interface ClientePrincipal {
   nombreRazonSocial: string;
@@ -147,16 +119,19 @@ interface FieldProps {
   register: UseFormRegister<Datos>;
   errors: FieldErrors<Datos>;
   campoRequerido: (name: keyof Datos) => boolean;
+  className?: string;
+  help?: string;
 }
-function Field({ name, label, type = "text", placeholder, register, errors, campoRequerido }: FieldProps) {
+function Field({ name, label, type = "text", placeholder, register, errors, campoRequerido, className = "", help }: FieldProps) {
   const cls = errors[name] ? "border-red-500" : "";
   return (
-    <div className="space-y-1">
+    <div className={`space-y-1 ${className}`}>
       <Label>
         {label}
         {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
       </Label>
-      <Input {...register(name)} type={type} placeholder={placeholder} className={cls} />
+      <Input {...register(name)} type={type} placeholder={placeholder} maxLength={MAX_TEXTO} className={cls} />
+      {help && <p className="text-xs text-gray-400">{help}</p>}
       {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
     </div>
   );
@@ -172,6 +147,12 @@ interface SelectFieldProps {
   campoRequerido: (name: keyof Datos) => boolean;
 }
 function SelectField({ name, label, options, defaultVal, setValue, errors, campoRequerido }: SelectFieldProps) {
+  // Con la opción "Otro" se pide especificar el valor, y ese texto es lo que se guarda.
+  const conOtro = options.includes("Otro");
+  const valorPersonalizado = conOtro && defaultVal !== "" && !options.includes(defaultVal);
+  const [seleccion, setSeleccion] = useState(valorPersonalizado ? "Otro" : defaultVal);
+  const [otroTexto, setOtroTexto] = useState(valorPersonalizado ? defaultVal : "");
+  const pideOtro = conOtro && seleccion === "Otro";
   const cls = errors[name] ? "border-red-500" : "";
   return (
     <div className="space-y-1">
@@ -179,7 +160,14 @@ function SelectField({ name, label, options, defaultVal, setValue, errors, campo
         {label}
         {campoRequerido(name) && <span className="text-red-500 ml-0.5">*</span>}
       </Label>
-      <Select defaultValue={defaultVal} onValueChange={(v) => setValue(name, (v ?? "") as never)}>
+      <Select
+        value={seleccion}
+        onValueChange={(v) => {
+          const nuevo = v ?? "";
+          setSeleccion(nuevo);
+          setValue(name, (nuevo === "Otro" ? otroTexto : nuevo) as never);
+        }}
+      >
         <SelectTrigger className={cls}>
           <SelectValue placeholder="Seleccione..." />
         </SelectTrigger>
@@ -187,6 +175,19 @@ function SelectField({ name, label, options, defaultVal, setValue, errors, campo
           {options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}
         </SelectContent>
       </Select>
+      {pideOtro && (
+        <Input
+          value={otroTexto}
+          onChange={(e) => {
+            setOtroTexto(e.target.value);
+            setValue(name, e.target.value as never);
+          }}
+          placeholder="Especifique cuál"
+          maxLength={MAX_TEXTO}
+          aria-label={`${label}: especifique cuál`}
+          className={cls}
+        />
+      )}
       {errors[name] && <p className="text-xs text-red-500">{errors[name]?.message}</p>}
     </div>
   );
@@ -218,7 +219,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   const tercero = (formulario.tercero as Record<string, unknown>) ?? {};
   const esProveedor = tercero.tipo === "PROVEEDOR";
 
-  const clientesIniciales: ClientePrincipal[] = Array.isArray(formulario.clientesPrincipales)
+  const clientesIniciales: ClientePrincipal[] = Array.isArray(formulario.clientesPrincipales) && formulario.clientesPrincipales.length > 0
     ? (formulario.clientesPrincipales as Record<string, unknown>[]).map((c) => ({
         nombreRazonSocial: toStr(c.nombreRazonSocial),
         porcentajeParticipacion: toStr(c.porcentajeParticipacion),
@@ -301,23 +302,46 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
       toast.error(`Campos requeridos para proveedor: ${nombres}`);
       return false;
     }
+    const correosInvalidos = CAMPOS_CORREO_PROVEEDOR.filter((campo) => datos[campo] && !EMAIL_REGEX.test(String(datos[campo])));
+    if (correosInvalidos.length > 0) {
+      correosInvalidos.forEach((campo) => setError(campo, { type: "pattern", message: "Correo inválido" }));
+      toast.error("Revise el formato de los correos electrónicos");
+      return false;
+    }
     return true;
   }
 
+  // "Otro" sin especificar (p. ej. datos guardados antes de pedir el detalle)
+  function validarOtros(datos: Datos): boolean {
+    const sinEspecificar = CAMPOS_CON_OTRO.filter((campo) => datos[campo] === "Otro");
+    if (sinEspecificar.length > 0) {
+      sinEspecificar.forEach((campo) => setError(campo, { type: "required", message: "Especifique cuál" }));
+      toast.error("Especifique el valor en los campos donde eligió «Otro»");
+      return false;
+    }
+    return true;
+  }
+
+  // Los clientes principales son opcionales: se descartan las filas sin nombre
+  function clientesParaGuardar() {
+    return clientes.filter((c) => c.nombreRazonSocial.trim() !== "");
+  }
+
   async function onSubmit(datos: Datos, siguiente: boolean) {
+    if (siguiente && !validarOtros(datos)) return;
     if (siguiente && esJuridica && !validarJuridica(datos)) return;
     if (siguiente && esProveedor && !validarProveedor(datos)) return;
-    await onGuardar({ infoGeneral: datos, clientesPrincipales: clientes }, siguiente);
+    await onGuardar({ infoGeneral: datos, clientesPrincipales: clientesParaGuardar() }, siguiente);
   }
 
   async function guardarBorrador() {
     const datos = getValues();
-    await onGuardar({ infoGeneral: datos, clientesPrincipales: clientes }, false);
+    await onGuardar({ infoGeneral: datos, clientesPrincipales: clientesParaGuardar() }, false);
   }
 
   // Determina si un campo debe mostrar asterisco de requerido
   function campoRequerido(name: keyof Datos): boolean {
-    if (name === "telefonoCelular") return esProveedor;
+    if (esProveedor && CAMPOS_REQUERIDOS_PROVEEDOR.includes(name)) return true;
     if (CAMPOS_REQUERIDOS_JURIDICA.includes(name)) return esJuridica;
     const shape = schema.shape[name];
     return shape ? !shape.isOptional() : false;
@@ -329,7 +353,13 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
   const checkProps = { setValue };
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); handleSubmit((d) => onSubmit(d, true))(); }}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      handleSubmit(
+        (d) => onSubmit(d, true),
+        () => toast.error("Complete los campos requeridos marcados en rojo"),
+      )();
+    }}>
       <div className="space-y-6">
 
         {/* ── Tipo de Persona ── */}
@@ -415,24 +445,12 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1 sm:col-span-2">
-                <Label>Dirección Principal <span className="text-red-500">*</span></Label>
-                <Input {...register("direccionPrincipal")} className={errors.direccionPrincipal ? "border-red-500" : ""} />
-              </div>
+              <Field {...fieldProps} name="direccionPrincipal" label="Dirección Principal" className="sm:col-span-2" />
               <Field {...fieldProps} name="departamento" label="Departamento" />
               <Field {...fieldProps} name="ciudad"       label="Ciudad / Municipio" />
               <Field {...fieldProps} name="correoElectronico" label="Correo Electrónico" type="email" />
-              <div className="space-y-1">
-                <Label>Teléfono Fijo</Label>
-                <Input {...register("telefonoFijo")} placeholder="2222-2222" />
-              </div>
-              <div className="space-y-1">
-                <Label>
-                  Teléfono Celular
-                  {esProveedor && <span className="text-red-500 ml-0.5">*</span>}
-                </Label>
-                <Input {...register("telefonoCelular")} placeholder="7777-7777" className={errors.telefonoCelular ? "border-red-500" : ""} />
-              </div>
+              <Field {...fieldProps} name="telefonoFijo" label="Teléfono Fijo" placeholder="2222-2222" />
+              <Field {...fieldProps} name="telefonoCelular" label="Teléfono Celular" placeholder="7777-7777" />
             </div>
           </CardContent>
         </Card>
@@ -450,11 +468,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field {...fieldProps} name="nombreContacto"    label="Nombre del Contacto / Vendedor" />
                 <Field {...fieldProps} name="correoVendedor"    label="Correo del Vendedor" type="email" />
-                <div className="space-y-1 sm:col-span-2">
-                  <Label>Correo para Recepción de Comprobantes de Pago <span className="text-red-500">*</span></Label>
-                  <Input {...register("correoComprobantes")} type="email" className={errors.correoComprobantes ? "border-red-500" : ""} />
-                  <p className="text-xs text-gray-400">A este correo se enviarán los comprobantes de pago electrónicos.</p>
-                </div>
+                <Field {...fieldProps} name="correoComprobantes" label="Correo para Recepción de Comprobantes de Pago" type="email" className="sm:col-span-2" help="A este correo se enviarán los comprobantes de pago electrónicos." />
               </div>
             </CardContent>
           </Card>
@@ -463,7 +477,10 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
         {/* ── Clientes Principales ── */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-[var(--brand-dark)]">Clientes Principales</CardTitle>
+            <CardTitle className="text-base text-[var(--brand-dark)]">
+              Clientes Principales
+              <span className="ml-2 text-xs font-normal text-gray-400">(Opcional)</span>
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {clientes.map((c, i) => (
@@ -471,6 +488,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                 <div className="flex-1 space-y-1">
                   <Label className="text-xs">Nombre / Razón Social</Label>
                   <Input
+                    maxLength={MAX_TEXTO}
                     value={c.nombreRazonSocial}
                     onChange={(e) => {
                       const n = [...clientes]; n[i] = { ...n[i], nombreRazonSocial: e.target.value }; setClientes(n);
@@ -480,6 +498,10 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                 <div className="w-28 space-y-1">
                   <Label className="text-xs">% Participación</Label>
                   <Input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
                     value={c.porcentajeParticipacion}
                     onChange={(e) => {
                       const n = [...clientes]; n[i] = { ...n[i], porcentajeParticipacion: e.target.value }; setClientes(n);
@@ -516,15 +538,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
                 Proporcione los datos bancarios para el procesamiento de pagos. Prioridad banco Cuscatlán.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1 sm:col-span-2">
-                  <Label>Número de Cuenta Bancaria <span className="text-red-500">*</span></Label>
-                  <Input
-                    {...register("numeroCuentaBancaria")}
-                    placeholder="Sin guiones (ej: 10281234567890)"
-                    className={errors.numeroCuentaBancaria ? "border-red-500" : ""}
-                  />
-                  <p className="text-xs text-gray-400">Ingrese el número sin guiones ni espacios.</p>
-                </div>
+                <Field {...fieldProps} name="numeroCuentaBancaria" label="Número de Cuenta Bancaria" placeholder="Sin guiones (ej: 10281234567890)" className="sm:col-span-2" help="Ingrese el número sin guiones ni espacios." />
                 <Field {...fieldProps} name="titularCuenta" label="Titular de la Cuenta" />
                 <SelectField {...selectProps} name="tipoCuenta" label="Tipo de Cuenta" defaultVal={toStr(ig.tipoCuenta)} options={[
                   "Ahorro", "Corriente",
@@ -565,10 +579,7 @@ export default function PasoInfoGeneral({ formulario, guardando, onGuardar }: Pr
               <Field {...fieldProps} name="rlNumeroDocumento"    label="Número de Documento" />
               <Field {...fieldProps} name="rlFechaExpedicion"    label="Fecha de Expedición" type="date" />
               <Field {...fieldProps} name="rlLugarExpedicion"    label="Lugar de Expedición" />
-              <div className="space-y-1">
-                <Label>Fecha de Vencimiento</Label>
-                <Input {...register("rlFechaVencimiento")} type="date" />
-              </div>
+              <Field {...fieldProps} name="rlFechaVencimiento" label="Fecha de Vencimiento" type="date" />
               <SelectField {...selectProps} name="rlGenero"       label="Género" defaultVal={toStr(ig.rlGenero)} options={["Masculino", "Femenino", "Otro"]} />
               <SelectField {...selectProps} name="rlEstadoCivil"  label="Estado Civil" defaultVal={toStr(ig.rlEstadoCivil)} options={[
                 "Soltero/a", "Casado/a", "Divorciado/a", "Viudo/a", "Unión libre",

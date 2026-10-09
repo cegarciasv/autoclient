@@ -39,6 +39,9 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
     : [referenciaVacia(), referenciaVacia()];
 
   const [referencias, setReferencias] = useState<Referencia[]>(refIniciales);
+  const [intentado, setIntentado] = useState(false);
+  // Resalta en rojo los campos requeridos vacíos una vez que se intentó avanzar
+  const invalido = (valor: string) => (intentado && !valor.trim() ? "border-red-500" : "");
 
   function actualizar(i: number, campo: keyof Referencia, valor: string) {
     const nuevas = [...referencias];
@@ -59,13 +62,14 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
   }
 
   function validar(): boolean {
+    setIntentado(true);
     if (referencias.length < 2) {
       toast.error("Se requieren mínimo 2 referencias comerciales");
       return false;
     }
     for (let i = 0; i < referencias.length; i++) {
       const r = referencias[i];
-      if (!r.nombreRazonSocial || !r.telefonoCelular || !r.direccion) {
+      if (!r.nombreRazonSocial.trim() || !r.telefonoCelular.trim() || !r.direccion.trim()) {
         toast.error(`Complete los campos requeridos en la referencia ${i + 1}`);
         return false;
       }
@@ -114,6 +118,8 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
                   <Input
                     value={r.nombreRazonSocial}
                     onChange={(e) => actualizar(i, "nombreRazonSocial", e.target.value)}
+                    maxLength={191}
+                    className={invalido(r.nombreRazonSocial)}
                   />
                 </div>
                 <div className="space-y-1">
@@ -130,6 +136,8 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
                     value={r.telefonoCelular}
                     onChange={(e) => actualizar(i, "telefonoCelular", e.target.value)}
                     placeholder="7777-7777"
+                    maxLength={191}
+                    className={invalido(r.telefonoCelular)}
                   />
                 </div>
                 <div className="space-y-1 sm:col-span-2">
@@ -137,6 +145,8 @@ export default function PasoReferencias({ formulario, guardando, onGuardar, onAn
                   <Input
                     value={r.direccion}
                     onChange={(e) => actualizar(i, "direccion", e.target.value)}
+                    maxLength={191}
+                    className={invalido(r.direccion)}
                   />
                 </div>
               </div>

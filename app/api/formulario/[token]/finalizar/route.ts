@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { obtenerSesionFormulario } from "@/lib/auth-formulario";
 import { cartasAutorizacionActivas } from "@/lib/branding";
+import { validarCompletitud } from "@/lib/formulario-reglas";
 
 type Ctx = { params: Promise<{ token: string }> };
 
@@ -13,7 +14,13 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
   const [formulario, tercero] = await Promise.all([
     prisma.formulario.findUnique({
       where: { terceroId: sesion.terceroId },
-      include: { documentos: true },
+      include: {
+        documentos: true,
+        infoGeneral: true,
+        accionistas: true,
+        referencias: true,
+        encuestaProveedor: true,
+      },
     }),
     prisma.tercero.findUnique({
       where: { id: sesion.terceroId },
@@ -23,6 +30,22 @@ export async function POST(_req: NextRequest, ctx: Ctx) {
   if (!formulario) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
 
   const esNatural = tercero?.tipoPersona === "NATURAL";
+
+  // El navegador valida cada paso, pero el servidor es quien garantiza que nada obligatorio quede vacío
+  const problemas = validarCompletitud({
+    tipo: tercero?.tipo === "PROVEEDOR" ? "PROVEEDOR" : "CLIENTE",
+    tipoPersona: tercero?.tipoPersona ?? null,
+    infoGeneral: formulario.infoGeneral as Record<string, unknown> | null,
+    accionistas: formulario.accionistas as Record<string, unknown>[],
+    referencias: formulario.referencias as Record<string, unknown>[],
+    encuesta: formulario.encuestaProveedor as Record<string, unknown> | null,
+  });
+  if (problemas.length > 0) {
+    return NextResponse.json(
+      { error: `Faltan datos obligatorios del formulario. Regrese a los pasos anteriores para completarlos — ${problemas.join(" | ")}`, problemas },
+      { status: 422 }
+    );
+  }
 
   const tiposBase = esNatural
     ? [

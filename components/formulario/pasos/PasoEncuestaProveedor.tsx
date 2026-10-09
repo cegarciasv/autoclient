@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const schema = z.object({
   trayectoriaExperiencia: z.string().min(1),
@@ -43,7 +44,7 @@ function toStr(v: unknown): string {
 export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar, onAnterior }: Props) {
   const ep = (formulario.encuestaProveedor as Record<string, unknown>) ?? {};
 
-  const { register, handleSubmit, getValues, setValue, watch } = useForm<Datos>({
+  const { register, handleSubmit, getValues, setValue, watch, formState: { errors } } = useForm<Datos>({
     resolver: zodResolver(schema),
     defaultValues: {
       trayectoriaExperiencia: toStr(ep.trayectoriaExperiencia),
@@ -94,20 +95,27 @@ export default function PasoEncuestaProveedor({ formulario, guardando, onGuardar
     return (
       <div className="space-y-1">
         <Label>{label} <span className="text-red-500">*</span></Label>
-        <Select defaultValue={watch(name) as string} onValueChange={(v) => setValue(name, (v ?? "") as never)}>
-          <SelectTrigger>
+        <Select defaultValue={watch(name) as string} onValueChange={(v) => setValue(name, (v ?? "") as never, { shouldValidate: !!errors[name] })}>
+          <SelectTrigger className={errors[name] ? "border-red-500" : ""}>
             <SelectValue placeholder="Seleccione..." />
           </SelectTrigger>
           <SelectContent>
             {options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}
           </SelectContent>
         </Select>
+        {errors[name] && <p className="text-xs text-red-500">Requerido</p>}
       </div>
     );
   }
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); handleSubmit((d) => onSubmit(d, true))(); }}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      handleSubmit(
+        (d) => onSubmit(d, true),
+        () => toast.error("Complete los campos requeridos marcados en rojo"),
+      )();
+    }}>
       <div className="space-y-6">
 
         <Card>

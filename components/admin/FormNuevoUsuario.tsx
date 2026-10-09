@@ -69,7 +69,7 @@ export default function FormNuevoUsuario() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="nombre">Nombre completo *</Label>
+              <Label htmlFor="nombre">Nombre completo <span className="text-red-600">*</span></Label>
               <Input
                 id="nombre"
                 value={form.nombre}
@@ -81,7 +81,7 @@ export default function FormNuevoUsuario() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="email">Correo electrónico *</Label>
+              <Label htmlFor="email">Correo electrónico <span className="text-red-600">*</span></Label>
               <Input
                 id="email"
                 type="email"
@@ -94,7 +94,7 @@ export default function FormNuevoUsuario() {
             </div>
 
             <div className="space-y-1.5">
-              <Label>Rol *</Label>
+              <Label>Rol <span className="text-red-600">*</span></Label>
               <Select
                 value={form.rol}
                 onValueChange={(v) => set("rol", v ?? "EJECUTIVO")}
